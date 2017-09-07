@@ -1,0 +1,26 @@
+{
+  "name": "Designer5",
+  "version": "1.0.0",
+  "description": "gridcontrol",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "mongodb": "^2.2.31"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gvr37leo/Designer5.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gvr37leo/Designer5/issues"
+  },
+  "homepage": "https://github.com/gvr37leo/Designer5#readme"
+}

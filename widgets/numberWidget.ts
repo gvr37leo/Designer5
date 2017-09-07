@@ -9,6 +9,7 @@ function round(number, precision) {
 
 function numeral(string:any):Numeral{
     if(typeof string == 'number')return new Numeral(string)
+    if(string == null)string = '0'
     return new Numeral(parseFloat(string.replace(/[^0-9\.]+/,'')))
 }
 

@@ -9,7 +9,7 @@ var url = 'mongodb://localhost:27017/company';
 var app = express();
 app.use(bodyParser.json());//for json encoded http body's
 app.use(bodyParser.urlencoded({ extended: false }));//for route parameters
-app.use(express.static(path.resolve(__dirname+'./../../client')));
+app.use(express.static('./'));
 
 var port = 8000;
 // var exampledefinition = JSON.parse(fs.readFileSync('./public/definition.json','utf8'));
@@ -36,6 +36,7 @@ mongoClient.connect(url,function(err,db){
     app.post('/api/:object', function(req, res){
         var collection = db.collection(req.params.object)
 
+        delete req.body._id
         collection.insert(req.body, function(err, result){
             if(err)res.send(err)
             res.send('success');
@@ -45,6 +46,7 @@ mongoClient.connect(url,function(err,db){
     app.put('/api/:object/:id', function(req, res){
         var collection = db.collection(req.params.object)
 
+        delete req.body._id
         collection.update({_id:new mongodb.ObjectID(req.params.id)}, {$set:req.body}, function(err, result){
             if(err)res.send(err)
             res.send('success');
@@ -61,7 +63,7 @@ mongoClient.connect(url,function(err,db){
     })
 
     app.all('/*', function(req, res, next) {
-        res.sendFile(path.resolve(__dirname+'./../../client/index.html'));
+        res.sendFile(path.resolve('index.html'));
     });
 });
 
