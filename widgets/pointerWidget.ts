@@ -7,6 +7,8 @@ class PointerWidget extends Widget<string>{
         
         var inputel = <HTMLInputElement>string2html('<input/>')
         this.element.appendChild(inputel)
+        var link = string2html(`<a>-></a>`) as HTMLAnchorElement
+        this.element.appendChild(link)
         
         inputel.addEventListener('input',(e) => {
             this.value.set(inputel.value)
@@ -14,6 +16,7 @@ class PointerWidget extends Widget<string>{
 
         this.value.onchange.listen((val) => {
             inputel.value = val
+            link.href = `/#${attribute.pointerType}/${val}`;
         })
     }   
 }

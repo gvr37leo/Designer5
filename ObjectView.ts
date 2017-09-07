@@ -3,10 +3,12 @@
 class ObjectView{
     element:Element
     definition:ObjDef
+    data
 
     constructor(element:Element,definition:ObjDef, object, id){
         this.element = element
         this.definition = definition
+        this.data = {};
 
         var savebtn = new Button(element, 'save',() => {
             fetch(`/api/${definition.name}/${id}`,{
@@ -14,7 +16,7 @@ class ObjectView{
                     'Content-Type': 'application/json'
                 },
                 method:'PUT',
-                body:JSON.stringify(data)
+                body:JSON.stringify(this.data)
             }).then((res) => {
                 return res.text()
             }).then((res) => {
@@ -41,6 +43,7 @@ class ObjectView{
         }).then((res) => {
             return res.json()
         }).then((res) => {
+            this.data = res;
             this.render(res)
         })
     }

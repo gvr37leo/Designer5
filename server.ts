@@ -39,7 +39,7 @@ mongoClient.connect(url,function(err,db){
         delete req.body._id
         collection.insert(req.body, function(err, result){
             if(err)res.send(err)
-            res.send('success');
+            else res.send('success');
         });
     })
 
@@ -49,7 +49,7 @@ mongoClient.connect(url,function(err,db){
         delete req.body._id
         collection.update({_id:new mongodb.ObjectID(req.params.id)}, {$set:req.body}, function(err, result){
             if(err)res.send(err)
-            res.send('success');
+                else res.send('success');
         })
     })
 
@@ -58,7 +58,7 @@ mongoClient.connect(url,function(err,db){
 
         collection.deleteOne({_id:new mongodb.ObjectID(req.params.id)}, function(err, result){
             if(err)res.send(err)
-            res.send('success');
+            else res.send('success');
         })
     })
 

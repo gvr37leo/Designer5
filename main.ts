@@ -93,24 +93,6 @@ var appDef = {
     }]
 }
 
-
-
-var data = [{
-    id:'1',
-    naam:'paul',
-    homeless:false,
-    birthday:'09/09/1994 12:00:00',
-    lengte:178.3,
-    vriend:'2'
-    },{
-    id:'2',
-    naam:'piet',
-    homeless:true,
-    birthday:'09/09/1998 12:00:00',
-    lengte:182.9,
-    vriend:'1'
-}]
-
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')
 

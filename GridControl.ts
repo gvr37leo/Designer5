@@ -25,13 +25,9 @@ class GridControl{
         
         this.table = string2html('<table id="table" style="width:100%;"></table>')
         this.element.appendChild(this.table)
-        var testdiv = document.querySelector('#test')
 
         this.appendHeader()
         
-        this.onchange.listen((val) => {
-            testdiv.innerHTML = JSON.stringify(this.data)
-        })
         
         fetch(`/api/${definition.name}`,{
             headers:{
