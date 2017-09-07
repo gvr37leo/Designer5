@@ -79,11 +79,11 @@ var appDef = {
                 type:'text'
             },{
                 name:'person',
-                type:'text',
+                type:'pointer',
                 pointerType:'person'
             },{
                 name:'bedrijf',
-                type:'text',
+                type:'pointer',
                 pointerType:'bedrijf'
             },{
                 name:'salaris',
