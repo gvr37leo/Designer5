@@ -128,4 +128,7 @@ var router = Router({
 
 router.init();
 
+function mod(number, modulus){
+    return ((number%modulus)+modulus)%modulus;
+}
 

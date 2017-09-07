@@ -79,7 +79,7 @@ class GridControl{
                 widget.value.set(data[rows][attribute.name])
                 widget.value.onchange.listen((val) => {
                     data[rows][attribute.name] = val;
-                    this.onchange.trigger(0)
+                    this.onchange.trigger(0,0)
                 })
                 
             }
@@ -136,7 +136,7 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
             widget = new DateWidget(element)
             break;
         case 'pointer':
-            widget = new PointerWidget(element, attr)
+            widget = new PointerWidget(element, attr, [1,2,3,4,5])
             break;
         default://text
             widget = new TextWidget(element)

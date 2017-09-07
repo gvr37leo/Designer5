@@ -17,14 +17,14 @@ class Box<T>{
         this.value = value
         if(old !== value){
             if(!silent){
-                this.onchange.trigger(this.value)
+                this.onchange.trigger(this.value, old)
             }
         }
     }
 }
 
 class EventSystem<T>{
-    callbacks: ((val:T) => void)[]
+    callbacks: ((val:T, old:T) => void)[]
 
     constructor(){
         this.callbacks = []
@@ -38,9 +38,9 @@ class EventSystem<T>{
         this.callbacks.splice(this.callbacks.findIndex(v => v === callback), 1)
     }
 
-    trigger(value:T){
+    trigger(value:T, old){
         for(var callback of this.callbacks){
-            callback(value)
+            callback(value, old)
         }
     }
 }
