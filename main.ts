@@ -2,6 +2,8 @@
 /// <reference path="ObjectView.ts" />
 /// <reference path="ObjectNewView.ts" />
 /// <reference path="Navbar.ts" />
+/// <reference path="utils.ts" />
+
 declare var Router:any
 
 class AppDef{
@@ -16,7 +18,8 @@ class ObjDef{
 class Attribute{
     name:string
     type:string
-    pointerType:string
+    pointerType:string //for pointer and array types
+    column
 }
 
 class Button{
@@ -53,11 +56,11 @@ var appDef = {
                 type:'pointer',
                 pointerType:'person'
             }
-            // ,{
-            //     type:'array',
-            //     pointerType:'persoonwerktBijBedrijf',
-            //     field:'person'
-            // }
+            ,{
+                type:'array',
+                pointerType:'persoonwerktBijBedrijf',
+                field:'person'
+            }
         ]
     },{
         name:'bedrijf',
@@ -132,8 +135,3 @@ var router = Router({
 });
 
 router.init();
-
-function mod(number, modulus){
-    return ((number%modulus)+modulus)%modulus;
-}
-

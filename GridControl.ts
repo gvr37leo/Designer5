@@ -48,6 +48,7 @@ class GridControl{
         var nameHeader = document.createElement('tr')
         this.table.appendChild(nameHeader)
         for(let attribute of this.definition.attributes){
+            if(attribute.type == 'array')continue
             var td = document.createElement('td')
             nameHeader.appendChild(td)
 
@@ -59,6 +60,7 @@ class GridControl{
         var searchHeader = document.createElement('tr')
         this.table.appendChild(searchHeader)
         for(let attribute of this.definition.attributes){
+            if(attribute.type == 'array')continue
             var td = document.createElement('td')
             searchHeader.appendChild(td)
 
@@ -71,6 +73,7 @@ class GridControl{
             var row = document.createElement('tr')
             this.table.appendChild(row)
             for(let attribute of this.definition.attributes){
+                if(attribute.type == 'array')continue
                 var td = document.createElement('td')
                 row.appendChild(td)
 
@@ -153,4 +156,4 @@ function string2html(string):HTMLElement{
     div.innerHTML = string;
     return div.children[0] as HTMLElement;
 }
-var types = ['text','boolean','number','date','pointer']
+var types = ['text','boolean','number','date','pointer','array']

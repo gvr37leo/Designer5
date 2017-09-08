@@ -7,6 +7,8 @@ class ObjectNewView{
         var data = {}
         this.element = element
 
+        this.element.appendChild(string2html(`<a href="/#${definition.name}">Up</a>`))
+
         var savebtn = new Button(element, 'create',() => {
             fetch(`/api/${definition.name}`,{
                 headers:{
