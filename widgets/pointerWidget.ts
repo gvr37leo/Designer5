@@ -32,8 +32,6 @@ class PointerWidget extends Widget<string>{
 
         that.drops = []
 
-        
-
         that.onselect.listen(() =>{
             that.dropper.style.display = 'none'
         })
@@ -78,17 +76,9 @@ class PointerWidget extends Widget<string>{
             }
         })
 
-        fetch(`/api/${attribute.pointerType}`,{
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            method:'GET',
-        }).then((res) => {
-            return res.json()
-        }).then((res) => {
+        getlist(attribute.pointerType, (res) => {
             that.render(res)
         })
-        
     }
 
     render(options){

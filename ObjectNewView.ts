@@ -10,17 +10,8 @@ class ObjectNewView{
         this.element.appendChild(string2html(`<a href="/#${definition.name}">Up</a>`))
 
         var savebtn = new Button(element, 'create',() => {
-            fetch(`/api/${definition.name}`,{
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                method:'POST',
-                body:JSON.stringify(data)
-            }).then((res) => {
-                return res.text()
-            })
-            .then((res) => {
-                console.log(res)
+
+            create(definition.name,data,() => {
                 router.setRoute(definition.name)
             })
         })

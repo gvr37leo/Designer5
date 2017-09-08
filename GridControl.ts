@@ -28,20 +28,10 @@ class GridControl{
 
         this.appendHeader()
         
-        
-        fetch(`/api/${definition.name}`,{
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            method:'GET',
-        }).then((res) => {
-            return res.json()
-        }).then((res) => {
+        getlist(definition.name,(res) => {
             this.data = res
             this.appendBody(res)
         })
-
-        
     }
 
     appendHeader(){
