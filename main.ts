@@ -53,6 +53,11 @@ var appDef = {
                 type:'pointer',
                 pointerType:'person'
             }
+            // ,{
+            //     type:'array',
+            //     pointerType:'persoonwerktBijBedrijf',
+            //     field:'person'
+            // }
         ]
     },{
         name:'bedrijf',

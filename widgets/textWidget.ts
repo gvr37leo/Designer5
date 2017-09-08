@@ -4,7 +4,7 @@
 class TextWidget extends Widget<string>{
     constructor(element:HTMLElement){
         super(element)
-
+        var that  = this;
         var inputel = <HTMLInputElement>string2html('<input/>')
         this.element.appendChild(inputel)
         

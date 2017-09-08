@@ -136,7 +136,10 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
             widget = new DateWidget(element)
             break;
         case 'pointer':
-            widget = new PointerWidget(element, attr, [1,2,3,4,5])
+            
+            
+
+            widget = new PointerWidget(element, attr, (val) => val.naam)
             break;
         default://text
             widget = new TextWidget(element)
