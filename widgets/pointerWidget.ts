@@ -2,8 +2,8 @@
 
 class PointerWidget extends Widget<string>{
     attribute: Attribute;
-    displayValue: Box<number>;
-    selected: Box<number>
+    internalValue: Box<number>;
+    selectedindex: Box<number>
     value:Box<any>
     onselect:EventSystem<any>
     container:HTMLElement
@@ -12,7 +12,8 @@ class PointerWidget extends Widget<string>{
     link:HTMLAnchorElement
     drops:Element[]
     displayer:(val) => string
-    data
+    infoer:(val) => string
+    optionslist
     template:string = `
         <span>
             <span id="container" style="position:relative; display:inline-block;"> 
@@ -23,47 +24,52 @@ class PointerWidget extends Widget<string>{
         </span>
 ` 
 
-    constructor(element:HTMLElement, attribute:Attribute, displayer:(val) => string){
-        //werkt nog niet helemaal
-        //moet een waarde hebben voor value die wordt bijgehouden maar niet gebruikt
-
+    constructor(element:HTMLElement, attribute:Attribute, infoer:(val) => string, displayer:(val) => string){
         super(element)
         var that = this
-        this.displayValue = new Box(0)
-
         this.attribute = attribute
         this.displayer = displayer
-        this.selected = new Box(0)
-        this.onselect = new EventSystem()
-        this.element = element
-        this.data = []
+
         this.element.appendChild(string2html(this.template))
         this.container = this.element.querySelector('#container') as HTMLElement
         this.link = this.element.querySelector('#link') as HTMLAnchorElement
         this.input = this.element.querySelector('#input') as HTMLInputElement
         this.dropper = this.element.querySelector('#dropper') as HTMLElement
         this.drops = []
+        
+        this.internalValue = new Box(0)
+        this.selectedindex = new Box<number>(0)
+        this.onselect = new EventSystem()
 
-        this.displayValue.onchange.listen((val) => {
+        this.internalValue.onchange.listen((val) => {
             that.input.value = this.displayer(val)
+            this.value.set(val._id)
         })
 
+        var displayHasBeenSet = false
         this.value.onchange.listen((val) => {
-            //now is setup that only triggering from outside call this function:bad
-            //should probably give options in constructor instead of getting them in this widget
-            //is also desing wise better
-            getobject(attribute.pointerType,val,(data) => {
-                that.displayValue.set(data)
-            })
+            if(!displayHasBeenSet){
+                displayHasBeenSet = false
+                getobject(attribute.pointerType,val,(data) => {
+                    that.input.value = this.displayer(data)
+                })
+            }
+            //special case
+            //do something for first time setting
+
             that.link.href = `/#${attribute.pointerType}/${val}`
+
         })
+
+        
+        
 
         this.onselect.listen(() =>{
             that.dropper.style.display = 'none'
         })
 
-        this.selected.onchange.listen((val, old) => {
-            that.value.set(that.data[val])
+        this.selectedindex.onchange.listen((val, old) => {//for keydowns
+            that.internalValue.set(that.optionslist[val])
 
             that.drops[val].classList.add('selected')
             that.drops[old].classList.remove('selected')
@@ -84,12 +90,12 @@ class PointerWidget extends Widget<string>{
 
         this.input.addEventListener('keydown', (e) => {
             if(e.keyCode == 87 || e.keyCode == 38){
-                that.selected.set(mod(that.selected.get() - 1 ,that.data.length))
+                that.selectedindex.set(mod(that.selectedindex.get() - 1 ,that.optionslist.length))
                 that.dropper.style.display = 'block'
             }
 
             if(e.keyCode == 83 || e.keyCode == 40){
-                that.selected.set(mod(that.selected.get() + 1 ,that.data.length))
+                that.selectedindex.set(mod(that.selectedindex.get() + 1 ,that.optionslist.length))
                 that.dropper.style.display = 'block'
             }
 
@@ -98,19 +104,19 @@ class PointerWidget extends Widget<string>{
             }
         })
 
+
         getlist(attribute.pointerType, (res) => {
+            this.optionslist = res
             that.render(res)
         })
     }
 
-    render(options){
+    render(optionlist){
         var that = this;
-        for(let option of options){
+        for(let option of optionlist){
             var drop = string2html(`<div class="drop">${that.displayer(option)}</div>`)
             drop.addEventListener('click',() => {
-                that.link.href = `/#${this.attribute.pointerType}/${option._id}`
-                this.value.set(option._id, true)
-                this.displayValue.set(option)
+                this.internalValue.set(option)
                 this.onselect.trigger(option._id,0)
             })
             this.drops.push(drop)

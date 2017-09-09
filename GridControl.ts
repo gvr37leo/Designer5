@@ -134,7 +134,7 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
             
             
 
-            widget = new PointerWidget(element, attr, (val) => val.naam)
+            widget = new PointerWidget(element, attr, (val) => val._id, (val) => val.naam)
             break;
         default://text
             widget = new TextWidget(element)
