@@ -1,32 +1,27 @@
 /// <reference path="main.ts" />
+/// <reference path="DetailView.ts" />
 
-class ObjectNewView{
-    element:Element
+class ObjectNewView extends DetailView{
 
     constructor(element:Element,definition:ObjDef){
-        var data = {}
-        this.element = element
-
-        this.element.appendChild(string2html(`<a href="/#${definition.name}">Up</a>`))
-
-        var savebtn = new Button(element, 'create',() => {
-
-            create(definition.name,data,() => {
+        super(element,definition)
+        this.data = {}
+        
+        var savebtn = new Button(this.buttonContainer, 'create',() => {
+            create(definition.name,this.data,() => {
                 router.setRoute(definition.name)
             })
         })
 
-        for(let attribute of definition.attributes){
+        this.render(this.data)
+    }
+
+    render(data){
+        for(let attribute of this.definition.attributes){
             if(attribute.name == '_id')continue;
-            var container = string2html('<div></div>')
-            container.appendChild(string2html(`<span>${attribute.name}</span>`))
-            var widget = getWidget(attribute, container)
-            this.element.appendChild(container)
+            if(attribute.type == 'array') continue;
 
-            widget.value.onchange.listen((val) => {
-                data[attribute.name] = val;
-            })
+            this.addWidget(attribute)
         }
-
     }
 }

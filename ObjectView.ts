@@ -1,40 +1,11 @@
 /// <reference path="main.ts" />
+/// <reference path="DetailView.ts" />
 
-class ObjectView{
-    fieldContainer: Element;
-    buttonContainer: Element;
-    gridcontainer: Element;
-    tabs: Element;
-    arrayContainer: Element;
-    element: Element
-    definition:ObjDef
-    data
-    template:string = `
-        <div>
-            <a id="uplink">Up</a>
-            <span id="buttoncontainer"></span>
-            
-            <div id="fieldcontainer"></div>
-            <div><div id="tabs"></div><div id="gridcontainer"></div></div>
-        </div>
-    `
 
-    constructor(element:Element,definition:ObjDef, object, id){
-        this.element = element
-        this.definition = definition
-        this.data = {};
-        
+class ObjectView extends DetailView{
 
-        this.element.appendChild(string2html(this.template))
-        this.fieldContainer = this.element.querySelector('#fieldcontainer')
-        this.gridcontainer = this.element.querySelector('#gridcontainer')
-        this.tabs = this.element.querySelector('#tabs')
-        
-        var uplink = this.element.querySelector('#uplink') as HTMLAnchorElement
-        uplink.href = `/#${this.definition.name}`
-
-        this.buttonContainer = this.element.querySelector('#buttoncontainer')
-
+    constructor(element:Element,definition:ObjDef, id){
+        super(element, definition)
         var savebtn = new Button(this.buttonContainer, 'save', () => {
             update(definition.name,id,this.data,() => {
 
@@ -49,6 +20,12 @@ class ObjectView{
         getobject(definition.name,id,(res) => {
             this.data = res;
             this.render(res)
+
+            for(var key of this.widgetMap){
+                var widget = key[1]
+                var fieldname = key[0]
+                widget.value.set(res[fieldname]) 
+            }
         })
 
         for(let attribute of this.definition.attributes){
@@ -70,16 +47,7 @@ class ObjectView{
                     }))
                 })
             }else{
-                var container = string2html('<div></div>')
-                container.appendChild(string2html(`<span>${attribute.name}</span>`))
-                var widget = getWidget(attribute, container)
-
-                this.fieldContainer.appendChild(container)
-    
-                widget.value.onchange.listen((val) => {
-                    data[attribute.name] = val;
-                })
-                widget.value.set(data[attribute.name])
+                this.addWidget(attribute)
             }
         }
     }

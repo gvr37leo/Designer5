@@ -135,7 +135,7 @@ var router = Router({
         var objdefinition = appDef.objdefinitions.find((obj) => {
             return obj.name == object
         })
-        new ObjectView(element,objdefinition as ObjDef,object,id)
+        new ObjectView(element,objdefinition as ObjDef,id)
     },
 });
 

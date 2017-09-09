@@ -1,7 +1,9 @@
 /// <reference path="../widget.ts" />
 
 class PointerWidget extends Widget<string>{
-    selected:Box<number>
+    attribute: Attribute;
+    displayValue: Box<number>;
+    selected: Box<number>
     value:Box<any>
     onselect:EventSystem<any>
     container:HTMLElement
@@ -12,35 +14,55 @@ class PointerWidget extends Widget<string>{
     displayer:(val) => string
     data
     template:string = `
-        <div>
-            <span id="container" style="position:relative"> 
+        <span>
+            <span id="container" style="position:relative; display:inline-block;"> 
                 <input id="input" type="text"> 
                 <div id="dropper" class="dropper"></div> 
             </span>
             <a id="link">-></a>
-        </div>
+        </span>
 ` 
 
     constructor(element:HTMLElement, attribute:Attribute, displayer:(val) => string){
+        //werkt nog niet helemaal
+        //moet een waarde hebben voor value die wordt bijgehouden maar niet gebruikt
+
         super(element)
         var that = this
-        that.displayer = displayer
-        that.selected = new Box(0)
-        that.onselect = new EventSystem()
-        that.element = element
-        that.data = []
+        this.displayValue = new Box(0)
+
+        this.attribute = attribute
+        this.displayer = displayer
+        this.selected = new Box(0)
+        this.onselect = new EventSystem()
+        this.element = element
+        this.data = []
         this.element.appendChild(string2html(this.template))
         this.container = this.element.querySelector('#container') as HTMLElement
-        that.link = this.element.querySelector('#link') as HTMLAnchorElement
-        that.input = this.element.querySelector('#input') as HTMLInputElement
-        that.dropper = this.element.querySelector('#dropper') as HTMLElement
-        that.drops = []
+        this.link = this.element.querySelector('#link') as HTMLAnchorElement
+        this.input = this.element.querySelector('#input') as HTMLInputElement
+        this.dropper = this.element.querySelector('#dropper') as HTMLElement
+        this.drops = []
 
-        that.onselect.listen(() =>{
+        this.displayValue.onchange.listen((val) => {
+            that.input.value = this.displayer(val)
+        })
+
+        this.value.onchange.listen((val) => {
+            //now is setup that only triggering from outside call this function:bad
+            //should probably give options in constructor instead of getting them in this widget
+            //is also desing wise better
+            getobject(attribute.pointerType,val,(data) => {
+                that.displayValue.set(data)
+            })
+            that.link.href = `/#${attribute.pointerType}/${val}`
+        })
+
+        this.onselect.listen(() =>{
             that.dropper.style.display = 'none'
         })
 
-        that.selected.onchange.listen((val, old) => {
+        this.selected.onchange.listen((val, old) => {
             that.value.set(that.data[val])
 
             that.drops[val].classList.add('selected')
@@ -48,22 +70,19 @@ class PointerWidget extends Widget<string>{
         })
 
 
-        that.value.onchange.listen((val) => {
-            that.input.value = val;
-            this.link.href = `/#${attribute.pointerType}/${val}`
-        })
+        
 
-        that.input.addEventListener('focus', () => {
+        this.input.addEventListener('focus', () => {
             that.dropper.style.display = 'block'
         })
 
         document.addEventListener('click', (e) => {
-            if(!this.container.contains(e.target as any)){
+            if(!that.container.contains(e.target as any)){
                 that.dropper.style.display = 'none'
             }
         })
 
-        that.input.addEventListener('keydown', (e) => {
+        this.input.addEventListener('keydown', (e) => {
             if(e.keyCode == 87 || e.keyCode == 38){
                 that.selected.set(mod(that.selected.get() - 1 ,that.data.length))
                 that.dropper.style.display = 'block'
@@ -89,7 +108,9 @@ class PointerWidget extends Widget<string>{
         for(let option of options){
             var drop = string2html(`<div class="drop">${that.displayer(option)}</div>`)
             drop.addEventListener('click',() => {
-                this.value.set(option._id)
+                that.link.href = `/#${this.attribute.pointerType}/${option._id}`
+                this.value.set(option._id, true)
+                this.displayValue.set(option)
                 this.onselect.trigger(option._id,0)
             })
             this.drops.push(drop)
