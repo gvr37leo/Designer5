@@ -50,6 +50,14 @@ class ObjectView{
             this.data = res;
             this.render(res)
         })
+
+        for(let attribute of this.definition.attributes){
+            if(attribute.type == 'array'){
+                new GridControl(this.gridcontainer,appDef.objdefinitions.find((val) => {
+                    return val.name == attribute.pointerType
+                }))
+            }
+        }
     }
 
     render(data){
@@ -57,8 +65,7 @@ class ObjectView{
             if(attribute.type == 'array'){
                 new Button(this.tabs,attribute.pointerType,() => {
                     this.gridcontainer.innerHTML = ''
-                    var def = appDef as AppDef
-                    new GridControl(this.gridcontainer,def.objdefinitions.find((val) => {
+                    new GridControl(this.gridcontainer,appDef.objdefinitions.find((val) => {
                         return val.name == attribute.pointerType
                     }))
                 })

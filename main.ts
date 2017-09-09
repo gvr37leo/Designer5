@@ -32,7 +32,7 @@ class Button{
     }
 }
 
-var appDef = {
+var appDef:AppDef = {
     objdefinitions:[{
         name:'person',
         attributes:[
@@ -77,7 +77,12 @@ var appDef = {
             },{
                 name:'rating',
                 type:'number'
-            },
+            }
+            ,{
+                type:'array',
+                pointerType:'persoonwerktBijBedrijf',
+                field:'bedrijf'
+            }
         ]
     },{
         name:'persoonwerktBijBedrijf',
@@ -99,7 +104,7 @@ var appDef = {
             }
         ]
     }]
-}
+} as AppDef
 
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')

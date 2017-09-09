@@ -7,7 +7,8 @@
 
 
 class GridControl{
-    element:Element
+    filter: any;
+    element: Element
     data
     definition:ObjDef
     table
@@ -17,6 +18,7 @@ class GridControl{
         this.onchange = new EventSystem()
         this.element = element;
         this.definition = definition
+        // this.filter = options.filter
         
         //create link
         var createspan = document.createElement('span')

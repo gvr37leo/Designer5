@@ -4,12 +4,22 @@ class PointerWidget extends Widget<string>{
     selected:Box<number>
     value:Box<any>
     onselect:EventSystem<any>
+    container:HTMLElement
     input:HTMLInputElement
     dropper:HTMLElement
+    link:HTMLAnchorElement
     drops:Element[]
     displayer:(val) => string
     data
-
+    template:string = `
+        <span  style="position:relative">
+            <div id="container">
+                <input id="input" type="text">
+                <div id="dropper" class="dropper"></div>
+            </div>
+            <a id="link">-></a>
+        </span>
+    `
 
     constructor(element:HTMLElement, attribute:Attribute, displayer:(val) => string){
         super(element)
@@ -19,17 +29,11 @@ class PointerWidget extends Widget<string>{
         that.onselect = new EventSystem()
         that.element = element
         that.data = []
-        var link = string2html(`<a>-></a>`) as HTMLAnchorElement
-
-        var container = string2html('<span id="test" style="position:relative"></span>')
-
-        that.input = string2html('<input id="input" type="text">') as HTMLInputElement;
-        that.dropper = string2html('<div id="dropper" class="dropper"></div>') as HTMLElement
-        container.appendChild(that.input)
-        container.appendChild(that.dropper)
-        that.element.appendChild(container)
-        that.element.appendChild(link)
-
+        this.element.appendChild(string2html(this.template))
+        this.container = this.element.querySelector('#container') as HTMLElement
+        that.link = this.element.querySelector('#link') as HTMLAnchorElement
+        that.input = this.element.querySelector('#input') as HTMLInputElement
+        that.dropper = this.element.querySelector('#dropper') as HTMLElement
         that.drops = []
 
         that.onselect.listen(() =>{
@@ -46,7 +50,7 @@ class PointerWidget extends Widget<string>{
 
         that.value.onchange.listen((val) => {
             that.input.value = val;
-            link.href = `/#${attribute.pointerType}/${val}`
+            this.link.href = `/#${attribute.pointerType}/${val}`
         })
 
         that.input.addEventListener('focus', () => {
@@ -54,13 +58,12 @@ class PointerWidget extends Widget<string>{
         })
 
         document.addEventListener('click', (e) => {
-            if(!container.contains(e.target as any)){
+            if(!this.container.contains(e.target as any)){
                 that.dropper.style.display = 'none'
             }
         })
 
         that.input.addEventListener('keydown', (e) => {
-            e.preventDefault()
             if(e.keyCode == 87 || e.keyCode == 38){
                 that.selected.set(mod(that.selected.get() - 1 ,that.data.length))
                 that.dropper.style.display = 'block'
