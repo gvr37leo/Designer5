@@ -82,16 +82,8 @@ class GridControl{
             // save button
             var savetd = document.createElement('td')
             var savebtn = new Button(savetd, 'save',() => {
-                fetch(`/api/${this.definition.name}/${data[rows]._id}`,{
-                    headers:{
-                        'Content-Type': 'application/json'
-                    },
-                    method:'PUT',
-                    body:JSON.stringify(data[rows])
-                }).then((res) => {
-                    return res.text()
-                }).then((res) => {
-                    console.log(res)
+                update(this.definition.name,data[rows]._id,data[rows],() => {
+                    
                 })
             })
             row.appendChild(savetd)
@@ -99,13 +91,8 @@ class GridControl{
             // delete button
             var deltd = document.createElement('td')
             var deletebutton = new Button(deltd,'delete',() => {
-                fetch(`/api/${this.definition.name}/${data[rows]._id}`,{
-                    method:'DELETE',
-                }).then((res) => {
-                    return res.text()
-                })
-                .then((res) => {
-                    console.log(res)
+                del(this.definition.name,data[rows]._id,() => {
+
                 })
             })
             row.appendChild(deltd)

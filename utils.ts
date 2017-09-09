@@ -39,6 +39,7 @@ function create(pointertype,data,callback:() => void){
         return res.text()
     })
     .then((res) => {
+        toastr.success('created')
         callback()
     })
 }
@@ -50,6 +51,7 @@ function del(pointertype, id,callback:() => void){
         return res.text()
     })
     .then((res) => {
+        toastr.success('deleted')
         callback()
     })
 }
@@ -64,6 +66,7 @@ function update(pointertype,id,data,callback:() => void){
     }).then((res) => {
         return res.text()
     }).then((res) => {
+        toastr.success('saved')
         callback()
     })
 }

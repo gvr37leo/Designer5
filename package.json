@@ -4,6 +4,7 @@
   "description": "gridcontrol",
   "main": "index.js",
   "dependencies": {
+    "@types/toastr": "^2.1.35",
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
     "mongodb": "^2.2.31"

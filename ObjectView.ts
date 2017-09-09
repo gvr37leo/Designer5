@@ -8,7 +8,7 @@ class ObjectView extends DetailView{
         super(element, definition)
         var savebtn = new Button(this.buttonContainer, 'save', () => {
             update(definition.name,id,this.data,() => {
-
+                
             })
         })
 

@@ -48,14 +48,15 @@ class PointerWidget extends Widget<string>{
 
         var displayHasBeenSet = false
         this.value.onchange.listen((val) => {
+            //special case
+            //set display for first time set
             if(!displayHasBeenSet){
                 displayHasBeenSet = false
                 getobject(attribute.pointerType,val,(data) => {
                     that.input.value = this.displayer(data)
                 })
             }
-            //special case
-            //do something for first time setting
+            
 
             that.link.href = `/#${attribute.pointerType}/${val}`
 
