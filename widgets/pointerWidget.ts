@@ -12,14 +12,14 @@ class PointerWidget extends Widget<string>{
     displayer:(val) => string
     data
     template:string = `
-        <span  style="position:relative">
-            <div id="container">
-                <input id="input" type="text">
-                <div id="dropper" class="dropper"></div>
-            </div>
+        <div>
+            <span id="container" style="position:relative"> 
+                <input id="input" type="text"> 
+                <div id="dropper" class="dropper"></div> 
+            </span>
             <a id="link">-></a>
-        </span>
-    `
+        </div>
+` 
 
     constructor(element:HTMLElement, attribute:Attribute, displayer:(val) => string){
         super(element)
