@@ -1,3 +1,6 @@
+/// <reference path="main.ts" />
+
+
 function mod(number, modulus){
     return ((number%modulus)+modulus)%modulus;
 }
@@ -117,4 +120,8 @@ function createTableCell(row){
     var td = document.createElement('td')
     row.appendChild(td)
     return td
+}
+
+function findRefs(def:AppDef){
+
 }

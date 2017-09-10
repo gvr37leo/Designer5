@@ -7,7 +7,7 @@ class ObjectNewView extends DetailView{
         super(element,definition)
         this.data = {}
         
-        var savebtn = new Button(this.buttonContainer, 'create',() => {
+        var savebtn = new Button(this.buttonContainer, 'create', 'btn btn-success',() => {
             create(definition.name,this.data,() => {
                 router.setRoute(definition.name)
             })

@@ -2,18 +2,25 @@
 
 
 class BooleanWidget extends Widget<boolean>{
+    inputel: HTMLInputElement;
+
+
     constructor(element:HTMLElement){
         super(element)
         
-        var inputel = <HTMLInputElement>string2html('<input type="checkbox"/>')
-        this.element.appendChild(inputel)
+        this.inputel = string2html('<input type="checkbox"/>') as HTMLInputElement
+        this.element.appendChild(this.inputel)
         
-        inputel.addEventListener('change',(e) => {
-            this.value.set(inputel.checked as any)
+        this.inputel.addEventListener('change',(e) => {
+            this.value.set(this.inputel.checked as any)
         })
 
         this.value.onchange.listen((val) => {
-            inputel.checked = val
+            this.inputel.checked = val
         })
-    }   
+    }
+
+    handleSetReadOnly(val: boolean) {
+        this.inputel.readOnly = val;
+    }
 }

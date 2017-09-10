@@ -5,11 +5,15 @@ class DetailView{
     definition: ObjDef;
     template: string = `
         <div>
-            <a id="uplink">Up</a>
+            <a class="btn btn-default" id="uplink">Up</a>
             <span id="buttoncontainer"></span>
             
             <div id="fieldcontainer"></div>
-            <div><div id="tabs"></div><div id="gridcontainer"></div></div>
+            
+            <div class="arraycontainer" >
+                <div id="tabs"></div>
+                <div id="gridcontainer"></div>
+            </div>
         </div>`
     element:Element
     fieldContainer: Element;
@@ -36,7 +40,7 @@ class DetailView{
 
     addWidget(attribute:Attribute){
         var container = string2html('<div></div>')
-        container.appendChild(string2html(`<span>${attribute.name}</span>`))
+        container.appendChild(string2html(`<div><b>${attribute.name}</b></div>`))
         var widget = getWidget(attribute, container)
 
         this.fieldContainer.appendChild(container)

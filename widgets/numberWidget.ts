@@ -152,5 +152,9 @@ class NumberWidget extends Widget<number>{
         this.element.addEventListener('blur', (e) => {
             inputel.value = this.formatter()
         })
-    } 
+    }
+    
+    handleSetReadOnly(val: boolean) {
+        
+    }
 }

@@ -25,8 +25,8 @@ class Attribute{
 class Button{
     btnElement:Element
 
-    constructor(element:Element, text:string, callback:() => void){
-        this.btnElement = string2html(`<button>${text}</button>`)
+    constructor(element:Element, text:string, classes:string, callback:() => void){
+        this.btnElement = string2html(`<button class="button ${classes}">${text}</button>`)
         element.appendChild(this.btnElement)
         this.btnElement.addEventListener('click', callback)
     }

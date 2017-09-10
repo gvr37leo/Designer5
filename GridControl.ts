@@ -8,6 +8,7 @@
 var types = ['text','boolean','number','date','pointer','array']
 
 class GridControl{
+    gridtitle: Element;
     tablebody: Element;
     titlerow: Element;
     searchrow: Element;
@@ -18,9 +19,10 @@ class GridControl{
     definition:ObjDef
     onchange:EventSystem<any>
     template:string = `
-        <div>
-            <a id="createlink">create</a>
-            <table id="table" style="width:100%;">
+        <div class="grid">
+            <h2 id="gridtitle"></h2>
+            <a class="btn btn-success createbtn" id="createlink">create</a>
+            <table id="table" class="table table-striped" style="width:100%;">
                 <thead>
                     <tr id="titlerow"></tr>
                     <tr id="searchrow"></tr>
@@ -40,11 +42,13 @@ class GridControl{
         this.filter = filter
 
         this.element.appendChild(string2html(this.template))
+        this.gridtitle = this.element.querySelector('#gridtitle')
         this.tablebody = this.element.querySelector('#tablebody') 
         this.titlerow = this.element.querySelector('#titlerow')
         this.searchrow = this.element.querySelector('#searchrow')
         this.createlink = this.element.querySelector('#createlink') as HTMLAnchorElement
         this.createlink.href = `/#${this.definition.name}/new`
+        this.gridtitle.innerHTML = this.definition.name
 
         this.appendHeader()
         
@@ -59,8 +63,7 @@ class GridControl{
             if(attribute.type == 'array')continue;
 
             //titlerow
-            var columnTitle = new TextWidget(createTableCell(this.titlerow))
-            columnTitle.value.set(attribute.name)
+            createTableCell(this.titlerow).appendChild(string2html(`<b>${attribute.name}</b>`))
 
             //columnrow
             var searchField = new TextWidget(createTableCell(this.searchrow))
@@ -74,10 +77,13 @@ class GridControl{
             this.tablebody.appendChild(row)
 
             for(let attribute of this.definition.attributes){
-                if(attribute.type == 'array')continue
-
+                if(attribute.type == 'array')continue;
                 var widget = getWidget(attribute,createTableCell(row))
                 widget.value.set(data[rows][attribute.name])
+
+                if(attribute.name == '_id'){
+                    widget.readonly.set(true);
+                }
                 widget.value.onchange.listen((val) => {
                     data[rows][attribute.name] = val;
                     this.onchange.trigger(0,0)
@@ -85,17 +91,17 @@ class GridControl{
             }
 
             // save button
-            var savebtn = new Button(createTableCell(row), 'save',() => {
+            var savebtn = new Button(createTableCell(row), 'save', 'btn btn-success',() => {
                 update(this.definition.name,data[rows]._id,data[rows],() => {})
             })
 
             // delete button
-            var deletebutton = new Button(createTableCell(row),'delete',() => {
+            var deletebutton = new Button(createTableCell(row),'delete', 'btn btn-danger',() => {
                 del(this.definition.name,data[rows]._id,() => {})
             })
 
             //inspect link
-            createTableCell(row).appendChild(string2html(`<a href="/#${this.definition.name}/${data[rows]._id}">inspect</a>`))
+            createTableCell(row).appendChild(string2html(`<a class="btn btn-info" href="/#${this.definition.name}/${data[rows]._id}">inspect</a>`))
         }
     }
 }

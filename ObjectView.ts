@@ -8,13 +8,13 @@ class ObjectView extends DetailView{
         super(element, definition)
         var that = this
 
-        var savebtn = new Button(this.buttonContainer, 'save', () => {
+        var savebtn = new Button(this.buttonContainer, 'save', 'btn btn-success', () => {
             update(definition.name,id,that.data,() => {
                 
             })
         })
 
-        var deletebtn = new Button(that.buttonContainer, 'delete', () => {
+        var deletebtn = new Button(that.buttonContainer, 'delete', 'btn btn-danger', () => {
             del(definition.name,id,() => {
             })
         })
@@ -50,7 +50,7 @@ class ObjectView extends DetailView{
 
         for(let attribute of this.definition.attributes){
             if(attribute.type == 'array'){
-                new Button(this.tabs,attribute.pointerType,() => {
+                new Button(this.tabs, attribute.pointerType, 'btn btn-default',() => {
                     this.gridcontainer.innerHTML = ''
                     new GridControl(this.gridcontainer,appDef.objdefinitions.find((val) => {
                         return val.name == attribute.pointerType

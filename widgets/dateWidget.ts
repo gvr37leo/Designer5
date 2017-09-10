@@ -15,5 +15,9 @@ class DateWidget extends Widget<string>{
         this.value.onchange.listen((val) => {
             inputel.value = val
         })
-    }   
+    }
+    
+    handleSetReadOnly(val: boolean) {
+        
+    }
 }

@@ -2,18 +2,25 @@
 
 
 class TextWidget extends Widget<string>{
-    constructor(element:HTMLElement){
+    inputel: HTMLInputElement;
+
+    constructor(element: HTMLElement) {
         super(element)
         var that  = this;
-        var inputel = <HTMLInputElement>string2html('<input/>')
-        this.element.appendChild(inputel)
+        this.inputel = string2html('<input/>') as HTMLInputElement
+        this.element.appendChild(this.inputel)
         
-        inputel.addEventListener('input',(e) => {
-            this.value.set(inputel.value)
+        this.inputel.addEventListener('input',(e) => {
+            that.value.set(that.inputel.value)
         })
 
         this.value.onchange.listen((val) => {
-            inputel.value = val
+            that.inputel.value = val
         })
-    }   
+    }
+    
+    handleSetReadOnly(val: boolean) {
+        var that = this
+        that.inputel.readOnly = val;
+    }
 }

@@ -15,14 +15,13 @@ class PointerWidget extends Widget<string>{
     infoer:(val) => string
     optionslist
     template:string = `
-        <span>
-            <span id="container" style="position:relative; display:inline-block;"> 
+        <div>
+            <div id="container" style="position:relative; display:inline-block;"> 
                 <input id="input" type="text"> 
                 <div id="dropper" class="dropper"></div> 
-            </span>
-            <a id="link">-></a>
-        </span>
-` 
+            </div>
+            <a class="btn btn-info" id="link">-></a>
+        </div>` 
 
     constructor(element:HTMLElement, attribute:Attribute, infoer:(val) => string, displayer:(val) => string){
         super(element)
@@ -90,12 +89,12 @@ class PointerWidget extends Widget<string>{
         })
 
         this.input.addEventListener('keydown', (e) => {
-            if(e.keyCode == 87 || e.keyCode == 38){
+            if(e.keyCode == 38){
                 that.selectedindex.set(mod(that.selectedindex.get() - 1 ,that.optionslist.length))
                 that.dropper.style.display = 'block'
             }
 
-            if(e.keyCode == 83 || e.keyCode == 40){
+            if(e.keyCode == 40){
                 that.selectedindex.set(mod(that.selectedindex.get() + 1 ,that.optionslist.length))
                 that.dropper.style.display = 'block'
             }
@@ -125,4 +124,8 @@ class PointerWidget extends Widget<string>{
             this.dropper.appendChild(drop)
         }
     }
+
+    handleSetReadOnly(val: boolean) {
+        
+            }
 }
