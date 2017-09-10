@@ -114,14 +114,14 @@ var navbar = new Navbar(navbarContainer,appDef as AppDef)
 var router = Router({
     "":() => {
         element.innerHTML = ''
-        new GridControl(element, appDef.objdefinitions[0] as ObjDef)
+        new GridControl(element, appDef.objdefinitions[0] as ObjDef,{})
     },
     ":object":(object) => {
         element.innerHTML = ''
         var objdefinition = appDef.objdefinitions.find((obj) => {
             return obj.name == object
         })
-        new GridControl(element, objdefinition as ObjDef)
+        new GridControl(element, objdefinition as ObjDef,{})
     },
     ":object/new":(object) => {
         element.innerHTML = ''

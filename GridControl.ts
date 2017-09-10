@@ -32,10 +32,12 @@ class GridControl{
         </div>
     `
 
-    constructor(element:Element, definition:ObjDef){
+    constructor(element:Element, definition:ObjDef, filter){
+        var that = this
         this.onchange = new EventSystem()
         this.element = element;
         this.definition = definition
+        this.filter = filter
 
         this.element.appendChild(string2html(this.template))
         this.tablebody = this.element.querySelector('#tablebody') 
@@ -46,9 +48,9 @@ class GridControl{
 
         this.appendHeader()
         
-        getlist(definition.name,(res) => {
-            this.data = res
-            this.appendBody(res)
+        getlistfiltered(definition.name,this.filter,(res) => {
+            that.data = res
+            that.appendBody(res)
         })
     }
 
@@ -73,10 +75,8 @@ class GridControl{
 
             for(let attribute of this.definition.attributes){
                 if(attribute.type == 'array')continue
-                var td = document.createElement('td')
-                row.appendChild(td)
 
-                var widget = getWidget(attribute,td)
+                var widget = getWidget(attribute,createTableCell(row))
                 widget.value.set(data[rows][attribute.name])
                 widget.value.onchange.listen((val) => {
                     data[rows][attribute.name] = val;

@@ -43,6 +43,20 @@ function getlist(pointertype,callback:(data) => void){
     })
 }
 
+function getlistfiltered(pointertype,filter,callback:(data) => void){
+    fetch(`/api/search/${pointertype}`,{
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        method:'POST',
+        body:JSON.stringify(filter)
+    }).then((res) => {
+        return res.json()
+    }).then((res) => {
+        callback(res)
+    })
+}
+
 function getobject(pointertype,id,callback:(data) => void){
     fetch(`/api/${pointertype}/${id}`,{
         headers:{

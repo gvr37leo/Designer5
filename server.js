@@ -1,5 +1,4 @@
 "use strict";
-exports.__esModule = true;
 var express = require("express");
 var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
@@ -20,6 +19,12 @@ mongoClient.connect(url, function (err, db) {
     app.get('/api/:object', function (req, res) {
         var collection = db.collection(req.params.object);
         collection.find({}).toArray(function (err, result) {
+            res.send(result);
+        });
+    });
+    app.post('/api/search/:object', function (req, res) {
+        var collection = db.collection(req.params.object);
+        collection.find(req.body).toArray(function (err, result) {
             res.send(result);
         });
     });
@@ -49,7 +54,7 @@ mongoClient.connect(url, function (err, db) {
                 res.send('success');
         });
     });
-    app["delete"]('/api/:object/:id', function (req, res) {
+    app.delete('/api/:object/:id', function (req, res) {
         var collection = db.collection(req.params.object);
         collection.deleteOne({ _id: new mongodb.ObjectID(req.params.id) }, function (err, result) {
             if (err)

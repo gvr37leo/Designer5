@@ -26,6 +26,13 @@ mongoClient.connect(url,function(err,db){
         })
     })
 
+    app.post('/api/search/:object', function(req, res){
+        var collection = db.collection(req.params.object)
+        collection.find(req.body).toArray(function(err, result){
+            res.send(result);
+        })
+    })
+
     app.get('/api/:object/:id', function(req, res){
         var collection = db.collection(req.params.object)
         collection.findOne({_id:new mongodb.ObjectID(req.params.id)}).then(function(doc){
