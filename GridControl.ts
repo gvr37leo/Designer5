@@ -73,6 +73,7 @@ class GridControl{
 
     appendBody(data){
         for(let rows = 0; rows < data.length; rows++){
+            let rowchange = new EventSystem();
             var row = document.createElement('tr')
             this.tablebody.appendChild(row)
 
@@ -87,16 +88,22 @@ class GridControl{
                 widget.value.onchange.listen((val) => {
                     data[rows][attribute.name] = val;
                     this.onchange.trigger(0,0)
+                    rowchange.trigger(0,0)
                 })
             }
 
             // save button
-            var savebtn = new Button(createTableCell(row), 'save', 'btn btn-success',() => {
+            let savebtn = new Button(createTableCell(row), 'save', 'btn btn-success',() => {
                 update(this.definition.name,data[rows]._id,data[rows],() => {})
+                savebtn.btnElement.disabled = true;
+            })
+            savebtn.btnElement.disabled = true;
+            rowchange.listen(() => {
+                savebtn.btnElement.disabled = false;
             })
 
             // delete button
-            var deletebutton = new Button(createTableCell(row),'delete', 'btn btn-danger',() => {
+            let deletebutton = new Button(createTableCell(row),'delete', 'btn btn-danger',() => {
                 del(this.definition.name,data[rows]._id,() => {})
             })
 
