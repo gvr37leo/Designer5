@@ -1,4 +1,5 @@
 /// <reference path="main.ts" />
+/// <reference path="defClasses.ts" />
 
 
 function mod(number, modulus){
@@ -16,6 +17,9 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
             break;
         case 'date':
             widget = new DateWidget(element)
+            break;
+        case 'id':
+            widget = new idWidget(element,attr)
             break;
         case 'enum':
             widget = new EnumWidget(element,attr)
@@ -164,16 +168,18 @@ function createTableCell(row){
 function addImplicitRefs(appDef:AppDef):AppDef{
     var map = appDefListToMap(appDef)
 
-    for(var ObjDef of appDef.objdefinitions){
-        for(var attribute of ObjDef.attributes){
+    for(var objDef of appDef.objdefinitions){
+        var idAttribute = new Attribute('_id','id')
+        idAttribute.pointerType = objDef.name
+        objDef.attributes.unshift(idAttribute)
+
+        for(var attribute of objDef.attributes){
             if(attribute.type == 'pointer'){
                 var referencedObject = map.get(attribute.pointerType)
                 
-                var newAttribute = new Attribute()
-                newAttribute.type = 'array'
-                newAttribute.pointerType = ObjDef.name
+                var newAttribute = new Attribute(attribute.name,'array')
+                newAttribute.pointerType = objDef.name
                 newAttribute.column = attribute.name
-                newAttribute.name = attribute.name
 
                 referencedObject.attributes.push(newAttribute)
             }
@@ -204,19 +210,3 @@ function mapToAppDefList(map:Map<string,ObjDef>):AppDef{
     return appDef;
 }
 
-class AppDef{
-    objdefinitions:ObjDef[] = []
-}
-
-class ObjDef{
-    name:string
-    attributes:Attribute[] = []
-}
-
-class Attribute{
-    name:string
-    type:string
-    pointerType:string //for pointer and array types
-    column:string
-    enumtypes:string[] = []//for type enum
-}

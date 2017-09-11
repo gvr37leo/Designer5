@@ -8,14 +8,49 @@
 
 declare var Router:any
 
+var selfDef:AppDef = {
+    objdefinitions:[{
+        name:'object',
+        attributes:[{
+            name:'name',
+            type:'string'
+        }]//array of attributes is reffed
+    },{
+        name:'attribute',
+        attributes:[{
+            name:'name',
+            type:'string'
+        },{
+            name:'type',
+            type:'enum',
+            enumTypes:['text','number','date','enum','pointer']
+        },{
+            name:'pointerType',
+            type:'pointer',
+            pointerType:'object'
+        },{
+            name:'column',
+            type:'pointer',
+            pointerType:'attribute'//but only attributes that exist in the object that pointertype points towards
+        }]
+    },{
+        name:'objectHasAttributes',
+        attributes:[{
+            type:'array',
+            pointerType:'object',
+            name:'object',
+        },{
+            type:'array',
+            pointerType:'attribute',
+            name:'attribute'
+        }]
+    }]
+} as AppDef
+
 var appDef:AppDef = {
     objdefinitions:[{
         name:'person',
-        attributes:[
-            {
-                name:'_id',
-                type:'text'
-            },{
+        attributes:[{
                 name:'naam',
                 type:'text'
             },{
@@ -35,11 +70,7 @@ var appDef:AppDef = {
         ]
     },{
         name:'bedrijf',
-        attributes:[
-            {
-                name:'_id',
-                type:'text'
-            },{
+        attributes:[{
                 name:'naam',
                 type:'text'
             },{
@@ -56,11 +87,7 @@ var appDef:AppDef = {
         ]
     },{
         name:'persoonwerktBijBedrijf',
-        attributes:[
-            {
-                name:'_id',
-                type:'text'
-            },{
+        attributes:[{
                 name:'person',
                 type:'pointer',
                 pointerType:'person'

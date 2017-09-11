@@ -5,6 +5,7 @@
 /// <reference path="widgets/pointerWidget.ts" />
 /// <reference path="widgets/textWidget.ts" />
 /// <reference path="widgets/enumWidget.ts" />
+/// <reference path="widgets/idWidget.ts" />
 
 
 var types = ['text','boolean','number','date','pointer','array']
@@ -57,6 +58,8 @@ class GridControl{
         getlistfiltered(definition.name,this.filter,(res) => {
             that.data = res
             that.appendBody(res)
+        },() => {
+
         })
     }
 
@@ -87,9 +90,6 @@ class GridControl{
                 var widget = getWidget(attribute,createTableCell(row))
                 widget.value.set(data[rows][attribute.name])
 
-                if(attribute.name == '_id'){
-                    widget.readonly.set(true);
-                }
                 widget.value.onchange.listen((val) => {
                     data[rows][attribute.name] = val;
                     this.onchange.trigger(0,0)
@@ -99,16 +99,13 @@ class GridControl{
 
             // save button
             let savebtn = new SaveButton(createTableCell(row),rowchange,() => {
-                update(this.definition.name,data[rows]._id,data[rows],() => {})
+                update(this.definition.name,data[rows]._id,data[rows],() => {},() => {})
             })
 
             // delete button
             let deletebutton = new Button(createTableCell(row),'delete', 'btn btn-danger',() => {
-                del(this.definition.name,data[rows]._id,() => {})
+                del(this.definition.name,data[rows]._id,() => {},() => {})
             })
-
-            //inspect link
-            createTableCell(row).appendChild(string2html(`<a class="btn btn-info" href="/#${this.definition.name}/${data[rows]._id}">inspect</a>`))
         }
     }
 }
