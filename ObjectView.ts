@@ -8,7 +8,7 @@ class ObjectView extends DetailView{
     constructor(element:Element,definition:ObjDef, id){
         super(element, definition)
         var that = this
-
+        this.arraycontainer.style.display = 'none'
         this.changeEvent = new EventSystem<any>()
 
         var savebtn = new SaveButton(this.buttonContainer as HTMLElement,this.changeEvent, () => {
@@ -41,6 +41,7 @@ class ObjectView extends DetailView{
 
             for(let attribute of that.definition.attributes){
                 if(attribute.type == 'array'){
+                    this.arraycontainer.style.display = 'block'
                     new GridControl(that.gridcontainer,appDef.objdefinitions.find((val) => {
                         return val.name == attribute.pointerType
                     }), filter)

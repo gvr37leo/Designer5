@@ -5,10 +5,12 @@ class ObjectNewView extends DetailView{
 
     constructor(element:Element,definition:ObjDef){
         super(element,definition)
+        var that = this
+        this.arraycontainer.remove()
         this.data = {}
         
         var savebtn = new Button(this.buttonContainer, 'create', 'btn btn-success',() => {
-            create(definition.name,this.data,() => {
+            create(definition.name,that.data,() => {
                 router.setRoute(definition.name)
             })
         })

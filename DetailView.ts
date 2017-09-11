@@ -1,6 +1,7 @@
 /// <reference path="main.ts" />
 
 class DetailView{
+    arraycontainer: HTMLElement;
     objectTitle: HTMLElement;
     uplink: HTMLAnchorElement;
     definition: ObjDef;
@@ -12,7 +13,7 @@ class DetailView{
             
             <div id="fieldcontainer"></div>
             
-            <div class="arraycontainer" >
+            <div id="arraycontainer" class="arraycontainer" >
                 <div id="tabs"></div>
                 <div id="gridcontainer"></div>
             </div>
@@ -32,6 +33,7 @@ class DetailView{
         this.element.appendChild(string2html(this.template))
         this.objectTitle = this.element.querySelector('#objecttitle') as HTMLElement
         this.fieldContainer = this.element.querySelector('#fieldcontainer')
+        this.arraycontainer = this.element.querySelector('#arraycontainer') as HTMLElement 
         this.gridcontainer = this.element.querySelector('#gridcontainer')
         this.tabs = this.element.querySelector('#tabs')
         this.buttonContainer = this.element.querySelector('#buttoncontainer')
