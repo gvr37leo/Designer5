@@ -1,0 +1,17 @@
+.dropper{
+    right: 0px;
+    left: 0px;
+    position: absolute;
+    display: none;
+    background-color: white;
+    border:1px #a9a9a9 solid;
+    border-top: none;
+    z-index: 1;
+}
+
+.drop.selected{
+    background-color: grey;
+}
+.drop:hover{
+    background-color: #5897fb;
+}
