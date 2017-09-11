@@ -18,6 +18,7 @@ class ObjectView extends DetailView{
                 
             })
         })
+        savebtn.btnElement.classList.add('margin-right')
 
         var deletebtn = new Button(that.buttonContainer, 'delete', 'btn btn-danger', () => {
             del(definition.name,id,() => {
@@ -68,7 +69,7 @@ class ObjectView extends DetailView{
             let filter = {}
             filter[attribute.column] = data._id
             if(attribute.type == 'array'){
-                new Button(this.tabs, attribute.pointerType, 'btn btn-default',() => {
+                new Button(this.tabs, attribute.pointerType, 'btn btn-default margin-right',() => {
                     this.gridcontainer.innerHTML = ''
                     new GridControl(this.gridcontainer,appDef.objdefinitions.find((val) => {
                         return val.name == attribute.pointerType
