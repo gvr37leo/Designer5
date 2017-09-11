@@ -8,7 +8,7 @@
 var types = ['text','boolean','number','date','pointer','array']
 
 class GridControl{
-    gridtitle: Element;
+    gridtitle: HTMLElement;
     tablebody: Element;
     titlerow: Element;
     searchrow: Element;
@@ -42,13 +42,13 @@ class GridControl{
         this.filter = filter
 
         this.element.appendChild(string2html(this.template))
-        this.gridtitle = this.element.querySelector('#gridtitle')
+        this.gridtitle = this.element.querySelector('#gridtitle') as HTMLElement
         this.tablebody = this.element.querySelector('#tablebody') 
         this.titlerow = this.element.querySelector('#titlerow')
         this.searchrow = this.element.querySelector('#searchrow')
         this.createlink = this.element.querySelector('#createlink') as HTMLAnchorElement
         this.createlink.href = `/#${this.definition.name}/new`
-        this.gridtitle.innerHTML = this.definition.name
+        this.gridtitle.innerText = this.definition.name
 
         this.appendHeader()
         
@@ -67,6 +67,9 @@ class GridControl{
 
             //columnrow
             var searchField = new TextWidget(createTableCell(this.searchrow))
+            searchField.value.onchange.listen((val) => {
+                this.filter[attribute.name] = val
+            })
         }
 
     }

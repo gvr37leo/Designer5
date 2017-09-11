@@ -8,9 +8,6 @@
 
 declare var Router:any
 
-//savebutton
-//depends upon
-//pointerwidget set to null
 var appDef:AppDef = {
     objdefinitions:[{
         name:'person',

@@ -49,8 +49,14 @@ class PointerWidget extends Widget<string>{
         })
 
         this.internalValue.onchange.listen((val) => {
-            that.input.value = this.displayer(val)
-            this.value.set(val._id)
+            displayHasBeenSet = true
+            if(val == null){
+                that.input.value = 'nullptr'
+                this.value.set(null)
+            }else{
+                that.input.value = this.displayer(val)
+                this.value.set(val._id)
+            }
         })
 
         var displayHasBeenSet = false
@@ -58,19 +64,13 @@ class PointerWidget extends Widget<string>{
             //special case
             //set display for first time set
             if(!displayHasBeenSet){
-                displayHasBeenSet = false
+                displayHasBeenSet = true
                 getobject(attribute.pointerType,val,(data) => {
                     that.input.value = this.displayer(data)
                 })
             }
-            
-
             that.link.href = `/#${attribute.pointerType}/${val}`
-
         })
-
-        
-        
 
         this.onselect.listen(() =>{
             that.dropper.style.display = 'none'
@@ -135,5 +135,5 @@ class PointerWidget extends Widget<string>{
 
     handleSetReadOnly(val: boolean) {
         
-            }
+    }
 }
