@@ -1,6 +1,7 @@
 /// <reference path="../widget.ts" />
 
 class PointerWidget extends Widget<string>{
+    delbuttoncontainer: HTMLElement;
     attribute: Attribute;
     internalValue: Box<number>;
     selectedindex: Box<number>
@@ -20,6 +21,7 @@ class PointerWidget extends Widget<string>{
                 <input id="input" type="text"> 
                 <div id="dropper" class="dropper"></div> 
             </div>
+            <span id="delbuttoncontainer"></span>
             <a class="btn btn-info" id="link">-></a>
         </div>` 
 
@@ -34,11 +36,17 @@ class PointerWidget extends Widget<string>{
         this.link = this.element.querySelector('#link') as HTMLAnchorElement
         this.input = this.element.querySelector('#input') as HTMLInputElement
         this.dropper = this.element.querySelector('#dropper') as HTMLElement
+        this.delbuttoncontainer = this.element.querySelector('#delbuttoncontainer') as HTMLElement
         this.drops = []
         
         this.internalValue = new Box(0)
         this.selectedindex = new Box<number>(0)
         this.onselect = new EventSystem()
+
+
+        new Button(this.delbuttoncontainer,'X','btn btn-danger',() => {
+            this.internalValue.set(null)
+        })
 
         this.internalValue.onchange.listen((val) => {
             that.input.value = this.displayer(val)

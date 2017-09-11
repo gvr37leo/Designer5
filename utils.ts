@@ -122,6 +122,61 @@ function createTableCell(row){
     return td
 }
 
-function findRefs(def:AppDef){
+function addImplicitRefs(appDef:AppDef):AppDef{
+    var map = appDefListToMap(appDef)
 
+    for(var ObjDef of appDef.objdefinitions){
+        for(var attribute of ObjDef.attributes){
+            if(attribute.type == 'pointer' && attribute.pointerType != ObjDef.name){
+                var referencedObject = map.get(attribute.pointerType)
+                
+                var newAttribute = new Attribute()
+                newAttribute.type = 'array'
+                newAttribute.pointerType = ObjDef.name
+                newAttribute.column = attribute.name
+                newAttribute.name = attribute.name
+
+                referencedObject.attributes.push(newAttribute)
+            }
+        }
+    }
+
+    return mapToAppDefList(map)
+}
+
+function appDefListToMap(appdef:AppDef):Map<string,ObjDef>{
+    var map = new Map<string,ObjDef>()
+    for(var ObjDef of appDef.objdefinitions){
+        map.set(ObjDef.name,ObjDef)
+    }
+    return map
+}
+
+function mapToAppDefList(map:Map<string,ObjDef>):AppDef{
+    var appDef = new AppDef()
+
+    for(var pair of map){
+        var string = pair[0]
+        var objDef = pair[1]
+
+        appDef.objdefinitions.push(objDef)
+    }
+
+    return appDef;
+}
+
+class AppDef{
+    objdefinitions:ObjDef[] = []
+}
+
+class ObjDef{
+    name:string
+    attributes:Attribute[] = []
+}
+
+class Attribute{
+    name:string
+    type:string
+    pointerType:string //for pointer and array types
+    column:string
 }

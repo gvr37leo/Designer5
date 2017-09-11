@@ -3,35 +3,14 @@
 /// <reference path="ObjectNewView.ts" />
 /// <reference path="Navbar.ts" />
 /// <reference path="utils.ts" />
+/// <reference path="buttons.ts" />
+
 
 declare var Router:any
 
-class AppDef{
-    objdefinitions:ObjDef[]
-}
-
-class ObjDef{
-    name:string
-    attributes:Attribute[]
-}
-
-class Attribute{
-    name:string
-    type:string
-    pointerType:string //for pointer and array types
-    column
-}
-
-class Button{
-    btnElement:HTMLButtonElement
-
-    constructor(element:Element, text:string, classes:string, callback:() => void){
-        this.btnElement = string2html(`<button class="button ${classes}">${text}</button>`) as HTMLButtonElement
-        element.appendChild(this.btnElement)
-        this.btnElement.addEventListener('click', callback)
-    }
-}
-
+//savebutton
+//depends upon
+//pointerwidget set to null
 var appDef:AppDef = {
     objdefinitions:[{
         name:'person',
@@ -56,11 +35,6 @@ var appDef:AppDef = {
                 type:'pointer',
                 pointerType:'person'
             }
-            ,{
-                type:'array',
-                pointerType:'persoonwerktBijBedrijf',
-                field:'person'
-            }
         ]
     },{
         name:'bedrijf',
@@ -77,11 +51,6 @@ var appDef:AppDef = {
             },{
                 name:'rating',
                 type:'number'
-            }
-            ,{
-                type:'array',
-                pointerType:'persoonwerktBijBedrijf',
-                field:'bedrijf'
             }
         ]
     },{
@@ -105,6 +74,8 @@ var appDef:AppDef = {
         ]
     }]
 } as AppDef
+
+var appDef = addImplicitRefs(appDef)
 
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')

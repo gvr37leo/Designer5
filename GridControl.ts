@@ -93,13 +93,8 @@ class GridControl{
             }
 
             // save button
-            let savebtn = new Button(createTableCell(row), 'save', 'btn btn-success',() => {
+            let savebtn = new SaveButton(createTableCell(row),rowchange,() => {
                 update(this.definition.name,data[rows]._id,data[rows],() => {})
-                savebtn.btnElement.disabled = true;
-            })
-            savebtn.btnElement.disabled = true;
-            rowchange.listen(() => {
-                savebtn.btnElement.disabled = false;
             })
 
             // delete button

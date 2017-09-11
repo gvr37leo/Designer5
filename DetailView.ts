@@ -1,10 +1,12 @@
 /// <reference path="main.ts" />
 
 class DetailView{
+    objectTitle: HTMLElement;
     uplink: HTMLAnchorElement;
     definition: ObjDef;
     template: string = `
         <div>
+            <h2 id="objecttitle"></h2>
             <a class="btn btn-default" id="uplink">Up</a>
             <span id="buttoncontainer"></span>
             
@@ -28,13 +30,14 @@ class DetailView{
         this.element = element
 
         this.element.appendChild(string2html(this.template))
+        this.objectTitle = this.element.querySelector('#objecttitle') as HTMLElement
         this.fieldContainer = this.element.querySelector('#fieldcontainer')
         this.gridcontainer = this.element.querySelector('#gridcontainer')
         this.tabs = this.element.querySelector('#tabs')
         this.buttonContainer = this.element.querySelector('#buttoncontainer')
         this.uplink = this.element.querySelector('#uplink') as HTMLAnchorElement
         this.uplink.href = `/#${this.definition.name}`
-
+        this.objectTitle.innerText = this.definition.name
         
     }
 
@@ -49,6 +52,7 @@ class DetailView{
             this.data[attribute.name] = val;
         })
         this.widgetMap.set(attribute.name,widget)
+        return widget
     }
 
     

@@ -3,12 +3,15 @@
 
 
 class ObjectView extends DetailView{
+    changeEvent: EventSystem<any>;
 
     constructor(element:Element,definition:ObjDef, id){
         super(element, definition)
         var that = this
 
-        var savebtn = new Button(this.buttonContainer, 'save', 'btn btn-success', () => {
+        this.changeEvent = new EventSystem<any>()
+
+        var savebtn = new SaveButton(this.buttonContainer as HTMLElement,this.changeEvent, () => {
             update(definition.name,id,that.data,() => {
                 
             })
@@ -26,7 +29,11 @@ class ObjectView extends DetailView{
             for(var key of that.widgetMap){
                 var widget = key[1]
                 var fieldname = key[0]
-                widget.value.set(res[fieldname]) 
+                widget.value.set(res[fieldname])
+                
+                widget.value.onchange.listen(() => {
+                    this.changeEvent.trigger(0,0)
+                }) 
             }
             
             var filter = {}
