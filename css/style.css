@@ -36,3 +36,24 @@
     border-bottom: 1px dotted grey;
 }
 
+.group-left{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
+}
+
+.group-middle{
+    border-radius: 0 0 0 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+.group-right{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0;
+}
+
+.form-control{
+    max-width: 200px;
+}

@@ -16,13 +16,13 @@ class PointerWidget extends Widget<string>{
     infoer:(val) => string
     optionslist
     template:string = `
-        <div>
+        <div style="display:flex;">
             <div id="container" style="position:relative; display:inline-block;"> 
-                <input id="input" type="text"> 
+                <input class="form-control group-left" id="input" type="text"> 
                 <div id="dropper" class="dropper"></div> 
             </div>
             <span id="delbuttoncontainer"></span>
-            <a class="btn btn-info" id="link">-></a>
+            <a class="btn btn-info group-right" id="link">-></a>
         </div>` 
 
     constructor(element:HTMLElement, attribute:Attribute, infoer:(val) => string, displayer:(val) => string){
@@ -44,7 +44,7 @@ class PointerWidget extends Widget<string>{
         this.onselect = new EventSystem()
 
 
-        new Button(this.delbuttoncontainer,'X','btn btn-danger',() => {
+        new Button(this.delbuttoncontainer,'X','btn btn-danger group-middle',() => {
             this.internalValue.set(null)
         })
 

@@ -1,4 +1,5 @@
-/// <reference path="../widget.ts" />
+/// <reference path="../main.ts" />
+
 
 function round(number, precision) {
     var factor = Math.pow(10, precision);
@@ -56,7 +57,7 @@ class NumberWidget extends Widget<number>{
         
         //other variables (public)
         this.value = new Box(0)//internal value
-        var inputel = <HTMLInputElement>string2html('<input/>')
+        var inputel = <HTMLInputElement>string2html('<input class="form-control" />')
         this.element = inputel
         element.appendChild(inputel)
         

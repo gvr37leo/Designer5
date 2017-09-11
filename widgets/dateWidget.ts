@@ -5,7 +5,7 @@ class DateWidget extends Widget<string>{
     constructor(element:HTMLElement){
         super(element)
         
-        var inputel = <HTMLInputElement>string2html('<input/>')
+        var inputel = <HTMLInputElement>string2html('<input class="form-control"/>')
         this.element.appendChild(inputel)
         
         inputel.addEventListener('input',(e) => {

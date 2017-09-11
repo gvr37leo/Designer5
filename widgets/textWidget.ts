@@ -7,7 +7,7 @@ class TextWidget extends Widget<string>{
     constructor(element: HTMLElement) {
         super(element)
         var that  = this;
-        this.inputel = string2html('<input/>') as HTMLInputElement
+        this.inputel = string2html('<input class="form-control"/>') as HTMLInputElement
         this.element.appendChild(this.inputel)
         
         this.inputel.addEventListener('input',(e) => {
