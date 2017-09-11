@@ -48,6 +48,10 @@ var appDef:AppDef = {
             },{
                 name:'rating',
                 type:'number'
+            },{
+                name:'bankrating',
+                type:'enum',
+                enumtypes:['A+','A','B','D','F']
             }
         ]
     },{

@@ -4,6 +4,8 @@
 /// <reference path="widgets/numberWidget.ts" />
 /// <reference path="widgets/pointerWidget.ts" />
 /// <reference path="widgets/textWidget.ts" />
+/// <reference path="widgets/enumWidget.ts" />
+
 
 var types = ['text','boolean','number','date','pointer','array']
 

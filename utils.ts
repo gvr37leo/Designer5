@@ -17,6 +17,9 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
         case 'date':
             widget = new DateWidget(element)
             break;
+        case 'enum':
+            widget = new EnumWidget(element,attr)
+            break;
         case 'pointer':
             widget = new PointerWidget(element, attr, (val) => val._id, (val) => val.naam)
             break;
@@ -179,4 +182,5 @@ class Attribute{
     type:string
     pointerType:string //for pointer and array types
     column:string
+    enumtypes:string[] = []//for type enum
 }
