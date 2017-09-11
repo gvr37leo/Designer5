@@ -13,7 +13,7 @@ class EnumWidget extends Widget<string>{
     template:string = `
         <div>
             <div id="container" style="position:relative; display:inline-block;"> 
-                <input id="input" type="text"> 
+                <input id="input" class="form-control" type="text"> 
                 <div id="dropper" class="dropper"></div> 
             </div>
         </div>` 

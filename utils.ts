@@ -166,7 +166,7 @@ function addImplicitRefs(appDef:AppDef):AppDef{
 
     for(var ObjDef of appDef.objdefinitions){
         for(var attribute of ObjDef.attributes){
-            if(attribute.type == 'pointer' && attribute.pointerType != ObjDef.name){//second part isn't nescessary
+            if(attribute.type == 'pointer'){
                 var referencedObject = map.get(attribute.pointerType)
                 
                 var newAttribute = new Attribute()

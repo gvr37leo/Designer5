@@ -40,15 +40,18 @@ class ObjectView extends DetailView{
                 }) 
             }
             
-            var filter = {}
-            filter[this.definition.name] = id
+            
 
             for(let attribute of that.definition.attributes){
+                var filter = {}
+                filter[attribute.column] = id
+                
                 if(attribute.type == 'array'){
                     this.arraycontainer.style.display = 'block'
                     new GridControl(that.gridcontainer,appDef.objdefinitions.find((val) => {
                         return val.name == attribute.pointerType
                     }), filter)
+                    break;
                 }
             }
         },(error) => {
@@ -59,10 +62,11 @@ class ObjectView extends DetailView{
     }
 
     render(data){
-        var filter = {}
-        filter[this.definition.name] = data._id
+        
 
         for(let attribute of this.definition.attributes){
+            let filter = {}
+            filter[attribute.column] = data._id
             if(attribute.type == 'array'){
                 new Button(this.tabs, attribute.pointerType, 'btn btn-default',() => {
                     this.gridcontainer.innerHTML = ''
