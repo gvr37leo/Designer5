@@ -2,7 +2,7 @@
 
 class PointerWidget extends Widget<string>{
     delbuttoncontainer: HTMLElement;
-    attribute: Attribute;
+    attribute: pointerAttribute;
     internalValue: Box<number>;
     selectedindex: Box<number>
     value:Box<any>
@@ -25,7 +25,7 @@ class PointerWidget extends Widget<string>{
             <a class="btn btn-info group-right" id="link">-></a>
         </div>` 
 
-    constructor(element:HTMLElement, attribute:Attribute, infoer:(val) => string, displayer:(val) => string){
+    constructor(element:HTMLElement, attribute:pointerAttribute, infoer:(val) => string, displayer:(val) => string){
         super(element)
         var that = this
         this.attribute = attribute
@@ -60,16 +60,21 @@ class PointerWidget extends Widget<string>{
         })
 
         var displayHasBeenSet = false
-        this.value.onchange.listen((val) => {
+        this.value.onchange.listen((val) => {//handle the case where val = undefined or null
             //special case
             //set display for first time set
             if(!displayHasBeenSet){
                 displayHasBeenSet = true
-                getobject(attribute.pointerType,val,(data) => {
-                    that.input.value = this.displayer(data)
-                },(error) => {
-                    
-                })
+
+                if(val == null){
+                    that.input.value = 'nullptr'
+                }else{
+                    getobject(attribute.pointerType,val,(data) => {
+                        that.input.value = this.displayer(data)
+                    },(error) => {
+                        
+                    })
+                }
             }
             that.link.href = `/#${attribute.pointerType}/${val}`
         })
@@ -138,6 +143,11 @@ class PointerWidget extends Widget<string>{
     }
 
     handleSetReadOnly(val: boolean) {
+        if(val){
+            this.delbuttoncontainer.style.display = 'none'
+        }else{
+            this.delbuttoncontainer.style.display = 'block'
+        }
         
     }
 }

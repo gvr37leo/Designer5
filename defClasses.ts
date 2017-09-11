@@ -19,6 +19,7 @@ class ObjDef{
 abstract class Attribute{
     name:string
     type:string
+    readonly:boolean = false
 
     constructor(name:string, type:string){
         this.name = name;

@@ -1,6 +1,8 @@
 /// <reference path="../widget.ts" />
 
 
+//change this to pointertype and remove the delete button when readonly
+
 class idWidget extends Widget<string>{
     attribute: Attribute;
     inspectLink: HTMLAnchorElement;

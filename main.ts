@@ -5,26 +5,32 @@
 /// <reference path="utils.ts" />
 /// <reference path="buttons.ts" />
 
+//todo
+//create in objectview in same window
+//hide column that references self in objectview(maybe generate hidecolumn attribute)
+//readonly pointerwidget
+//depends upon - hiding
+//generate json button
 
 declare var Router:any
 
-// var selfDef = new AppDef([
-//     new ObjDef('object',[
-//         new textAttribute('naam')//not calling this name causes errors becauses of the displayer function in pointerwidget
-//         //array of attributes is reffed
-//     ]),
-//     new ObjDef('attribute',[
-//         new textAttribute('naam'),
-//         new enumAttribute('type',['boolean','date','enum','number','pointer','text']),
-//         new pointerAttribute('pointerType','object'),
-//         new pointerAttribute('column','attribute')//but only attributes that exist in the object that pointertype points towards
-//         //array of attributes is reffed
-//     ]),
-//     new ObjDef('objectHasAttributes',[
-//         new pointerAttribute('object','object'),
-//         new pointerAttribute('attribute','attribute'),
-//     ])
-// ])
+var selfDef = new AppDef([
+    new ObjDef('object',[
+        new textAttribute('naam')//not calling this name causes errors becauses of the displayer function in pointerwidget
+        //array of attributes is reffed
+    ]),
+    new ObjDef('attribute',[
+        new textAttribute('naam'),
+        new enumAttribute('type',['boolean','date','enum','number','pointer','text']),
+        new pointerAttribute('pointerType','object'),
+        new pointerAttribute('column','attribute')//but only attributes that exist in the object that pointertype points towards
+        //array of attributes is reffed
+    ]),
+    new ObjDef('objectHasAttributes',[
+        new pointerAttribute('object','object'),
+        new pointerAttribute('attribute','attribute'),
+    ])
+])
 
 var testDefinition = new AppDef([
     new ObjDef('person',[
@@ -49,7 +55,7 @@ var testDefinition = new AppDef([
 
 // selfDef
 // testDefinition
-var appDef = addImplicitRefs(testDefinition)
+var appDef = addImplicitRefs(selfDef)
 
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')

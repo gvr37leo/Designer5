@@ -25,7 +25,7 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
             widget = new EnumWidget(element,attr as enumAttribute)
             break;
         case 'pointer':
-            widget = new PointerWidget(element, attr, (val) => val._id, (val) => val.naam)
+            widget = new PointerWidget(element, attr as pointerAttribute, (val) => val._id, (val) => val.naam)
             break;
         default://text
             widget = new TextWidget(element)
