@@ -1,1 +1,1 @@
-tsc sever.ts --inlineSourceMap --watch
+tsc server.ts --inlineSourceMap --watch

@@ -36,86 +36,122 @@ function string2html(string):HTMLElement{
     return div.children[0] as HTMLElement;
 }
 
-function getlist(pointertype,callback:(data) => void){
+function handleResponse(response){
+    return response.json()
+    .then(json => {
+        if (response.ok) {
+            return json
+        } else {
+            let error = Object.assign({}, json, {
+                status: response.status,
+                statusText: response.statusText
+            })
+            return Promise.reject(error)
+        }
+    })
+}
+
+function handleError(error){
+    console.log(error)
+    toastr.error(JSON.stringify(error))
+}
+
+function getlist(pointertype,callback:(data) => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}`,{
         headers:{
             'Content-Type': 'application/json'
         },
         method:'GET',
-    }).then((res) => {
-        return res.json()
-    }).then((res) => {
+    })
+    .then(handleResponse)
+    .then((res) => {
         callback(res)
+    }).catch((err) => {
+        handleError(err)
+        errorCB(err)
     })
 }
 
-function getlistfiltered(pointertype,filter,callback:(data) => void){
+function getlistfiltered(pointertype,filter,callback:(data) => void,errorCB:(error) => void){
     fetch(`/api/search/${pointertype}`,{
         headers:{
             'Content-Type': 'application/json'
         },
         method:'POST',
         body:JSON.stringify(filter)
-    }).then((res) => {
-        return res.json()
-    }).then((res) => {
+    })
+    .then(handleResponse)
+    .then((res) => {
         callback(res)
+    }).catch((err) => {
+        handleError(err)
+        errorCB(err)
     })
 }
 
-function getobject(pointertype,id,callback:(data) => void){
+function getobject(pointertype,id,callback:(data) => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}/${id}`,{
         headers:{
             'Content-Type': 'application/json'
         },
         method:'GET',
-    }).then((res) => {
-        return res.json()
-    }).then((res) => {
+    })
+    .then(handleResponse)
+    .then((res) => {
         callback(res)
+    }).catch((err) => {
+        handleError(err)
+        errorCB(err)
     })
 }
 
-function create(pointertype,data,callback:() => void){
+function create(pointertype,data,callback:() => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}`,{
         headers:{
             'Content-Type': 'application/json'
         },
         method:'POST',
         body:JSON.stringify(data)
-    }).then((res) => {
-        return res.text()
     })
+    .then(handleResponse)
     .then((res) => {
         toastr.success('created')
         callback()
+    }).catch((err) => {
+        handleError(err)
+        errorCB(err)
     })
 }
 
-function del(pointertype, id,callback:() => void){
+function del(pointertype, id,callback:() => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}/${id}`,{
         method:'DELETE',
-    }).then((res) => {
-        return res.text()
     })
+    .then(handleResponse)
     .then((res) => {
         toastr.success('deleted')
         callback()
+    }).catch((err) => {
+        handleError(err)
+        errorCB(err)
     })
 }
 
-function update(pointertype,id,data,callback:() => void){
+function update(pointertype,id,data,callback:() => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}/${id}`,{
         headers:{
             'Content-Type': 'application/json'
         },
         method:'PUT',
         body:JSON.stringify(data)
-    }).then((res) => {
-        return res.text()
-    }).then((res) => {
+    })
+    .then(handleResponse)
+    .then((res) => {
         toastr.success('saved')
         callback()
+    }).catch((err) => {
+        handleError(err)
+        errorCB(err)
     })
 }
 

@@ -67,6 +67,8 @@ class PointerWidget extends Widget<string>{
                 displayHasBeenSet = true
                 getobject(attribute.pointerType,val,(data) => {
                     that.input.value = this.displayer(data)
+                },(error) => {
+                    
                 })
             }
             that.link.href = `/#${attribute.pointerType}/${val}`
@@ -116,6 +118,8 @@ class PointerWidget extends Widget<string>{
         getlist(attribute.pointerType, (res) => {
             this.optionslist = res
             that.render(res)
+        },(error) => {
+            
         })
     }
 

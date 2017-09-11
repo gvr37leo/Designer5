@@ -14,11 +14,15 @@ class ObjectView extends DetailView{
         var savebtn = new SaveButton(this.buttonContainer as HTMLElement,this.changeEvent, () => {
             update(definition.name,id,that.data,() => {
                 
+            },(error) => {
+                
             })
         })
 
         var deletebtn = new Button(that.buttonContainer, 'delete', 'btn btn-danger', () => {
             del(definition.name,id,() => {
+            },(error) => {
+                
             })
         })
 
@@ -47,6 +51,8 @@ class ObjectView extends DetailView{
                     }), filter)
                 }
             }
+        },(error) => {
+
         })
 
         

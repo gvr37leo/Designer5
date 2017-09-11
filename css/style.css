@@ -7,8 +7,19 @@
 }
 
 .navitem{
+    text-decoration: none;
     color: white;
     margin-right: 10px;
+}
+
+.navitem:hover {
+    text-decoration: none;
+    color: grey;
+}
+
+a:focus {
+    text-decoration: none;
+    color: white;
 }
 
 .contentcontainer{
@@ -55,5 +66,5 @@
 }
 
 .form-control{
-    max-width: 200px;
+    max-width: 220px;
 }
