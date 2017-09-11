@@ -22,7 +22,7 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
             widget = new idWidget(element,attr)
             break;
         case 'enum':
-            widget = new EnumWidget(element,attr)
+            widget = new EnumWidget(element,attr as enumAttribute)
             break;
         case 'pointer':
             widget = new PointerWidget(element, attr, (val) => val._id, (val) => val.naam)
@@ -169,17 +169,13 @@ function addImplicitRefs(appDef:AppDef):AppDef{
     var map = appDefListToMap(appDef)
 
     for(var objDef of appDef.objdefinitions){
-        var idAttribute = new Attribute('_id','id')
-        idAttribute.pointerType = objDef.name
-        objDef.attributes.unshift(idAttribute)
+        objDef.attributes.unshift(new identityAttribute(objDef.name))
 
         for(var attribute of objDef.attributes){
             if(attribute.type == 'pointer'){
-                var referencedObject = map.get(attribute.pointerType)
+                var referencedObject = map.get((attribute as pointerAttribute).pointerType)
                 
-                var newAttribute = new Attribute(attribute.name,'array')
-                newAttribute.pointerType = objDef.name
-                newAttribute.column = attribute.name
+                var newAttribute = new arrayAttribute(attribute.name,objDef.name,attribute.name)
 
                 referencedObject.attributes.push(newAttribute)
             }
@@ -191,14 +187,14 @@ function addImplicitRefs(appDef:AppDef):AppDef{
 
 function appDefListToMap(appdef:AppDef):Map<string,ObjDef>{
     var map = new Map<string,ObjDef>()
-    for(var ObjDef of appDef.objdefinitions){
+    for(var ObjDef of appdef.objdefinitions){
         map.set(ObjDef.name,ObjDef)
     }
     return map
 }
 
 function mapToAppDefList(map:Map<string,ObjDef>):AppDef{
-    var appDef = new AppDef()
+    var appDef = new AppDef([])
 
     for(var pair of map){
         var string = pair[0]

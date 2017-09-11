@@ -8,102 +8,48 @@
 
 declare var Router:any
 
-var selfDef:AppDef = {
-    objdefinitions:[{
-        name:'object',
-        attributes:[{
-            name:'name',
-            type:'string'
-        }]//array of attributes is reffed
-    },{
-        name:'attribute',
-        attributes:[{
-            name:'name',
-            type:'string'
-        },{
-            name:'type',
-            type:'enum',
-            enumTypes:['text','number','date','enum','pointer']
-        },{
-            name:'pointerType',
-            type:'pointer',
-            pointerType:'object'
-        },{
-            name:'column',
-            type:'pointer',
-            pointerType:'attribute'//but only attributes that exist in the object that pointertype points towards
-        }]
-    },{
-        name:'objectHasAttributes',
-        attributes:[{
-            type:'array',
-            pointerType:'object',
-            name:'object',
-        },{
-            type:'array',
-            pointerType:'attribute',
-            name:'attribute'
-        }]
-    }]
-} as AppDef
+// var selfDef = new AppDef([
+//     new ObjDef('object',[
+//         new textAttribute('naam')//not calling this name causes errors becauses of the displayer function in pointerwidget
+//         //array of attributes is reffed
+//     ]),
+//     new ObjDef('attribute',[
+//         new textAttribute('naam'),
+//         new enumAttribute('type',['boolean','date','enum','number','pointer','text']),
+//         new pointerAttribute('pointerType','object'),
+//         new pointerAttribute('column','attribute')//but only attributes that exist in the object that pointertype points towards
+//         //array of attributes is reffed
+//     ]),
+//     new ObjDef('objectHasAttributes',[
+//         new pointerAttribute('object','object'),
+//         new pointerAttribute('attribute','attribute'),
+//     ])
+// ])
 
-var appDef:AppDef = {
-    objdefinitions:[{
-        name:'person',
-        attributes:[{
-                name:'naam',
-                type:'text'
-            },{
-                name:'homeless',
-                type:'boolean'
-            },{
-                name:'birthday',
-                type:'date'
-            },{
-                name:'lengte',
-                type:'number'
-            },{
-                name:'vriend',
-                type:'pointer',
-                pointerType:'person'
-            }
-        ]
-    },{
-        name:'bedrijf',
-        attributes:[{
-                name:'naam',
-                type:'text'
-            },{
-                name:'branch',
-                type:'text'
-            },{
-                name:'rating',
-                type:'number'
-            },{
-                name:'bankrating',
-                type:'enum',
-                enumtypes:['A+','A','B','D','F']
-            }
-        ]
-    },{
-        name:'persoonwerktBijBedrijf',
-        attributes:[{
-                name:'person',
-                type:'pointer',
-                pointerType:'person'
-            },{
-                name:'bedrijf',
-                type:'pointer',
-                pointerType:'bedrijf'
-            },{
-                name:'salaris',
-                type:'number'
-            }
-        ]
-    }]
-} as AppDef
+var testDefinition = new AppDef([
+    new ObjDef('person',[
+        new textAttribute('naam'),
+        new booleanAttribute('homeless'),
+        new dateAttribute('birthday'),
+        new numberAttribute('lengte'),
+        new pointerAttribute('vriend','person'),
+    ]),
+    new ObjDef('bedrijf',[
+        new textAttribute('naam'),
+        new textAttribute('branch'),
+        new numberAttribute('rating'),
+        new enumAttribute('bankrating',['A+','A','B','D','F'])
+    ]),
+    new ObjDef('persoonwerktBijBedrijf',[
+        new pointerAttribute('person','person'),
+        new pointerAttribute('bedrijf','bedrijf'),
+        new numberAttribute('salaris'),
+    ])
+])
 
-var appDef = addImplicitRefs(appDef)
+// selfDef
+// testDefinition
+var appDef = addImplicitRefs(testDefinition)
 
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')

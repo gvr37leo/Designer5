@@ -2,7 +2,7 @@
 
 
 class EnumWidget extends Widget<string>{
-    attribute: Attribute;
+    attribute: enumAttribute;
     selectedindex: Box<number>
     value:Box<any>
     onselect:EventSystem<any>
@@ -18,7 +18,7 @@ class EnumWidget extends Widget<string>{
             </div>
         </div>` 
 
-    constructor(element:HTMLElement, attribute:Attribute){
+    constructor(element:HTMLElement, attribute:enumAttribute){
         super(element)
         var that = this
         this.attribute = attribute
