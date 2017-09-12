@@ -106,7 +106,7 @@ function getobject(pointertype,id,callback:(data) => void,errorCB:(error) => voi
             callback(null);
         }
         else{
-            callback(res)
+            callback(JSON.parse(res))
         }
     }).catch((err) => {
         handleError(err)
@@ -199,7 +199,7 @@ function appDefListToMap(appdef:AppDef):Map<string,ObjDef>{
 }
 
 function mapToAppDefList(map:Map<string,ObjDef>):AppDef{
-    var appDef = new AppDef([])
+    var appDef = new AppDef([],[])
 
     for(var pair of map){
         var string = pair[0]

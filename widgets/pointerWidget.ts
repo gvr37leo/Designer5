@@ -39,10 +39,10 @@ class PointerWidget extends Widget<string>{
         this.delbuttoncontainer = this.element.querySelector('#delbuttoncontainer') as HTMLElement
         this.drops = []
         
+        this.value.value = 0;
         this.internalValue = new Box(0)
         this.selectedindex = new Box<number>(0)
         this.onselect = new EventSystem()
-        that.input.value = 'nullptr'
 
         new Button(this.delbuttoncontainer,'X','btn btn-danger group-middle',() => {
             this.internalValue.set(null)
@@ -71,7 +71,7 @@ class PointerWidget extends Widget<string>{
                 }else{
                     getobject(attribute.pointerType,val,(data) => {
                         if(data == null){
-                            that.input.value = 'nullptr'
+                            that.input.value = 'null'
                         }else{
                             that.input.value = this.displayer(data)
                         }

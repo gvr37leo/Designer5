@@ -13,6 +13,7 @@ var types = ['text','boolean','number','date','pointer','array']
 
 
 class GridControl{
+    buttonContainer: Element;
     filterCooldown: CoolUp;
     createButton: Button;
     createlinkContainer: Element;
@@ -28,8 +29,8 @@ class GridControl{
     template:string = `
         <div class="grid">
             <h2 id="gridtitle"></h2>
-            <div id="createlink-container">
-                
+            <div id="button-container">
+                <span id="createlink-container"></span>
             </div>
             <table id="table" class="table table-striped" style="width:100%;">
                 <thead>
@@ -54,6 +55,7 @@ class GridControl{
         })
 
         this.element.appendChild(string2html(this.template))
+        this.buttonContainer = this.element.querySelector('#button-container')
         this.gridtitle = this.element.querySelector('#gridtitle') as HTMLElement
         this.tablebody = this.element.querySelector('#tablebody') 
         this.titlerow = this.element.querySelector('#titlerow')
@@ -61,7 +63,7 @@ class GridControl{
         this.createlinkContainer = this.element.querySelector('#createlink-container');
         this.gridtitle.innerText = this.definition.name
         
-        this.createButton = new Button(this.createlinkContainer,'create','btn btn-success createbtn',() => {
+        this.createButton = new Button(this.createlinkContainer,'create','btn btn-success',() => {
             globalModal.contentcontainer.innerHTML = ''
             let objectNewView = new ObjectNewView(globalModal.contentcontainer, this.definition)
             globalModal.show()
@@ -69,6 +71,10 @@ class GridControl{
             objectNewView.saveSucceeded.listen(() => {
                 globalModal.hide()
             })
+        })
+
+        new Button(this.buttonContainer,'refresh','btn btn-info', () => {
+            this.refetchbody()
         })
 
         this.appendHeader()
@@ -88,7 +94,7 @@ class GridControl{
 
     appendHeader(){
         for(let attribute of this.definition.attributes){
-            if(attribute.type == 'array')continue;
+            if(attribute.type == 'array' || attribute.hidden)continue;
 
             //titlerow
             createTableCell(this.titlerow).appendChild(string2html(`<b>${attribute.name}</b>`))
@@ -114,7 +120,7 @@ class GridControl{
             this.tablebody.appendChild(row)
 
             for(let attribute of this.definition.attributes){
-                if(attribute.type == 'array')continue;
+                if(attribute.type == 'array' || attribute.hidden)continue;
                 var widget = getWidget(attribute,createTableCell(row))
                 widget.value.set(data[rows][attribute.name])
 

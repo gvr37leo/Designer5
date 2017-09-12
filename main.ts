@@ -10,33 +10,51 @@
 //todo
 //depends upon - hiding
 //generate json button
+//naam required for display
+//filtering
+//datewidget
+//update on delete and create
+//refresh button
 
 declare var Router:any
 
-var selfDef = new AppDef([
+var selfDef = new AppDef([(appDef) => {
+    for(var objDef of appDef.objdefinitions){
+        getlist(objDef.name,(data) => {
+            
+        },(err) => {
+
+        })
+    }
+}],[
     new ObjDef('object',[
-        new textAttribute('naam')//not calling this name causes errors becauses of the displayer function in pointerwidget
-        //array of attributes is reffed
+        new textAttribute('naam'),//not calling this name causes errors becauses of the displayer function in pointerwidget
+        new booleanAttribute('hidden'),
+        new booleanAttribute('advancedSearch'),
     ]),
     new ObjDef('attribute',[
         new textAttribute('naam'),
         new enumAttribute('type',['boolean','date','enum','number','pointer','text']),
-        new pointerAttribute('pointerType','object'),
-        new pointerAttribute('column','attribute')//but only attributes that exist in the object that pointertype points towards
+        new booleanAttribute('readonly',true),
+        new booleanAttribute('hidden',true),
+        
+        new pointerAttribute('pointerType','object',true),
+        // new pointerAttribute('column','attribute',true),//but only attributes that exist in the object that pointertype points towards
+        new textAttribute('enumtypes',true)
         //array of attributes is reffed
     ]),
     new ObjDef('objectHasAttributes',[
         new pointerAttribute('object','object'),
         new pointerAttribute('attribute','attribute'),
-    ])
+    ],true)
 ])
 
-var testDefinition = new AppDef([
+var testDefinition = new AppDef([],[
     new ObjDef('person',[
         new textAttribute('naam'),
         new booleanAttribute('homeless'),
         new dateAttribute('birthday'),
-        new numberAttribute('lengte'),
+        new numberAttribute('lengte',true),
         new pointerAttribute('vriend','person'),
     ]),
     new ObjDef('bedrijf',[
@@ -49,13 +67,13 @@ var testDefinition = new AppDef([
         new pointerAttribute('werknemer','person'),
         new pointerAttribute('werkgever','bedrijf'),
         new numberAttribute('salaris'),
-    ])
+    ],true)
 ])
 
 var globalModal = new Modal()
 // selfDef
 // testDefinition
-var appDef = addImplicitRefs(testDefinition)
+var appDef = addImplicitRefs(selfDef)
 
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')

@@ -11,6 +11,7 @@ class ObjectNewView extends DetailView{
         this.arraycontainer.remove()
         this.data = {}
         this.saveSucceeded = new EventSystem()
+        this.uplink.remove()
         
         this.savebtn = new Button(this.buttonContainer, 'create', 'btn btn-success',() => {
             create(definition.name,that.data,() => {

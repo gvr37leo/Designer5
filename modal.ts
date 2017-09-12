@@ -7,7 +7,7 @@ class Modal{
     element: HTMLElement;
     template:string = `
         <div id="backdrop" style="
-            position: absolute;
+            position: fixed;
             top: 0;
             bottom: 0;
             left: 0;
@@ -16,6 +16,7 @@ class Modal{
             display: none;
         ">
             <div id="contentcontainer" style="
+                overflow-y: auto;
                 padding:10px;
                 background-color: white;
                 position: absolute;

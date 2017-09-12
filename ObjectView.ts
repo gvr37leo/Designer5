@@ -76,7 +76,7 @@ class ObjectView extends DetailView{
                     let gridControl = new GridControl(this.gridcontainer,gridDefinition, filter)
 
                     gridControl.createButton.btnElement.remove()
-                    gridControl.createButton = new Button(gridControl.createlinkContainer,'create','btn btn-success createbtn',() => {
+                    gridControl.createButton = new Button(gridControl.createlinkContainer,'create','btn btn-success',() => {
                         globalModal.contentcontainer.innerHTML = ''
                         let objectNewView = new ObjectNewView(globalModal.contentcontainer, gridDefinition)
                         globalModal.show()
