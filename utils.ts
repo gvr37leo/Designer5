@@ -206,3 +206,21 @@ function mapToAppDefList(map:Map<string,ObjDef>):AppDef{
     return appDef;
 }
 
+class CoolUp{
+    timeout: number = null;
+    callback: () => void;
+    cooldownMS:number
+
+    constructor(cooldownMS:number, callback: () => void){
+        this.cooldownMS = cooldownMS
+        this.callback = callback
+    }
+
+    restartCast(){
+        if(this.timeout != null){
+            clearTimeout(this.timeout)
+        }
+        this.timeout = setTimeout(this.callback,this.cooldownMS)
+    }
+
+}

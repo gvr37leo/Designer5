@@ -10,7 +10,10 @@
 
 var types = ['text','boolean','number','date','pointer','array']
 
+
+
 class GridControl{
+    filterCooldown: CoolUp;
     createButton: Button;
     createlinkContainer: Element;
     gridtitle: HTMLElement;
@@ -46,6 +49,9 @@ class GridControl{
         this.element = element;
         this.definition = definition
         this.filter = filter
+        this.filterCooldown = new CoolUp(1000, () => {
+            this.refetchbody()
+        })
 
         this.element.appendChild(string2html(this.template))
         this.gridtitle = this.element.querySelector('#gridtitle') as HTMLElement
@@ -66,10 +72,15 @@ class GridControl{
         })
 
         this.appendHeader()
+        this.refetchbody()
         
-        getlistfiltered(definition.name,this.filter,(res) => {
-            that.data = res
-            that.appendBody(res)
+    }
+
+    refetchbody(){
+        getlistfiltered(this.definition.name,this.filter,(res) => {
+            this.data = res
+            this.tablebody.innerHTML = ''
+            this.appendBody(res)
         },() => {
 
         })
@@ -85,7 +96,12 @@ class GridControl{
             //columnrow
             var searchField = new TextWidget(createTableCell(this.searchrow))
             searchField.value.onchange.listen((val) => {
-                this.filter[attribute.name] = val
+                if(val == ''){
+                    delete this.filter[attribute.name]
+                }else{
+                    this.filter[attribute.name] = val
+                }
+                this.filterCooldown.restartCast()
             })
         }
 
