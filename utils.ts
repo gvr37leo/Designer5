@@ -100,9 +100,14 @@ function getobject(pointertype,id,callback:(data) => void,errorCB:(error) => voi
         },
         method:'GET',
     })
-    .then(handleResponse)
+    .then(response => response.text())
     .then((res) => {
-        callback(res)
+        if(res == ""){
+            callback(null);
+        }
+        else{
+            callback(res)
+        }
     }).catch((err) => {
         handleError(err)
         errorCB(err)

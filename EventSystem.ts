@@ -15,7 +15,7 @@ class Box<T>{
     set(value:T,silent:boolean = false){
         var old = this.value
         this.value = value
-        if(old !== value){
+        if(old != value){
             if(!silent){
                 this.onchange.trigger(this.value, old)
             }

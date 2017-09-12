@@ -3,6 +3,7 @@ import * as bodyParser from "body-parser"
 import * as mongodb from "mongodb"
 import * as fs from "fs"
 import * as path from "path"
+import * as escapeRegexp from "escape-regexp"
 
 var mongoClient = mongodb.MongoClient;
 var url = 'mongodb://localhost:27017/company';
@@ -61,8 +62,8 @@ function start(){
     
             delete req.body._id
             collection.update({_id:new mongodb.ObjectID(req.params.id)}, {$set:req.body}, function(err, result){
-                if(err)res.send(err)
-                    else res.send({status:'success'});
+                if(err)res.send(err);
+                else res.send({status:'success'});
             })
         })
     

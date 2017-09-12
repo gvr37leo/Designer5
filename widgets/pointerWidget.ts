@@ -42,7 +42,7 @@ class PointerWidget extends Widget<string>{
         this.internalValue = new Box(0)
         this.selectedindex = new Box<number>(0)
         this.onselect = new EventSystem()
-
+        that.input.value = 'nullptr'
 
         new Button(this.delbuttoncontainer,'X','btn btn-danger group-middle',() => {
             this.internalValue.set(null)
@@ -70,7 +70,12 @@ class PointerWidget extends Widget<string>{
                     that.input.value = 'nullptr'
                 }else{
                     getobject(attribute.pointerType,val,(data) => {
-                        that.input.value = this.displayer(data)
+                        if(data == null){
+                            that.input.value = 'nullptr'
+                        }else{
+                            that.input.value = this.displayer(data)
+                        }
+                        
                     },(error) => {
                         
                     })
