@@ -4,11 +4,10 @@
 /// <reference path="Navbar.ts" />
 /// <reference path="utils.ts" />
 /// <reference path="buttons.ts" />
+/// <reference path="modal.ts" />
+
 
 //todo
-//create in objectview in same window
-//hide column that references self in objectview(maybe generate hidecolumn attribute)
-//readonly pointerwidget
 //depends upon - hiding
 //generate json button
 
@@ -47,15 +46,16 @@ var testDefinition = new AppDef([
         new enumAttribute('bankrating',['A+','A','B','D','F'])
     ]),
     new ObjDef('persoonwerktBijBedrijf',[
-        new pointerAttribute('person','person'),
-        new pointerAttribute('bedrijf','bedrijf'),
+        new pointerAttribute('werknemer','person'),
+        new pointerAttribute('werkgever','bedrijf'),
         new numberAttribute('salaris'),
     ])
 ])
 
+var globalModal = new Modal()
 // selfDef
 // testDefinition
-var appDef = addImplicitRefs(selfDef)
+var appDef = addImplicitRefs(testDefinition)
 
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')
@@ -73,13 +73,6 @@ var router = Router({
             return obj.name == object
         })
         new GridControl(element, objdefinition as ObjDef,{})
-    },
-    ":object/new":(object) => {
-        element.innerHTML = ''
-        var objdefinition = appDef.objdefinitions.find((obj) => {
-            return obj.name == object
-        })
-        new ObjectNewView(element,objdefinition as ObjDef)
     },
     ":object/:id":(object,id) => {
         element.innerHTML = ''

@@ -11,11 +11,12 @@
 var types = ['text','boolean','number','date','pointer','array']
 
 class GridControl{
+    createButton: Button;
+    createlinkContainer: Element;
     gridtitle: HTMLElement;
     tablebody: Element;
     titlerow: Element;
     searchrow: Element;
-    createlink: HTMLAnchorElement;
     filter: any;
     element: Element
     data
@@ -24,7 +25,9 @@ class GridControl{
     template:string = `
         <div class="grid">
             <h2 id="gridtitle"></h2>
-            <a class="btn btn-success createbtn" id="createlink">create</a>
+            <div id="createlink-container">
+                
+            </div>
             <table id="table" class="table table-striped" style="width:100%;">
                 <thead>
                     <tr id="titlerow"></tr>
@@ -49,9 +52,18 @@ class GridControl{
         this.tablebody = this.element.querySelector('#tablebody') 
         this.titlerow = this.element.querySelector('#titlerow')
         this.searchrow = this.element.querySelector('#searchrow')
-        this.createlink = this.element.querySelector('#createlink') as HTMLAnchorElement
-        this.createlink.href = `/#${this.definition.name}/new`
+        this.createlinkContainer = this.element.querySelector('#createlink-container');
         this.gridtitle.innerText = this.definition.name
+        
+        this.createButton = new Button(this.createlinkContainer,'create','btn btn-success createbtn',() => {
+            globalModal.contentcontainer.innerHTML = ''
+            let objectNewView = new ObjectNewView(globalModal.contentcontainer, this.definition)
+            globalModal.show()
+
+            objectNewView.saveSucceeded.listen(() => {
+                globalModal.hide()
+            })
+        })
 
         this.appendHeader()
         

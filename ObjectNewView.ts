@@ -2,16 +2,19 @@
 /// <reference path="DetailView.ts" />
 
 class ObjectNewView extends DetailView{
+    saveSucceeded: EventSystem<{}>;
+    savebtn: Button;
 
     constructor(element:Element,definition:ObjDef){
         super(element,definition)
         var that = this
         this.arraycontainer.remove()
         this.data = {}
+        this.saveSucceeded = new EventSystem()
         
-        var savebtn = new Button(this.buttonContainer, 'create', 'btn btn-success',() => {
+        this.savebtn = new Button(this.buttonContainer, 'create', 'btn btn-success',() => {
             create(definition.name,that.data,() => {
-                router.setRoute(definition.name)
+                this.saveSucceeded.trigger(0,0)
             },(error) => {
                 
             })

@@ -3,6 +3,7 @@
 
 
 class ObjectView extends DetailView{
+    buttons: Button[] = [];
     changeEvent: EventSystem<any>;
 
     constructor(element:Element,definition:ObjDef, id){
@@ -31,6 +32,8 @@ class ObjectView extends DetailView{
             that.data = res;
             that.render(res)
 
+            
+
             for(var key of that.widgetMap){
                 var widget = key[1]
                 var fieldname = key[0]
@@ -44,14 +47,9 @@ class ObjectView extends DetailView{
             
 
             for(let attribute of that.definition.attributes){
-                var filter = {}
-                filter[attribute.column] = id
-                
                 if(attribute.type == 'array'){
                     this.arraycontainer.style.display = 'block'
-                    new GridControl(that.gridcontainer,appDef.objdefinitions.find((val) => {
-                        return val.name == attribute.pointerType
-                    }), filter)
+                    that.buttons[0].btnElement.click()
                     break;
                 }
             }
@@ -63,18 +61,34 @@ class ObjectView extends DetailView{
     }
 
     render(data){
-        
-
         for(let attribute of this.definition.attributes){
-            let filter = {}
-            filter[attribute.column] = data._id
             if(attribute.type == 'array'){
-                new Button(this.tabs, attribute.pointerType, 'btn btn-default margin-right',() => {
+                let castedAttribute = attribute as arrayAttribute
+
+                let filter = {}
+                filter[castedAttribute.column] = data._id
+                
+                this.buttons.push(new Button(this.tabs, `${castedAttribute.pointerType} : ${castedAttribute.column}`, 'btn btn-default margin-right',() => {
                     this.gridcontainer.innerHTML = ''
-                    new GridControl(this.gridcontainer,appDef.objdefinitions.find((val) => {
-                        return val.name == attribute.pointerType
-                    }), filter)
-                })
+                    let gridDefinition = appDef.objdefinitions.find((val) => {
+                        return val.name == castedAttribute.pointerType
+                    })
+                    let gridControl = new GridControl(this.gridcontainer,gridDefinition, filter)
+
+                    gridControl.createButton.btnElement.remove()
+                    gridControl.createButton = new Button(gridControl.createlinkContainer,'create','btn btn-success createbtn',() => {
+                        globalModal.contentcontainer.innerHTML = ''
+                        let objectNewView = new ObjectNewView(globalModal.contentcontainer, gridDefinition)
+                        globalModal.show()
+                        objectNewView.widgetMap.get(castedAttribute.column).value.set(this.data._id)
+                        objectNewView.widgetMap.get(castedAttribute.column).readonly.set(true)
+
+                        objectNewView.saveSucceeded.listen(() => {
+                            globalModal.hide()
+                        })
+                    }) 
+
+                }))
             }else{
                 this.addWidget(attribute)
             }
