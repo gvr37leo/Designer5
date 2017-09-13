@@ -29,3 +29,13 @@ class SaveButton extends Button{
         })
     }
 }
+
+class CustomButton{
+    name: string;
+    callback: (appDef: AppDef) => void;
+
+    constructor(name:string,callback:(appDef:AppDef) => void){
+        this.name = name
+        this.callback = callback
+    }   
+}

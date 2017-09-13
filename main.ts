@@ -16,15 +16,15 @@
 declare var Router:any
 var naam = new textAttribute('name')
 
-var selfDef = new AppDef([(appDef) => {
-    for(var objDef of appDef.objdefinitions){
+var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:AppDef) => {
+    for(let objDef of appDef.objdefinitions){
         getlist(objDef.name,(data) => {
-            
+            console.log(objDef.name, data)
         },(err) => {
 
         })
     }
-}],[
+})],[
     new ObjDef('object',naam,[
         naam,
         new booleanAttribute('hidden'),
@@ -71,12 +71,12 @@ var testDefinition = new AppDef([],[
 var globalModal = new Modal()
 // selfDef
 // testDefinition
-var appDef = addImplicitRefs(testDefinition)
+var appDef = addImplicitRefs(selfDef)
 
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')
 
-var navbar = new Navbar(navbarContainer,appDef as AppDef)
+var navbar = new Navbar(navbarContainer, appDef)
 
 var router = Router({
     "":() => {

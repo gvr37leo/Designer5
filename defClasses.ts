@@ -1,11 +1,12 @@
 class AppDef{
+    customButtons: CustomButton[];
+    databaseName: string
     objdefinitions:ObjDef[]
     dateformat:string
-    callbacks:((appDef:AppDef) => void)[]
 
-    constructor(callbacks:((appDef:AppDef) => void)[],objdefinitions:ObjDef[]){
+    constructor(customButtons:CustomButton[],objdefinitions:ObjDef[]){
         this.objdefinitions = objdefinitions
-        this.callbacks = callbacks
+        this.customButtons = customButtons
     }
 }
 

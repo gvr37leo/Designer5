@@ -186,8 +186,8 @@ function addImplicitRefs(appDef:AppDef):AppDef{
             }
         }
     }
-
-    return mapToAppDefList(map)
+    appDef.objdefinitions = mapToAppDefList(map).objdefinitions
+    return appDef
 }
 
 function appDefListToMap(appdef:AppDef):Map<string,ObjDef>{

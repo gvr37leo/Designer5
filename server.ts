@@ -35,7 +35,7 @@ function start(){
     
         app.post('/api/search/:object', function(req, res){
             var collection = db.collection(req.params.object)
-            collection.find(req.body).toArray(function(err, result){
+            collection.find(req.body).limit(50).toArray(function(err, result){
                 res.send(result);
             })
         })
