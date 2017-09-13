@@ -10,13 +10,11 @@
 //todo
 //depends upon - hiding
 //generate json button
-//naam required for display
 //filtering
 //datewidget
-//update on delete and create
-//refresh button
 
 declare var Router:any
+var naam = new textAttribute('name')
 
 var selfDef = new AppDef([(appDef) => {
     for(var objDef of appDef.objdefinitions){
@@ -27,13 +25,13 @@ var selfDef = new AppDef([(appDef) => {
         })
     }
 }],[
-    new ObjDef('object',[
-        new textAttribute('naam'),//not calling this name causes errors becauses of the displayer function in pointerwidget
+    new ObjDef('object',naam,[
+        naam,
         new booleanAttribute('hidden'),
         new booleanAttribute('advancedSearch'),
     ]),
-    new ObjDef('attribute',[
-        new textAttribute('naam'),
+    new ObjDef('attribute',naam,[
+        naam,
         new enumAttribute('type',['boolean','date','enum','number','pointer','text']),
         new booleanAttribute('readonly',true),
         new booleanAttribute('hidden',true),
@@ -43,27 +41,27 @@ var selfDef = new AppDef([(appDef) => {
         new textAttribute('enumtypes',true)
         //array of attributes is reffed
     ]),
-    new ObjDef('objectHasAttributes',[
+    new ObjDef('objectHasAttributes',null,[
         new pointerAttribute('object','object'),
         new pointerAttribute('attribute','attribute'),
     ],true)
 ])
 
 var testDefinition = new AppDef([],[
-    new ObjDef('person',[
-        new textAttribute('naam'),
+    new ObjDef('person',naam,[
+        naam,
         new booleanAttribute('homeless'),
         new dateAttribute('birthday'),
         new numberAttribute('lengte',true),
         new pointerAttribute('vriend','person'),
     ]),
-    new ObjDef('bedrijf',[
-        new textAttribute('naam'),
+    new ObjDef('bedrijf',naam,[
+        naam,
         new textAttribute('branch'),
         new numberAttribute('rating'),
         new enumAttribute('bankrating',['A+','A','B','D','F'])
     ]),
-    new ObjDef('persoonwerktBijBedrijf',[
+    new ObjDef('persoonwerktBijBedrijf',null,[
         new pointerAttribute('werknemer','person'),
         new pointerAttribute('werkgever','bedrijf'),
         new numberAttribute('salaris'),
@@ -73,7 +71,7 @@ var testDefinition = new AppDef([],[
 var globalModal = new Modal()
 // selfDef
 // testDefinition
-var appDef = addImplicitRefs(selfDef)
+var appDef = addImplicitRefs(testDefinition)
 
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')

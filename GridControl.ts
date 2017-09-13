@@ -70,6 +70,7 @@ class GridControl{
 
             objectNewView.saveSucceeded.listen(() => {
                 globalModal.hide()
+                this.refetchbody()
             })
         })
 
@@ -138,7 +139,9 @@ class GridControl{
 
             // delete button
             let deletebutton = new Button(createTableCell(row),'delete', 'btn btn-danger',() => {
-                del(this.definition.name,data[rows]._id,() => {},() => {})
+                del(this.definition.name,data[rows]._id,() => {
+                    this.refetchbody()
+                },() => {})
             })
         }
     }

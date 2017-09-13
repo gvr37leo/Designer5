@@ -1,6 +1,7 @@
 /// <reference path="../widget.ts" />
 
 class PointerWidget extends Widget<string>{
+    referencedObjectsDropdownAttributeName: string;
     delbuttoncontainer: HTMLElement;
     attribute: pointerAttribute;
     internalValue: Box<number>;
@@ -12,7 +13,6 @@ class PointerWidget extends Widget<string>{
     dropper:HTMLElement
     link:HTMLAnchorElement
     drops:Element[]
-    displayer:(val) => string
     infoer:(val) => string
     optionslist
     template:string = `
@@ -25,11 +25,10 @@ class PointerWidget extends Widget<string>{
             <a class="btn btn-info group-right" id="link">-></a>
         </div>` 
 
-    constructor(element:HTMLElement, attribute:pointerAttribute, infoer:(val) => string, displayer:(val) => string){
+    constructor(element:HTMLElement, attribute:pointerAttribute, infoer:(val) => string){
         super(element)
         var that = this
         this.attribute = attribute
-        this.displayer = displayer
 
         this.element.appendChild(string2html(this.template))
         this.container = this.element.querySelector('#container') as HTMLElement
@@ -38,7 +37,8 @@ class PointerWidget extends Widget<string>{
         this.dropper = this.element.querySelector('#dropper') as HTMLElement
         this.delbuttoncontainer = this.element.querySelector('#delbuttoncontainer') as HTMLElement
         this.drops = []
-        
+        this.referencedObjectsDropdownAttributeName = appDef.objdefinitions.find(val => val.name == attribute.pointerType).dropdownAttribute.name
+
         this.value.value = 0;
         this.internalValue = new Box(0)
         this.selectedindex = new Box<number>(0)
@@ -54,26 +54,26 @@ class PointerWidget extends Widget<string>{
                 that.input.value = 'nullptr'
                 this.value.set(null)
             }else{
-                that.input.value = this.displayer(val)
+                that.input.value = this.getDisplayValue(val)
                 this.value.set(val._id)
             }
         })
 
         var displayHasBeenSet = false
-        this.value.onchange.listen((val) => {//handle the case where val = undefined or null
+        this.value.onchange.listen((pointer) => {//handle the case where val = undefined or null
             //special case
             //set display for first time set
             if(!displayHasBeenSet){
                 displayHasBeenSet = true
 
-                if(val == null){
+                if(pointer == null){
                     that.input.value = 'nullptr'
                 }else{
-                    getobject(attribute.pointerType,val,(data) => {
+                    getobject(attribute.pointerType,pointer,(data) => {
                         if(data == null){
                             that.input.value = 'null'
                         }else{
-                            that.input.value = this.displayer(data)
+                            that.input.value = this.getDisplayValue(data)
                         }
                         
                     },(error) => {
@@ -81,7 +81,7 @@ class PointerWidget extends Widget<string>{
                     })
                 }
             }
-            that.link.href = `/#${attribute.pointerType}/${val}`
+            that.link.href = `/#${attribute.pointerType}/${pointer}`
         })
 
         this.onselect.listen(() =>{
@@ -124,6 +124,7 @@ class PointerWidget extends Widget<string>{
             }
         })
 
+        
 
         getlist(attribute.pointerType, (res) => {
             this.optionslist = res
@@ -136,7 +137,7 @@ class PointerWidget extends Widget<string>{
     render(optionlist){
         var that = this;
         for(let option of optionlist){
-            var drop = string2html(`<div class="drop">${that.displayer(option)}</div>`)
+            var drop = string2html(`<div class="drop">${this.getDisplayValue(option)}</div>`)
             drop.addEventListener('click',() => {
                 this.internalValue.set(option)
                 this.onselect.trigger(option._id,0)
@@ -154,5 +155,9 @@ class PointerWidget extends Widget<string>{
             this.delbuttoncontainer.style.display = 'block'
         }
         
+    }
+
+    getDisplayValue(val){
+        return val[this.referencedObjectsDropdownAttributeName] || val._id
     }
 }

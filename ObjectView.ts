@@ -85,6 +85,7 @@ class ObjectView extends DetailView{
 
                         objectNewView.saveSucceeded.listen(() => {
                             globalModal.hide()
+                            gridControl.refetchbody()
                         })
                     }) 
 

@@ -14,11 +14,13 @@ class ObjDef{
     attributes:Attribute[]
     advancedSearch:boolean
     hidden:boolean
+    dropdownAttribute:Attribute
 
-    constructor(name:string, attributes:Attribute[],hidden:boolean = false){
+    constructor(name:string, highlightAttribute:Attribute, attributes:Attribute[],hidden:boolean = false){
         this.name = name
         this.attributes = attributes
         this.hidden = hidden
+        this.dropdownAttribute = highlightAttribute
     }
 }
 
