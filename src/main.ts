@@ -9,11 +9,10 @@
 
 //todo
 //depends upon - hiding
-//generate json button
 //filtering
 //datewidget
 //enum should maybe point to another object instead of being a string array
-declare var download:any
+declare var download:(contents:string,filename:string,mimetype:string) => void
 declare var Router:any
 var naam = new textAttribute('name')
 
@@ -21,50 +20,43 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
     var objectMap:Map<string,ObjDef> = new Map()
     var attributeMap: Map<string, Attribute> = new Map()
 
-    var getobjects = new Promise((resolve, reject) => {
-        getlist('object', (objects: ObjDef[]) => {
-            for (var obj of objects) {
-                objectMap.set(obj._id, new ObjDef(obj.name, null, [], obj.hidden))
-            }
-            console.log('objects', objects)
-            resolve(objects)
-        }, () => { 
-            reject()
-        })
-    }) 
+    // var getobjects = new Promise((resolve, reject) => {
+    //     getlist('object', (objects: ObjDef[]) => {
+    //         for (var obj of objects) {
+    //             objectMap.set(obj._id, new ObjDef(obj.name, null, [], obj.hidden))
+    //         }
+    //         console.log('objects', objects)
+    //         resolve(objects)
+    //     }, () => { 
+    //         reject()
+    //     })
+    // }) 
     
-    var getattributes = new Promise((resolve,reject) => {
-        getlist('attribute', (attributes: Attribute[]) => {
-            for (var attribute of attributes) {
-                switch (attribute.type) {
-                    case 'text':
-                        break;
+    // var getattributes = new Promise((resolve,reject) => {
+    //     getlist('attribute', (attributes: Attribute[]) => {
+    //         for (var attribute of attributes) {
+    //             attributeMap.set(attribute._id, new Attribute(attribute.name, attribute.type, attribute.hidden))
+    //         }
 
-                    default:
-                        break;
-                }
-                attributeMap.set(attribute._id, new Attribute(attribute.name, attribute.type, attribute.hidden))
-            }
-
-            console.log('attributes', attributes)
-            resolve(attributes)
-        }, () => { 
-            reject()
-        })
-    })
+    //         console.log('attributes', attributes)
+    //         resolve(attributes)
+    //     }, () => { 
+    //         reject()
+    //     })
+    // })
     
 
-    Promise.all([getobjects, getattributes]).then((values) => {
-        getlist('objectHasAttributes', (objectHasAttributes: { object: string, attribute: string }[]) => {
-            for (var objectHasAttribute of objectHasAttributes) {
-                objectMap.get(objectHasAttribute.object).attributes.push(attributeMap.get(objectHasAttribute.attribute))
-            }
-            console.log('objectHasAttributes', objectHasAttributes)
+    // Promise.all([getobjects, getattributes]).then((values) => {
+    //     getlist('objectHasAttributes', (objectHasAttributes: { object: string, attribute: string }[]) => {
+    //         for (var objectHasAttribute of objectHasAttributes) {
+    //             objectMap.get(objectHasAttribute.object).attributes.push(attributeMap.get(objectHasAttribute.attribute))
+    //         }
+    //         console.log('objectHasAttributes', objectHasAttributes)
 
-            var appdef = JSON.stringify(addImplicitRefs(new AppDef([], Array.from(objectMap.values()))))
-            download(appdef, "appDef.json", "application/json")
-        }, () => { })
-    })
+    //         var appdef = JSON.stringify(addImplicitRefs(new AppDef([], Array.from(objectMap.values()))))
+    //         download(appdef, "appDef.json", "application/json")
+    //     }, () => { })
+    // })
 
 
 })],[
@@ -80,14 +72,13 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
         new booleanAttribute('hidden',true),
         
         new pointerAttribute('pointerType','object',true),
-        // new pointerAttribute('column','attribute',true),//but only attributes that exist in the object that pointertype points towards
-        new textAttribute('enumtypes',true)
-        //array of attributes is reffed
+        new textAttribute('enumtypes',true),
+        new pointerAttribute('belongsToObject', 'object'),
     ]),
-    new ObjDef('objectHasAttributes',null,[
-        new pointerAttribute('object','object'),
-        new pointerAttribute('attribute','attribute'),
-    ],true)
+    // new ObjDef('objectHasAttributes',null,[
+    //     // new pointerAttribute('object','object'),
+    //     new pointerAttribute('attribute','attribute'),
+    // ],true)
 ])
 
 var testDefinition = new AppDef([],[
