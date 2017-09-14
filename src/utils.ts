@@ -182,7 +182,7 @@ function addImplicitRefs(appDef:AppDef):AppDef{
                 
                 var newAttribute = new arrayAttribute(attribute.name,objDef.name,attribute.name)
 
-                referencedObject.attributes.push(newAttribute)
+                referencedObject.attributes.unshift(newAttribute)
             }
         }
     }

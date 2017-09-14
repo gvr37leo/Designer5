@@ -20,18 +20,23 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
     var objectMap:Map<string,ObjDef> = new Map()
     var attributeMap: Map<string, Attribute> = new Map()
 
-    // var getobjects = new Promise((resolve, reject) => {
-    //     getlist('object', (objects: ObjDef[]) => {
-    //         for (var obj of objects) {
-    //             objectMap.set(obj._id, new ObjDef(obj.name, null, [], obj.hidden))
-    //         }
-    //         console.log('objects', objects)
-    //         resolve(objects)
-    //     }, () => { 
-    //         reject()
-    //     })
-    // }) 
-    
+    getlist('object', (objects: ObjDef[]) => {
+        for (var obj of objects) {
+            objectMap.set(obj._id, new ObjDef(obj.name, null, [], obj.hidden))
+        }
+        console.log('objects', objects)
+
+        getlist('attribute', (attributes: Attribute[]) => {
+            for (var attribute of attributes) {
+                attribute.belongsToObject
+            }
+
+            console.log('attributes', attributes)
+        }, () => { 
+        })
+
+    }, () => {})
+
     // var getattributes = new Promise((resolve,reject) => {
     //     getlist('attribute', (attributes: Attribute[]) => {
     //         for (var attribute of attributes) {

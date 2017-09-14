@@ -30,12 +30,14 @@ abstract class Attribute{
     _id:string
     name:string
     type:string
+    belongsToObject:ObjDef
     readonly:boolean = false
     hidden:boolean
 
-    constructor(name:string, type:string,hidden:boolean = false){
+    constructor(name: string, type: string, hidden: boolean = false) {//, belongsToObject: ObjDef
         this.name = name;
         this.type = type;
+        // this.belongsToObject = belongsToObject
         this.hidden = hidden
     }
 }
