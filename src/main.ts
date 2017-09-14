@@ -40,26 +40,25 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
 
             var appdef = addImplicitRefs(new AppDef([], Array.from(objectMap.values())))
             download(JSON.stringify(appdef, null, '\t'), "appDef.json", "application/json")
-        }, () => { 
-        })
-
+        }, () => {})
     }, () => {})
 })],[
-        new ObjDef('object', objectName,[//zou eigenlijk ref moeten zijn
+    new ObjDef('object', objectName,[//zou eigenlijk ref moeten zijn
         objectName,
         new pointerAttribute('dropdownAttribute','attribute'),
         new booleanAttribute('hidden'),
         new booleanAttribute('advancedSearch'),
     ]),
-        new ObjDef('attribute', attributeName,[
+    new ObjDef('attribute', attributeName,[
         attributeName,
         new enumAttribute('type',['boolean','date','enum','number','pointer','text']),
+        new pointerAttribute('belongsToObject', 'object'),
         new booleanAttribute('readonly',true),
         new booleanAttribute('hidden',true),
+        new booleanAttribute('required',true),
         
         new pointerAttribute('pointerType','object',true),
         new textAttribute('enumtypes',true),
-        new pointerAttribute('belongsToObject', 'object'),
     ]),
     // new ObjDef('objectHasAttributes',null,[
     //     // new pointerAttribute('object','object'),

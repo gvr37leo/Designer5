@@ -33,6 +33,7 @@ abstract class Attribute{
     belongsToObject:ObjDef
     readonly:boolean = false
     hidden:boolean
+    required:boolean
 
     constructor(name: string, type: string, hidden: boolean = false) {//, belongsToObject: ObjDef
         this.name = name;
