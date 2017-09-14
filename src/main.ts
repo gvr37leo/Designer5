@@ -13,7 +13,7 @@
 //filtering
 //datewidget
 //enum should maybe point to another object instead of being a string array
-
+declare var download:any
 declare var Router:any
 var naam = new textAttribute('name')
 
@@ -61,8 +61,8 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
             }
             console.log('objectHasAttributes', objectHasAttributes)
 
-            
-            console.log(addImplicitRefs(new AppDef([], Array.from(objectMap.values()))))
+            var appdef = JSON.stringify(addImplicitRefs(new AppDef([], Array.from(objectMap.values()))))
+            download(appdef, "appDef.json", "application/json")
         }, () => { })
     })
 
