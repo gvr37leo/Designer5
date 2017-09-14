@@ -11,6 +11,7 @@ class AppDef{
 }
 
 class ObjDef{
+    _id:string
     name:string
     attributes:Attribute[]
     advancedSearch:boolean
@@ -26,6 +27,7 @@ class ObjDef{
 }
 
 abstract class Attribute{
+    _id:string
     name:string
     type:string
     readonly:boolean = false

@@ -17,13 +17,55 @@ declare var Router:any
 var naam = new textAttribute('name')
 
 var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:AppDef) => {
-    for(let objDef of appDef.objdefinitions){
-        getlist(objDef.name,(data) => {
-            console.log(objDef.name, data)
-        },(err) => {
+    var objectMap:Map<string,ObjDef> = new Map()
+    var attributeMap: Map<string, Attribute> = new Map()
 
+    var getobjects = new Promise((resolve, reject) => {
+        getlist('object', (objects: ObjDef[]) => {
+            for (var obj of objects) {
+                objectMap.set(obj._id, new ObjDef(obj.name, null, [], obj.hidden))
+            }
+            console.log('objects', objects)
+            resolve(objects)
+        }, () => { 
+            reject()
         })
-    }
+    }) 
+    
+    var getattributes = new Promise((resolve,reject) => {
+        getlist('attribute', (attributes: Attribute[]) => {
+            for (var attribute of attributes) {
+                switch (attribute.type) {
+                    case 'text':
+                        break;
+
+                    default:
+                        break;
+                }
+                attributeMap.set(attribute._id, new Attribute(attribute.name, attribute.type, attribute.hidden))
+            }
+
+            console.log('attributes', attributes)
+            resolve(attributes)
+        }, () => { 
+            reject()
+        })
+    })
+    
+
+    Promise.all([getobjects, getattributes]).then((values) => {
+        getlist('objectHasAttributes', (objectHasAttributes: { object: string, attribute: string }[]) => {
+            for (var objectHasAttribute of objectHasAttributes) {
+                objectMap.get(objectHasAttribute.object).attributes.push(attributeMap.get(objectHasAttribute.attribute))
+            }
+            console.log('objectHasAttributes', objectHasAttributes)
+
+            
+            console.log(addImplicitRefs(new AppDef([], Array.from(objectMap.values()))))
+        }, () => { })
+    })
+
+
 })],[
     new ObjDef('object',naam,[
         naam,
