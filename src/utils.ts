@@ -225,7 +225,7 @@ class CoolUp{
         if(this.timeout != null){
             clearTimeout(this.timeout)
         }
-        this.timeout = setTimeout(this.callback,this.cooldownMS)
+        this.timeout = window.setTimeout(this.callback,this.cooldownMS)
     }
 
 }

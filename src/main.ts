@@ -12,6 +12,7 @@
 //generate json button
 //filtering
 //datewidget
+//enum should maybe point to another object instead of being a string array
 
 declare var Router:any
 var naam = new textAttribute('name')
