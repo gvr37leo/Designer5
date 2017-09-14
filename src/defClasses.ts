@@ -82,6 +82,7 @@ class identityAttribute extends Attribute{
     constructor(pointerType:string,hidden:boolean = false){
         super('_id', 'id',hidden)
         this.pointerType = pointerType
+        this.readonly = true
     }
 }
 

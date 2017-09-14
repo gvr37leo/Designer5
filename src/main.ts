@@ -21,26 +21,21 @@ var attributeName = new textAttribute('name')
 
 var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:AppDef) => {
     var objectMap:Map<string,ObjDef> = new Map()
-    var attributeMap: Map<string, Attribute> = new Map()
 
     getlist('object', (objects: ObjDef[]) => {
         for (var obj of objects) {
-            objectMap.set(obj._id, new ObjDef(obj.name, null, [], obj.hidden))
+            objectMap.set(obj._id, new ObjDef(obj.name, obj.dropdownAttribute, [], obj.hidden))
         }
-        console.log('objects', objects)
-
+        
         getlist('attribute', (attributes: Attribute[]) => {
             for (var attribute of attributes) {
                 var objReferencedByAttributeBelongsToObject: ObjDef = objectMap.get(attribute.belongsToObject as any)
                 objReferencedByAttributeBelongsToObject.attributes.push(attribute)
             }
-
-            console.log('attributes', attributes)
-
-
             var appdef = addImplicitRefs(new AppDef([], Array.from(objectMap.values())))
             download(JSON.stringify(appdef, null, '\t'), "appDef.json", "application/json")
         }, () => {})
+
     }, () => {})
 })],[
     new ObjDef('object', objectName,[//zou eigenlijk ref moeten zijn
@@ -92,7 +87,7 @@ var testDefinition = new AppDef([],[
 var globalModal = new Modal()
 // selfDef
 // testDefinition
-var appDef = addImplicitRefs(selfDef)
+var appDef = addImplicitRefs(testDefinition)
 
 var navbarContainer = document.querySelector('#navbar')
 var element = document.querySelector('#grid')
