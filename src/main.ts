@@ -14,7 +14,10 @@
 //enum should maybe point to another object instead of being a string array
 declare var download:(contents:string,filename:string,mimetype:string) => void
 declare var Router:any
-var naam = new textAttribute('name')
+
+
+var objectName = new textAttribute('name')
+var attributeName = new textAttribute('name')
 
 var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:AppDef) => {
     var objectMap:Map<string,ObjDef> = new Map()
@@ -28,50 +31,28 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
 
         getlist('attribute', (attributes: Attribute[]) => {
             for (var attribute of attributes) {
-                attribute.belongsToObject
+                var objReferencedByAttributeBelongsToObject: ObjDef = objectMap.get(attribute.belongsToObject as any)
+                objReferencedByAttributeBelongsToObject.attributes.push(attribute)
             }
 
             console.log('attributes', attributes)
+
+
+            var appdef = addImplicitRefs(new AppDef([], Array.from(objectMap.values())))
+            download(JSON.stringify(appdef, null, '\t'), "appDef.json", "application/json")
         }, () => { 
         })
 
     }, () => {})
-
-    // var getattributes = new Promise((resolve,reject) => {
-    //     getlist('attribute', (attributes: Attribute[]) => {
-    //         for (var attribute of attributes) {
-    //             attributeMap.set(attribute._id, new Attribute(attribute.name, attribute.type, attribute.hidden))
-    //         }
-
-    //         console.log('attributes', attributes)
-    //         resolve(attributes)
-    //     }, () => { 
-    //         reject()
-    //     })
-    // })
-    
-
-    // Promise.all([getobjects, getattributes]).then((values) => {
-    //     getlist('objectHasAttributes', (objectHasAttributes: { object: string, attribute: string }[]) => {
-    //         for (var objectHasAttribute of objectHasAttributes) {
-    //             objectMap.get(objectHasAttribute.object).attributes.push(attributeMap.get(objectHasAttribute.attribute))
-    //         }
-    //         console.log('objectHasAttributes', objectHasAttributes)
-
-    //         var appdef = JSON.stringify(addImplicitRefs(new AppDef([], Array.from(objectMap.values()))))
-    //         download(appdef, "appDef.json", "application/json")
-    //     }, () => { })
-    // })
-
-
 })],[
-    new ObjDef('object',naam,[
-        naam,
+        new ObjDef('object', objectName,[//zou eigenlijk ref moeten zijn
+        objectName,
+        new pointerAttribute('dropdownAttribute','attribute'),
         new booleanAttribute('hidden'),
         new booleanAttribute('advancedSearch'),
     ]),
-    new ObjDef('attribute',naam,[
-        naam,
+        new ObjDef('attribute', attributeName,[
+        attributeName,
         new enumAttribute('type',['boolean','date','enum','number','pointer','text']),
         new booleanAttribute('readonly',true),
         new booleanAttribute('hidden',true),
@@ -86,16 +67,18 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
     // ],true)
 ])
 
+var personName = new textAttribute('name')
+var bedrijfName = new textAttribute('name')
 var testDefinition = new AppDef([],[
-    new ObjDef('person',naam,[
-        naam,
+    new ObjDef('person', personName,[
+        personName,
         new booleanAttribute('homeless'),
         new dateAttribute('birthday'),
         new numberAttribute('lengte',true),
         new pointerAttribute('vriend','person'),
     ]),
-    new ObjDef('bedrijf',naam,[
-        naam,
+    new ObjDef('bedrijf', bedrijfName,[
+        bedrijfName,
         new textAttribute('branch'),
         new numberAttribute('rating'),
         new enumAttribute('bankrating',['A+','A','B','D','F'])

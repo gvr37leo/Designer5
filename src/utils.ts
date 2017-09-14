@@ -177,11 +177,11 @@ function addImplicitRefs(appDef:AppDef):AppDef{
         objDef.attributes.unshift(new identityAttribute(objDef.name))
 
         for(var attribute of objDef.attributes){
+            // attribute.belongsToObject = objDef
+
             if(attribute.type == 'pointer'){
                 var referencedObject = map.get((attribute as pointerAttribute).pointerType)
-                
                 var newAttribute = new arrayAttribute(attribute.name,objDef.name,attribute.name)
-
                 referencedObject.attributes.unshift(newAttribute)
             }
         }
