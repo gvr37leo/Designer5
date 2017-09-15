@@ -46,7 +46,7 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
     ]),
     new ObjDef('2','attribute', '5',[
         new TextAttribute('5', 'name'),
-        // new pointerAttribute('6','enumType','3'),
+        new pointerAttribute('6','enumTypes','3'),
         new pointerAttribute('7','belongsToObject', '1'),
         new booleanAttribute('8','readonly',true),
         new booleanAttribute('9','hidden',true),
@@ -55,7 +55,7 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
         new pointerAttribute('11','pointerType','1',true),
         new TextAttribute('12','enumtypes',true),
     ]),
-    new ObjDef('3','enumType',null,[
+    new ObjDef('3','enumType','13',[
         new TextAttribute('13', 'value'),
     ])
 ])
