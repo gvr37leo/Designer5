@@ -1,7 +1,8 @@
 /// <reference path="../widget.ts" />
 
 class PointerWidget extends Widget<string>{
-    referencedObjectsDropdownAttributeName: string;
+    referencedObjectDropdownAttribute: Attribute;
+    referencedObject: ObjDef;
     delbuttoncontainer: HTMLElement;
     attribute: pointerAttribute;
     internalValue: Box<number>;
@@ -37,25 +38,34 @@ class PointerWidget extends Widget<string>{
         this.dropper = this.element.querySelector('#dropper') as HTMLElement
         this.delbuttoncontainer = this.element.querySelector('#delbuttoncontainer') as HTMLElement
         this.drops = []
-        this.referencedObjectsDropdownAttributeName = appDef.objdefinitions.find(val => val.name == attribute.pointerType).dropdownAttribute.name
+
+        this.referencedObject = window.objectMap.get(attribute.pointerType)
+        this.referencedObjectDropdownAttribute = window.attributeMap.get(this.referencedObject.dropdownAttribute)
 
         this.value.value = 0;
         this.internalValue = new Box(0)
         this.selectedindex = new Box<number>(0)
         this.onselect = new EventSystem()
 
+        getlist(this.referencedObject.name, (res) => {
+            that.optionslist = res
+            that.render(res)
+        }, (error) => {
+
+        })
+
         new Button(this.delbuttoncontainer,'X','btn btn-danger group-middle',() => {
-            this.internalValue.set(null)
+            that.internalValue.set(null)
         })
 
         this.internalValue.onchange.listen((val) => {
             displayHasBeenSet = true
             if(val == null){
                 that.input.value = 'nullptr'
-                this.value.set(null)
+                that.value.set(null)
             }else{
-                that.input.value = this.getDisplayValue(val)
-                this.value.set(val._id)
+                that.input.value = that.getDisplayValue(val)
+                that.value.set(val._id)
             }
         })
 
@@ -69,11 +79,11 @@ class PointerWidget extends Widget<string>{
                 if(pointer == null){
                     that.input.value = 'nullptr'
                 }else{
-                    getobject(attribute.pointerType,pointer,(data) => {
+                    getobject(window.objectMap.get(attribute.belongsToObject).name ,pointer,(data) => {
                         if(data == null){
                             that.input.value = 'null'
                         }else{
-                            that.input.value = this.getDisplayValue(data)
+                            that.input.value = that.getDisplayValue(data)
                         }
                         
                     },(error) => {
@@ -81,7 +91,7 @@ class PointerWidget extends Widget<string>{
                     })
                 }
             }
-            that.link.href = `/#${attribute.pointerType}/${pointer}`
+            that.link.href = `/#${attribute.name}/${pointer}`
         })
 
         this.onselect.listen(() =>{
@@ -126,12 +136,7 @@ class PointerWidget extends Widget<string>{
 
         
 
-        getlist(attribute.pointerType, (res) => {
-            this.optionslist = res
-            that.render(res)
-        },(error) => {
-            
-        })
+        
     }
 
     render(optionlist){
@@ -158,6 +163,6 @@ class PointerWidget extends Widget<string>{
     }
 
     getDisplayValue(val){
-        return val[this.referencedObjectsDropdownAttributeName] || val._id
+        return val[this.referencedObjectDropdownAttribute.name] || val._id
     }
 }

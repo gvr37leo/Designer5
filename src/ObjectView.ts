@@ -1,5 +1,7 @@
 /// <reference path="main.ts" />
 /// <reference path="DetailView.ts" />
+/// <reference path="ObjectNewView.ts" />
+
 
 
 class ObjectView extends DetailView{
@@ -68,11 +70,12 @@ class ObjectView extends DetailView{
                 let filter = {}
                 filter[castedAttribute.column] = data._id
                 
-                this.buttons.push(new Button(this.tabs, `${castedAttribute.pointerType} : ${castedAttribute.column}`, 'btn btn-default margin-right',() => {
+                this.buttons.push(new Button(this.tabs, `${window.objectMap.get(castedAttribute.pointerType).name} : ${window.attributeMap.get(castedAttribute.column).name}`, 'btn btn-default margin-right',() => {
                     this.gridcontainer.innerHTML = ''
-                    let gridDefinition = appDef.objdefinitions.find((val) => {
-                        return val.name == castedAttribute.pointerType
-                    })
+                    let gridDefinition = window.objectMap.get(castedAttribute.pointerType)
+                    // appDef.objdefinitions.find((val) => {
+                    //     return val.name == castedAttribute.pointerType
+                    // })
                     let gridControl = new GridControl(this.gridcontainer,gridDefinition, filter)
 
                     gridControl.createButton.btnElement.remove()

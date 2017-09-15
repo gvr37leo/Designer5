@@ -60,7 +60,7 @@ function handleError(error){
     toastr.error(JSON.stringify(error))
 }
 
-function getlist(pointertype,callback:(data) => void,errorCB:(error) => void){
+function getlist(pointertype:string,callback:(data) => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}`,{
         headers:{
             'Content-Type': 'application/json'
@@ -76,7 +76,7 @@ function getlist(pointertype,callback:(data) => void,errorCB:(error) => void){
     })
 }
 
-function getlistfiltered(pointertype,filter,callback:(data) => void,errorCB:(error) => void){
+function getlistfiltered(pointertype: string,filter,callback:(data) => void,errorCB:(error) => void){
     fetch(`/api/search/${pointertype}`,{
         headers:{
             'Content-Type': 'application/json'
@@ -93,7 +93,7 @@ function getlistfiltered(pointertype,filter,callback:(data) => void,errorCB:(err
     })
 }
 
-function getobject(pointertype,id,callback:(data) => void,errorCB:(error) => void){
+function getobject(pointertype: string, id: string,callback:(data) => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}/${id}`,{
         headers:{
             'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ function getobject(pointertype,id,callback:(data) => void,errorCB:(error) => voi
     })
 }
 
-function create(pointertype,data,callback:() => void,errorCB:(error) => void){
+function create(pointertype: string,data,callback:() => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}`,{
         headers:{
             'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ function create(pointertype,data,callback:() => void,errorCB:(error) => void){
     })
 }
 
-function del(pointertype, id,callback:() => void,errorCB:(error) => void){
+function del(pointertype: string, id: string,callback:() => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}/${id}`,{
         method:'DELETE',
     })
@@ -146,7 +146,7 @@ function del(pointertype, id,callback:() => void,errorCB:(error) => void){
     })
 }
 
-function update(pointertype,id,data,callback:() => void,errorCB:(error) => void){
+function update(pointertype: string, id: string,data,callback:() => void,errorCB:(error) => void){
     fetch(`/api/${pointertype}/${id}`,{
         headers:{
             'Content-Type': 'application/json'
@@ -174,15 +174,14 @@ function addImplicitRefs(appDef:AppDef):AppDef{
     var map = appDefListToMap(appDef)
 
     for(var objDef of appDef.objdefinitions){
-        objDef.attributes.unshift(new identityAttribute(objDef.name))
+        objDef.attributes.unshift(new identityAttribute('NULL',objDef.name))
 
         for(var attribute of objDef.attributes){
-            // attribute.belongsToObject = objDef
-
+            attribute.belongsToObject = objDef._id
             if(attribute.type == 'pointer'){
                 var referencedObject = map.get((attribute as pointerAttribute).pointerType)
-                var newAttribute = new arrayAttribute(attribute.name,objDef.name,attribute.name)
-                referencedObject.attributes.unshift(newAttribute)
+                var newAttribute = new arrayAttribute('NULL',attribute.name,objDef._id,attribute._id)
+                referencedObject.attributes.push(newAttribute)
             }
         }
     }
@@ -193,7 +192,7 @@ function addImplicitRefs(appDef:AppDef):AppDef{
 function appDefListToMap(appdef:AppDef):Map<string,ObjDef>{
     var map = new Map<string,ObjDef>()
     for(var ObjDef of appdef.objdefinitions){
-        map.set(ObjDef.name,ObjDef)
+        map.set(ObjDef._id,ObjDef)
     }
     return map
 }
