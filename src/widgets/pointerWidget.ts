@@ -79,7 +79,7 @@ class PointerWidget extends Widget<string>{
                 if(pointer == null){
                     that.input.value = 'nullptr'
                 }else{
-                    getobject(window.objectMap.get(attribute.belongsToObject).name ,pointer,(data) => {
+                    getobject(window.objectMap.get(attribute.pointerType).name ,pointer,(data) => {
                         if(data == null){
                             that.input.value = 'null'
                         }else{

@@ -83,8 +83,12 @@ class ObjectView extends DetailView{
                         globalModal.contentcontainer.innerHTML = ''
                         let objectNewView = new ObjectNewView(globalModal.contentcontainer, gridDefinition)
                         globalModal.show()
-                        objectNewView.widgetMap.get(castedAttribute.column).value.set(this.data._id)
-                        objectNewView.widgetMap.get(castedAttribute.column).readonly.set(true)
+
+                        var obj = window.objectMap.get(castedAttribute.pointerType)
+                        var attr = window.attributeMap.get(castedAttribute.column)
+
+                        objectNewView.widgetMap.get(attr.name).value.set(this.data._id)
+                        objectNewView.widgetMap.get(attr.name).readonly.set(true)
 
                         objectNewView.saveSucceeded.listen(() => {
                             globalModal.hide()
