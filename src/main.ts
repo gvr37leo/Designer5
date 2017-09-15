@@ -20,7 +20,7 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
 
     getlist('object', (objects: ObjDef[]) => {
         for (var obj of objects) {
-            objectMap.set(obj._id, new ObjDef(obj.name, null, [], obj.hidden))
+            objectMap.set(obj._id, new ObjDef(obj._id,obj.name, null, [], obj.hidden))
         }
         console.log('objects', objects)
 
@@ -46,6 +46,7 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
     ]),
     new ObjDef('2','attribute', '5',[
         new TextAttribute('5', 'name'),
+        // new pointerAttribute('6','enumType','3'),
         new pointerAttribute('7','belongsToObject', '1'),
         new booleanAttribute('8','readonly',true),
         new booleanAttribute('9','hidden',true),
@@ -54,6 +55,9 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
         new pointerAttribute('11','pointerType','1',true),
         new TextAttribute('12','enumtypes',true),
     ]),
+    new ObjDef('3','enumType',null,[
+        new TextAttribute('13', 'value'),
+    ])
 ])
 
 var testDefinition = new AppDef([],[
@@ -78,4 +82,4 @@ var testDefinition = new AppDef([],[
 
 var globalModal = new Modal()
 
-var designer = new Designer(document.querySelector('#grid'),testDefinition)
+var designer = new Designer(document.querySelector('#grid'),selfDef)

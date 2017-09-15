@@ -66,16 +66,15 @@ class ObjectView extends DetailView{
         for(let attribute of this.definition.attributes){
             if(attribute.type == 'array'){
                 let castedAttribute = attribute as arrayAttribute
+                var obj = window.objectMap.get(castedAttribute.pointerType)
+                var attr = window.attributeMap.get(castedAttribute.column)
 
                 let filter = {}
-                filter[castedAttribute.column] = data._id
+                filter[attr.name] = data._id
                 
                 this.buttons.push(new Button(this.tabs, `${window.objectMap.get(castedAttribute.pointerType).name} : ${window.attributeMap.get(castedAttribute.column).name}`, 'btn btn-default margin-right',() => {
                     this.gridcontainer.innerHTML = ''
                     let gridDefinition = window.objectMap.get(castedAttribute.pointerType)
-                    // appDef.objdefinitions.find((val) => {
-                    //     return val.name == castedAttribute.pointerType
-                    // })
                     let gridControl = new GridControl(this.gridcontainer,gridDefinition, filter)
 
                     gridControl.createButton.btnElement.remove()
@@ -84,8 +83,7 @@ class ObjectView extends DetailView{
                         let objectNewView = new ObjectNewView(globalModal.contentcontainer, gridDefinition)
                         globalModal.show()
 
-                        var obj = window.objectMap.get(castedAttribute.pointerType)
-                        var attr = window.attributeMap.get(castedAttribute.column)
+                        
 
                         objectNewView.widgetMap.get(attr.name).value.set(this.data._id)
                         objectNewView.widgetMap.get(attr.name).readonly.set(true)
