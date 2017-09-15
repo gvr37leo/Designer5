@@ -1,3 +1,4 @@
+
 class AppDef{
     customButtons: CustomButton[];
     databaseName: string
@@ -5,8 +6,8 @@ class AppDef{
     dateformat:string
 
     constructor(customButtons:CustomButton[],objdefinitions:ObjDef[]){
-        this.objdefinitions = objdefinitions
         this.customButtons = customButtons
+        this.objdefinitions = objdefinitions
     }
 }
 
@@ -18,20 +19,29 @@ class ObjDef{
     hidden:boolean
     dropdownAttribute:string
 
-    constructor(_id:string, name:string, highlightAttribute:string, attributes:Attribute[],hidden:boolean = false){
+    constructor(_id:string, name:string, dropdownAttribute:string, attributes:Attribute[],hidden:boolean = false){
         this._id = _id
         this.name = name
         this.attributes = attributes
         this.hidden = hidden
-        this.dropdownAttribute = highlightAttribute
+        this.dropdownAttribute = dropdownAttribute
+    }
+}
+
+class EnumType{
+    _id: string;
+    value: string;
+    constructor(_id: string, value: string) {
+        this._id = _id
+        this.value = value
     }
 }
 
 abstract class Attribute{
     _id:string
     name:string
-    type:string
-    belongsToObject:string
+    enumType:string
+    belongsToObject:string//added by addimplicitrefsmethod
     readonly:boolean = false
     hidden:boolean
     required:boolean
@@ -39,9 +49,43 @@ abstract class Attribute{
     constructor(_id:string, name: string, type: string, hidden: boolean = false) {//, belongsToObject: ObjDef
         this._id = _id;
         this.name = name;
-        this.type = type;
-        // this.belongsToObject = belongsToObject
+        this.enumType = type;
         this.hidden = hidden
+    }
+
+    static makeAttributeFromObject(attribute:Attribute):Attribute{
+        var newAttribute:Attribute = null;
+        switch(attribute.enumType){
+            case 'text':
+                newAttribute = new TextAttribute(attribute._id,attribute.name,attribute.hidden)
+                break;
+            case 'boolean':
+                newAttribute = new booleanAttribute(attribute._id,attribute.name,attribute.hidden)
+                break;
+            case 'pointer':
+                newAttribute = new pointerAttribute(attribute._id,attribute.name,(attribute as pointerAttribute).pointerType,attribute.hidden)
+                break;
+            case 'date':
+                newAttribute = new dateAttribute(attribute._id,attribute.name,attribute.hidden)
+                break;
+            case 'number':
+                newAttribute = new numberAttribute(attribute._id,attribute.name,attribute.hidden)
+                break;
+
+// these should never be hit because they shouldnt have to be made in the editor and are added automatically in the addimplicitrefs function
+            case 'id':
+                newAttribute = new identityAttribute(attribute._id,(attribute as identityAttribute).pointerType,attribute.hidden)
+                break;
+
+            case 'array':
+                newAttribute = new arrayAttribute(attribute._id,attribute.name,(attribute as arrayAttribute).pointerType,(attribute as arrayAttribute).column,attribute.hidden)
+                break;
+        }
+        newAttribute.belongsToObject = attribute.belongsToObject
+        newAttribute.required = attribute.required
+        newAttribute.readonly = attribute.readonly
+
+        return newAttribute
     }
 }
 

@@ -49,7 +49,7 @@ class ObjectView extends DetailView{
             
 
             for(let attribute of that.definition.attributes){
-                if(attribute.type == 'array'){
+                if(attribute.enumType == 'array'){
                     this.arraycontainer.style.display = 'block'
                     that.buttons[0].btnElement.click()
                     break;
@@ -64,10 +64,10 @@ class ObjectView extends DetailView{
 
     render(data){
         for(let attribute of this.definition.attributes){
-            if(attribute.type == 'array'){
+            if(attribute.enumType == 'array'){
                 let castedAttribute = attribute as arrayAttribute
-                var obj = window.objectMap.get(castedAttribute.pointerType)
-                var attr = window.attributeMap.get(castedAttribute.column)
+                let obj = window.objectMap.get(castedAttribute.pointerType)
+                let attr = window.attributeMap.get(castedAttribute.column)
 
                 let filter = {}
                 filter[attr.name] = data._id

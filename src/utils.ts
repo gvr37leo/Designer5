@@ -8,7 +8,7 @@ function mod(number, modulus){
 
 function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
     var widget:Widget<any>
-    switch (attr.type) {
+    switch (attr.enumType) {
         case 'boolean':
             widget = new BooleanWidget(element)
             break;
@@ -178,7 +178,7 @@ function addImplicitRefs(appDef:AppDef):AppDef{
 
         for(var attribute of objDef.attributes){
             attribute.belongsToObject = objDef._id
-            if(attribute.type == 'pointer'){
+            if(attribute.enumType == 'pointer'){
                 var referencedObject = map.get((attribute as pointerAttribute).pointerType)
                 var newAttribute = new arrayAttribute('NULL',attribute.name,objDef._id,attribute._id)
                 referencedObject.attributes.push(newAttribute)

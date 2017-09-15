@@ -27,7 +27,7 @@ class ObjectNewView extends DetailView{
     render(data){
         for(let attribute of this.definition.attributes){
             if(attribute.name == '_id')continue;
-            if(attribute.type == 'array') continue;
+            if(attribute.enumType == 'array') continue;
 
             this.addWidget(attribute)
         }

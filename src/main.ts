@@ -14,30 +14,41 @@ declare var Router:any
 interface Window { objectMap: Map<string, ObjDef>; }
 interface Window { attributeMap: Map<string, Attribute>; }
 
-var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:AppDef) => {
-    var objectMap:Map<string,ObjDef> = new Map()
-    var attributeMap: Map<string, Attribute> = new Map()
-
-    getlist('object', (objects: ObjDef[]) => {
-        for (var obj of objects) {
-            objectMap.set(obj._id, new ObjDef(obj._id,obj.name, null, [], obj.hidden))
-        }
-        console.log('objects', objects)
-
-        getlist('attribute', (attributes: Attribute[]) => {
-            for (var attribute of attributes) {
-                var objReferencedByAttributeBelongsToObject: ObjDef = objectMap.get(attribute.belongsToObject as any)
-                objReferencedByAttributeBelongsToObject.attributes.push(attribute)
+function fillMap<T>(objname:string):Promise<Map<string,T>>{
+    return new Promise((resolve,reject) => {
+        var map:Map<string,T> = new Map()
+        getlist(objname,(data:any) => {
+            for(var obj of data){
+                map.set(obj._id,obj)
             }
+            resolve(map)
+        },() => {})
+    })
+}
 
-            console.log('attributes', attributes)
+function generateAppDefenition(appdef:AppDef){
+    Promise.all([fillMap<ObjDef>('object'),fillMap<Attribute>('attribute'),fillMap<EnumType>('enumType')])
+    .then((maps) => {
+        var objectMap:Map<string,ObjDef> = maps[0]
+        var attributeMap: Map<string, Attribute> = maps[1]
+        var enumMap:Map<string,EnumType> = maps[2]
+        for (var obj of objectMap) { 
+            objectMap.set(obj[1]._id, new ObjDef(obj[1]._id,obj[1].name, obj[1].dropdownAttribute, [], obj[1].hidden)) 
+        } 
 
+        for(var pair of attributeMap){
+            pair[1].enumType = enumMap.get(pair[1].enumType).value
 
-            var appdef = addImplicitRefs(new AppDef([], Array.from(objectMap.values())))
-            download(JSON.stringify(appdef, null, '\t'), "appDef.json", "application/json")
-        }, () => {})
-    }, () => {})
-})],[
+            var reffedObj: ObjDef = objectMap.get(pair[1].belongsToObject)
+            reffedObj.attributes.push(Attribute.makeAttributeFromObject(pair[1]))
+        }
+
+        var appdef = new AppDef([], Array.from(objectMap.values()))
+        download(JSON.stringify(appdef, null, '\t'), "appDef.json", "application/json")
+    })
+}
+
+var selfDef = new AppDef([new CustomButton('generate app definition', generateAppDefenition)],[
     new ObjDef('1','object', '1',[
         new TextAttribute('1','name'),
         new pointerAttribute('2','dropdownAttribute','2'),
@@ -46,14 +57,12 @@ var selfDef = new AppDef([new CustomButton('generate app definition',(appdef:App
     ]),
     new ObjDef('2','attribute', '5',[
         new TextAttribute('5', 'name'),
-        new pointerAttribute('6','enumTypes','3'),
+        new pointerAttribute('6','enumType','3'),
         new pointerAttribute('7','belongsToObject', '1'),
         new booleanAttribute('8','readonly',true),
         new booleanAttribute('9','hidden',true),
         new booleanAttribute('10','required',true),
-        
         new pointerAttribute('11','pointerType','1',true),
-        new TextAttribute('12','enumtypes',true),
     ]),
     new ObjDef('3','enumType','13',[
         new TextAttribute('13', 'value'),
