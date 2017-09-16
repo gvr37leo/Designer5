@@ -5,7 +5,7 @@ class ObjectNewView extends DetailView{
     saveSucceeded: EventSystem<{}>;
     savebtn: Button;
 
-    constructor(element:Element,definition:ObjDef){
+    constructor(element:HTMLElement,definition:ObjDef){
         super(element,definition)
         var that = this
         this.arraycontainer.remove()
@@ -14,14 +14,18 @@ class ObjectNewView extends DetailView{
         this.uplink.remove()
         
         this.savebtn = new Button(this.buttonContainer, 'create', 'btn btn-success',() => {
-            create(definition.name,that.data,() => {
-                this.saveSucceeded.trigger(0,0)
-            },(error) => {
-                
-            })
+            this.save()
         })
 
         this.render(this.data)
+    }
+
+    save(){
+        create(this.definition.name,this.data,() => {
+            this.saveSucceeded.trigger(0,0)
+        },(error) => {
+            
+        })
     }
 
     render(data){
