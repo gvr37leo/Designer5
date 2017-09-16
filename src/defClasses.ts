@@ -1,3 +1,4 @@
+
 class AppDef{
     customButtons: CustomButton[];
     databaseName: string
@@ -5,8 +6,8 @@ class AppDef{
     dateformat:string
 
     constructor(customButtons:CustomButton[],objdefinitions:ObjDef[]){
-        this.objdefinitions = objdefinitions
         this.customButtons = customButtons
+        this.objdefinitions = objdefinitions
     }
 }
 
@@ -16,72 +17,118 @@ class ObjDef{
     attributes:Attribute[]
     advancedSearch:boolean
     hidden:boolean
-    dropdownAttribute:Attribute
+    dropdownAttribute:string
 
-    constructor(name:string, highlightAttribute:Attribute, attributes:Attribute[],hidden:boolean = false){
+    constructor(_id:string, name:string, dropdownAttribute:string, attributes:Attribute[],hidden:boolean = false){
+        this._id = _id
         this.name = name
         this.attributes = attributes
         this.hidden = hidden
-        this.dropdownAttribute = highlightAttribute
+        this.dropdownAttribute = dropdownAttribute
+    }
+}
+
+class EnumType{
+    _id: string;
+    value: string;
+    constructor(_id: string, value: string) {
+        this._id = _id
+        this.value = value
     }
 }
 
 abstract class Attribute{
     _id:string
     name:string
-    type:string
-    belongsToObject:ObjDef
+    enumType:string
+    belongsToObject:string//added by addimplicitrefsmethod
     readonly:boolean = false
     hidden:boolean
     required:boolean
 
-    constructor(name: string, type: string, hidden: boolean = false) {//, belongsToObject: ObjDef
+    constructor(_id:string, name: string, type: string, hidden: boolean = false) {//, belongsToObject: ObjDef
+        this._id = _id;
         this.name = name;
-        this.type = type;
-        // this.belongsToObject = belongsToObject
+        this.enumType = type;
         this.hidden = hidden
+    }
+
+    static makeAttributeFromObject(attribute:Attribute):Attribute{
+        var newAttribute:Attribute = null;
+        switch(attribute.enumType){
+            case 'text':
+                newAttribute = new TextAttribute(attribute._id,attribute.name,attribute.hidden)
+                break;
+            case 'boolean':
+                newAttribute = new booleanAttribute(attribute._id,attribute.name,attribute.hidden)
+                break;
+            case 'pointer':
+                newAttribute = new pointerAttribute(attribute._id,attribute.name,(attribute as pointerAttribute).pointerType,attribute.hidden)
+                break;
+            case 'date':
+                newAttribute = new dateAttribute(attribute._id,attribute.name,attribute.hidden)
+                break;
+            case 'number':
+                newAttribute = new numberAttribute(attribute._id,attribute.name,attribute.hidden)
+                break;
+
+// these should never be hit because they shouldnt have to be made in the editor and are added automatically in the addimplicitrefs function
+            case 'id':
+                newAttribute = new identityAttribute(attribute._id,(attribute as identityAttribute).pointerType,attribute.hidden)
+                break;
+
+            case 'array':
+                newAttribute = new arrayAttribute(attribute._id,attribute.name,(attribute as arrayAttribute).pointerType,(attribute as arrayAttribute).column,attribute.hidden)
+                break;
+        }
+        newAttribute.belongsToObject = attribute.belongsToObject
+        newAttribute.required = attribute.required
+        newAttribute.readonly = attribute.readonly
+
+        return newAttribute
     }
 }
 
 class booleanAttribute extends Attribute{
-    constructor(name:string,hidden:boolean = false){
-        super(name, 'boolean',hidden)
+    constructor(_id: string,name:string,hidden:boolean = false){
+        super(_id,name, 'boolean',hidden)
     }
 }
 
 class dateAttribute extends Attribute{
-    constructor(name:string,hidden:boolean = false){
-        super(name, 'date',hidden)
+    constructor(_id: string,name:string,hidden:boolean = false){
+        super(_id,name, 'date',hidden)
     }
 }
 
 class numberAttribute extends Attribute{
-    constructor(name:string,hidden:boolean = false){
-        super(name, 'number',hidden)
+    constructor(_id: string,name:string,hidden:boolean = false){
+        super(_id,name, 'number',hidden)
     }
 }
 
 class enumAttribute extends Attribute{
     enumtypes:string[]//for type enum
 
-    constructor(name:string, enumtypes:string[],hidden:boolean = false){
-        super(name, 'enum',hidden)
+    constructor(_id: string,name:string, enumtypes:string[],hidden:boolean = false){
+        super(_id,name, 'enum',hidden)
         this.enumtypes = enumtypes
     }
 }
 
-class textAttribute extends Attribute{
-    constructor(name:string,hidden:boolean = false){
-        super(name, 'text',hidden)
+class TextAttribute extends Attribute{
+    constructor(_id: string,name:string,hidden:boolean = false){
+        super(_id,name, 'text',hidden)
     }
 }
 
 class identityAttribute extends Attribute{
     pointerType:string
     
-    constructor(pointerType:string,hidden:boolean = false){
-        super('_id', 'id',hidden)
+    constructor(_id: string,pointerType:string,hidden:boolean = false){
+        super(_id,'_id', 'id',hidden)
         this.pointerType = pointerType
+        this.readonly = true
     }
 }
 
@@ -89,8 +136,8 @@ class identityAttribute extends Attribute{
 class arrayAttribute extends Attribute{
     pointerType:string
     column:string
-    constructor(name:string,pointerType:string,column:string,hidden:boolean = false){
-        super(name, 'array',hidden)
+    constructor(_id: string,name:string,pointerType:string,column:string,hidden:boolean = false){
+        super(_id,name, 'array',hidden)
         this.pointerType = pointerType
         this.column = column
     }
@@ -98,8 +145,8 @@ class arrayAttribute extends Attribute{
 
 class pointerAttribute extends Attribute{
     pointerType:string
-    constructor(name:string,pointerType:string,hidden:boolean = false){
-        super(name, 'pointer',hidden)
+    constructor(_id: string,name:string,pointerType:string,hidden:boolean = false){
+        super(_id,name, 'pointer',hidden)
         this.pointerType = pointerType
     }
 }

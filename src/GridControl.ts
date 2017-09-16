@@ -95,7 +95,7 @@ class GridControl{
 
     appendHeader(){
         for(let attribute of this.definition.attributes){
-            if(attribute.type == 'array' || attribute.hidden)continue;
+            if(attribute.enumType == 'array' || attribute.hidden)continue;
 
             //titlerow
             createTableCell(this.titlerow).appendChild(string2html(`<b>${attribute.name}</b>`))
@@ -121,7 +121,7 @@ class GridControl{
             this.tablebody.appendChild(row)
 
             for(let attribute of this.definition.attributes){
-                if(attribute.type == 'array' || attribute.hidden)continue;
+                if(attribute.enumType == 'array' || attribute.hidden)continue;
                 var widget = getWidget(attribute,createTableCell(row))
                 widget.value.set(data[rows][attribute.name])
 

@@ -1,5 +1,7 @@
 /// <reference path="main.ts" />
 /// <reference path="DetailView.ts" />
+/// <reference path="ObjectNewView.ts" />
+
 
 
 class ObjectView extends DetailView{
@@ -47,7 +49,7 @@ class ObjectView extends DetailView{
             
 
             for(let attribute of that.definition.attributes){
-                if(attribute.type == 'array'){
+                if(attribute.enumType == 'array'){
                     this.arraycontainer.style.display = 'block'
                     that.buttons[0].btnElement.click()
                     break;
@@ -62,17 +64,17 @@ class ObjectView extends DetailView{
 
     render(data){
         for(let attribute of this.definition.attributes){
-            if(attribute.type == 'array'){
+            if(attribute.enumType == 'array'){
                 let castedAttribute = attribute as arrayAttribute
+                let obj = window.objectMap.get(castedAttribute.pointerType)
+                let attr = window.attributeMap.get(castedAttribute.column)
 
                 let filter = {}
-                filter[castedAttribute.column] = data._id
+                filter[attr.name] = data._id
                 
-                this.buttons.push(new Button(this.tabs, `${castedAttribute.pointerType} : ${castedAttribute.column}`, 'btn btn-default margin-right',() => {
+                this.buttons.push(new Button(this.tabs, `${window.objectMap.get(castedAttribute.pointerType).name} : ${window.attributeMap.get(castedAttribute.column).name}`, 'btn btn-default margin-right',() => {
                     this.gridcontainer.innerHTML = ''
-                    let gridDefinition = appDef.objdefinitions.find((val) => {
-                        return val.name == castedAttribute.pointerType
-                    })
+                    let gridDefinition = window.objectMap.get(castedAttribute.pointerType)
                     let gridControl = new GridControl(this.gridcontainer,gridDefinition, filter)
 
                     gridControl.createButton.btnElement.remove()
@@ -80,8 +82,11 @@ class ObjectView extends DetailView{
                         globalModal.contentcontainer.innerHTML = ''
                         let objectNewView = new ObjectNewView(globalModal.contentcontainer, gridDefinition)
                         globalModal.show()
-                        objectNewView.widgetMap.get(castedAttribute.column).value.set(this.data._id)
-                        objectNewView.widgetMap.get(castedAttribute.column).readonly.set(true)
+
+                        
+
+                        objectNewView.widgetMap.get(attr.name).value.set(this.data._id)
+                        objectNewView.widgetMap.get(attr.name).readonly.set(true)
 
                         objectNewView.saveSucceeded.listen(() => {
                             globalModal.hide()
