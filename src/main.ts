@@ -91,4 +91,4 @@ var testDefinition = new AppDef([],[
 
 var globalModal = new Modal()
 
-var designer = new Designer(document.querySelector('#grid'),selfDef)
+var designer = new Designer(document.querySelector('#grid'),testDefinition)
