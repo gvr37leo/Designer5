@@ -68,3 +68,12 @@ a:focus {
 .form-control{
     max-width: 220px;
 }
+
+.hovereffect:hover{
+    background-color: gray;
+    cursor: pointer;
+}
+
+.rounded-corners{
+    border-radius: 3px;
+}

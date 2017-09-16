@@ -30,7 +30,7 @@ class EventSystem<T>{
         this.callbacks = []
     }
 
-    listen(callback){
+    listen(callback:(val:T, old:T) => void){
         this.callbacks.push(callback)
     }
 
@@ -38,7 +38,7 @@ class EventSystem<T>{
         this.callbacks.splice(this.callbacks.findIndex(v => v === callback), 1)
     }
 
-    trigger(value:T, old){
+    trigger(value:T, old:T){
         for(var callback of this.callbacks){
             callback(value, old)
         }

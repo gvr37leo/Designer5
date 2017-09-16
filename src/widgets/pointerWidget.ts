@@ -142,7 +142,7 @@ class PointerWidget extends Widget<string>{
     render(optionlist){
         var that = this;
         for(let option of optionlist){
-            var drop = string2html(`<div class="drop">${this.getDisplayValue(option)}</div>`)
+            var drop = string2html(`<div class="hovereffect">${this.getDisplayValue(option)}</div>`)
             drop.addEventListener('click',() => {
                 this.internalValue.set(option)
                 this.onselect.trigger(option._id,0)
