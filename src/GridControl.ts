@@ -13,6 +13,8 @@ var types = ['text','boolean','number','date','pointer','array']
 
 
 class GridControl{
+    sort: {};
+    sortDirection: number;
     buttonContainer: Element;
     filterCooldown: CoolUp;
     createButton: Button;
@@ -50,6 +52,8 @@ class GridControl{
         this.element = element;
         this.definition = definition
         this.filter = filter
+        this.sort = {}
+        this.sortDirection = 1
         this.filterCooldown = new CoolUp(1000, () => {
             this.refetchbody()
         })
@@ -84,7 +88,7 @@ class GridControl{
     }
 
     refetchbody(){
-        getlistfiltered(this.definition.name,this.filter,(res) => {
+        getlistfiltered(this.definition.name,{filter:this.filter,sort:this.sort},(res) => {
             this.data = res
             this.tablebody.innerHTML = ''
             this.appendBody(res)
@@ -98,17 +102,47 @@ class GridControl{
             if(attribute.enumType == 'array' || attribute.hidden)continue;
 
             //titlerow
-            createTableCell(this.titlerow).appendChild(string2html(`<b>${attribute.name}</b>`))
+            var titleCell = createTableCell(this.titlerow)
+            titleCell.appendChild(string2html(`<b>${attribute.name}</b>`))
+            new Button(titleCell,'^','btn btn-default',() => {
+                this.sortDirection *= -1;
+                this.sort = {}
+                this.sort[attribute.name] = this.sortDirection
+                this.refetchbody()
+            })
+
 
             //columnrow
-            var searchField = new TextWidget(createTableCell(this.searchrow))
-            searchField.value.onchange.listen((val) => {
-                if(val == ''){
-                    delete this.filter[attribute.name]
-                }else{
+            var tableCell = createTableCell(this.searchrow)
+            
+            var searchFields:Widget<any>[] = []
+
+            if(attribute.enumType == 'date' || attribute.enumType == 'number'){
+                var fromSerachField = getWidget(attribute, tableCell)
+                fromSerachField.value.onchange.listen((val) => {
+                    if (!this.filter[attribute.name]) this.filter[attribute.name] = {}
+                    this.filter[attribute.name].$gte  = val
+                    this.filterCooldown.restartCast()
+                })
+
+                var toSerachField = getWidget(attribute, tableCell)
+                toSerachField.value.onchange.listen((val) => {
+                    if (!this.filter[attribute.name]) this.filter[attribute.name] = {}
+                    this.filter[attribute.name].$lt = val
+                    this.filterCooldown.restartCast()
+                })
+
+            }else{
+                var searchField = getWidget(attribute, tableCell)
+                searchField.value.onchange.listen((val) => {
                     this.filter[attribute.name] = val
-                }
-                this.filterCooldown.restartCast()
+                    this.filterCooldown.restartCast()
+                })
+            }
+
+            var clearSearchField = new Button(tableCell, 'clear', 'btn btn-danger', () => {
+                delete this.filter[attribute.name]
+                this.refetchbody()
             })
         }
 

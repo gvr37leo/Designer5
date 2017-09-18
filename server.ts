@@ -35,7 +35,8 @@ function start(){
     
         app.post('/api/search/:object', function(req, res){
             var collection = db.collection(req.params.object)
-            collection.find(req.body).limit(50).toArray(function(err, result){
+            var query:Query = req.body;
+            collection.find(query.filter).sort(query.sort).limit(50).toArray(function(err, result){
                 res.send(result);
             })
         })
@@ -82,10 +83,11 @@ function start(){
     });
 }
 
-
-
-
-
 app.listen(port, function(){
     console.log('listening on ' + port)
 })
+
+declare class Query{
+    filter:any
+    sort:any
+}

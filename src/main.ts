@@ -90,5 +90,5 @@ var testDefinition = new AppDef([],[
 ])
 
 var globalModal = new Modal()
-
-var designer = new Designer(document.querySelector('#grid'),selfDef)
+var globalNow = moment()
+var designer = new Designer(document.querySelector('#grid'),testDefinition)

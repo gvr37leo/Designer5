@@ -226,5 +226,10 @@ class CoolUp{
         }
         this.timeout = window.setTimeout(this.callback,this.cooldownMS)
     }
+}
 
+
+
+function isEmpty(obj){
+    return Object.keys(obj).length === 0 && obj.constructor === Object
 }

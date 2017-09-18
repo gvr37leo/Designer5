@@ -39,15 +39,16 @@ class DateWidget extends Widget<string>{
     constructor(element:HTMLElement){
         super(element)
         
-        this.element.appendChild(string2html(this.template)) 
-        this.container = this.element.querySelector('#container') as HTMLInputElement 
-        this.inputel = this.element.querySelector('#input') as HTMLInputElement 
-        this.headerrow = this.element.querySelector('#headerrow') as HTMLElement
-        this.left = this.element.querySelector('#left') as HTMLElement
-        this.middle = this.element.querySelector('#middle') as HTMLElement
-        this.right = this.element.querySelector('#right') as HTMLElement
-        this.calendar = this.element.querySelector('#calendar') as HTMLElement
-        this.calendarbody = this.element.querySelector('#calendarbody') as HTMLElement
+        var templateDiv = string2html(this.template)
+        this.element.appendChild(templateDiv) 
+        this.container = templateDiv.querySelector('#container') as HTMLInputElement 
+        this.inputel = templateDiv.querySelector('#input') as HTMLInputElement 
+        this.headerrow = templateDiv.querySelector('#headerrow') as HTMLElement
+        this.left = templateDiv.querySelector('#left') as HTMLElement
+        this.middle = templateDiv.querySelector('#middle') as HTMLElement
+        this.right = templateDiv.querySelector('#right') as HTMLElement
+        this.calendar = templateDiv.querySelector('#calendar') as HTMLElement
+        this.calendarbody = templateDiv.querySelector('#calendarbody') as HTMLElement
         this.selected = new Box<DateCell>(null)
         this.fillHeaderRow()
 
@@ -58,8 +59,8 @@ class DateWidget extends Widget<string>{
             }
         })
         
-        this.displayMoment = moment()
-        this.displayMonth(moment())
+        this.displayMoment = globalNow.clone();
+        this.displayMonth(this.displayMoment.clone())
         
         this.value.onchange.listen((val) => {
             this.inputel.value = this.formatter(val as any)
