@@ -18,13 +18,13 @@ class GridControl{
     buttonContainer: Element;
     filterCooldown: CoolUp;
     createButton: Button;
-    createlinkContainer: Element;
+    createlinkContainer: HTMLElement;
     gridtitle: HTMLElement;
-    tablebody: Element;
-    titlerow: Element;
-    searchrow: Element;
+    tablebody: HTMLElement;
+    titlerow: HTMLElement;
+    searchrow: HTMLElement;
     filter: any;
-    element: Element
+    element: HTMLElement
     data
     definition:ObjDef
     onchange:EventSystem<any>
@@ -34,19 +34,20 @@ class GridControl{
             <div id="button-container">
                 <span id="createlink-container"></span>
             </div>
-            <table id="table" class="table table-striped" style="width:100%;">
-                <thead>
-                    <tr id="titlerow"></tr>
-                    <tr id="searchrow"></tr>
-                </thead>
-                <tbody id="tablebody">
 
-                </tbody>
-            </table>
+            <div id="table">
+                <div id="tablehead">
+                    <div id="titlerow" class="tablerow"></div>
+                    <div id="searchrow" class="tablerow"></div>
+                </div>
+                <div id="tablebody">
+                
+                </div>
+            </div>
         </div>
     `
 
-    constructor(element:Element, definition:ObjDef, filter){
+    constructor(element:HTMLElement, definition:ObjDef, filter){
         var that = this
         this.onchange = new EventSystem()
         this.element = element;
@@ -61,10 +62,10 @@ class GridControl{
         this.element.appendChild(string2html(this.template))
         this.buttonContainer = this.element.querySelector('#button-container')
         this.gridtitle = this.element.querySelector('#gridtitle') as HTMLElement
-        this.tablebody = this.element.querySelector('#tablebody') 
-        this.titlerow = this.element.querySelector('#titlerow')
-        this.searchrow = this.element.querySelector('#searchrow')
-        this.createlinkContainer = this.element.querySelector('#createlink-container');
+        this.tablebody = this.element.querySelector('#tablebody')  as HTMLElement
+        this.titlerow = this.element.querySelector('#titlerow') as HTMLElement
+        this.searchrow = this.element.querySelector('#searchrow') as HTMLElement
+        this.createlinkContainer = this.element.querySelector('#createlink-container') as HTMLElement
         this.gridtitle.innerText = this.definition.name
         
         this.createButton = new Button(this.createlinkContainer,'create','btn btn-success',() => {
@@ -102,8 +103,9 @@ class GridControl{
             if(attribute.enumType == 'array' || attribute.hidden)continue;
 
             //titlerow
-            var titleCell = createTableCell(this.titlerow)
-            titleCell.appendChild(string2html(`<b>${attribute.name}</b>`))
+            
+            var titleCell = createAndAppend(this.titlerow,`<b style="display:flex;" class="cell"">${attribute.name}</b>`)
+
             new Button(titleCell,'^','btn btn-default',() => {
                 this.sortDirection *= -1;
                 this.sort = {}
@@ -113,7 +115,7 @@ class GridControl{
 
 
             //columnrow
-            var tableCell = createTableCell(this.searchrow)
+            var tableCell = createAndAppend(this.searchrow,'<div style="display:flex;" class="cell""></div>')
             
             var searchFields:Widget<any>[] = []
 
@@ -145,18 +147,21 @@ class GridControl{
                 this.refetchbody()
             })
         }
+        createAndAppend(this.titlerow,'<div class="cell"></div>')
+        createAndAppend(this.titlerow,'<div class="cell"></div>')
+        createAndAppend(this.searchrow,'<div class="cell"></div>')
+        createAndAppend(this.searchrow,'<div class="cell"></div>')
 
     }
 
     appendBody(data){
         for(let rows = 0; rows < data.length; rows++){
             let rowchange = new EventSystem();
-            var row = document.createElement('tr')
-            this.tablebody.appendChild(row)
-
+            var row = createAndAppend(this.tablebody,'<div class="tablerow"></div>')
+            
             for(let attribute of this.definition.attributes){
                 if(attribute.enumType == 'array' || attribute.hidden)continue;
-                var widget = getWidget(attribute,createTableCell(row))
+                var widget = getWidget(attribute,createAndAppend(row,'<div class="cell"></div>'))
                 widget.value.set(data[rows][attribute.name])
 
                 widget.value.onchange.listen((val) => {
@@ -167,12 +172,12 @@ class GridControl{
             }
 
             // save button
-            let savebtn = new SaveButton(createTableCell(row),rowchange,() => {
+            let savebtn = new SaveButton(createAndAppend(row,'<div class="cell"></div>'),rowchange,() => {
                 update(this.definition.name,data[rows]._id,data[rows],() => {},() => {})
             })
 
             // delete button
-            let deletebutton = new Button(createTableCell(row),'delete', 'btn btn-danger',() => {
+            let deletebutton = new Button(createAndAppend(row,'<div class="cell"></div>'),'delete', 'btn btn-danger',() => {
                 del(this.definition.name,data[rows]._id,() => {
                     this.refetchbody()
                 },() => {})

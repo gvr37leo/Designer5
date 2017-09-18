@@ -88,6 +88,10 @@ var testDefinition = new AppDef([],[
         new numberAttribute('12','salaris'),
     ],true)
 ])
+toastr.options.showDuration = 300;
+toastr.options.hideDuration = 500;
+toastr.options.timeOut = 800;
+toastr.options.extendedTimeOut = 500;
 
 var globalModal = new Modal()
 var globalNow = moment()
