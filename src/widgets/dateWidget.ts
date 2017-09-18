@@ -14,7 +14,7 @@ class DateWidget extends Widget<string>{
     inputel: HTMLInputElement; 
     template: string = ` 
         <div style="display:flex;"> 
-            <div id="container" style="position:relative; display:inline-block;">  
+            <div id="container" style="position:relative; display:inline-block; width:100%;">  
                 <input class="form-control" id="input" type="text">  
  
                 <div id="calendar" class="calendardropper"> 

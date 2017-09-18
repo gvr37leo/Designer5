@@ -114,18 +114,19 @@ class GridControl{
 
             //columnrow
             var tableCell = createTableCell(this.searchrow)
+            var innerCell = createAndAppend(tableCell,'<div style="display:flex; max-width:220px;"></div>')
             
             var searchFields:Widget<any>[] = []
 
             if(attribute.enumType == 'date' || attribute.enumType == 'number'){
-                var fromSerachField = getWidget(attribute, tableCell)
+                var fromSerachField = getWidget(attribute, innerCell)
                 fromSerachField.value.onchange.listen((val) => {
                     if (!this.filter[attribute.name]) this.filter[attribute.name] = {}
                     this.filter[attribute.name].$gte  = val
                     this.filterCooldown.restartCast()
                 })
 
-                var toSerachField = getWidget(attribute, tableCell)
+                var toSerachField = getWidget(attribute, innerCell)
                 toSerachField.value.onchange.listen((val) => {
                     if (!this.filter[attribute.name]) this.filter[attribute.name] = {}
                     this.filter[attribute.name].$lt = val
@@ -133,14 +134,14 @@ class GridControl{
                 })
 
             }else{
-                var searchField = getWidget(attribute, tableCell)
+                var searchField = getWidget(attribute, innerCell)
                 searchField.value.onchange.listen((val) => {
                     this.filter[attribute.name] = val
                     this.filterCooldown.restartCast()
                 })
             }
 
-            var clearSearchField = new Button(tableCell, 'clear', 'btn btn-danger', () => {
+            var clearSearchField = new Button(innerCell, 'clear', 'btn btn-danger clearbtn', () => {
                 delete this.filter[attribute.name]
                 this.refetchbody()
             })

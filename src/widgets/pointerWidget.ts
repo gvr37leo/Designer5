@@ -17,7 +17,7 @@ class PointerWidget extends Widget<string>{
     infoer:(val) => string
     optionslist
     template:string = `
-        <div style="display:flex;">
+        <div style="display:flex; max-width:220px;">
             <div id="container" style="position:relative; display:inline-block;"> 
                 <input class="form-control group-left" id="input" type="text"> 
                 <div id="dropper" class="dropper"></div> 
