@@ -8,13 +8,13 @@ class idWidget extends Widget<string>{
     inspectLink: HTMLAnchorElement;
     inputel: HTMLInputElement;
     template:string = `
-        <div style="display:flex;">
+        <div style="display:flex; max-width:220px;">
             <input id="inputel" style="padding-right:0;" class="form-control group-left"/>
             <a id="inspectlink" class=" btn btn-info group-right">-></a>
         </div>
     `
 
-    constructor(element: HTMLElement,attribute:Attribute) {
+    constructor(element: HTMLElement,attribute:IdentityAttribute) {
         super(element)
         var that  = this;
         this.attribute = attribute

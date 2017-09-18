@@ -180,7 +180,7 @@ function addImplicitRefs(appDef:AppDef):AppDef{
     var map = appDefListToMap(appDef)
 
     for(var objDef of appDef.objdefinitions){
-        objDef.attributes.unshift(new identityAttribute('NULL',objDef.name))
+        objDef.attributes.unshift(new IdentityAttribute('NULL',objDef.name))
 
         for(var attribute of objDef.attributes){
             attribute.belongsToObject = objDef._id

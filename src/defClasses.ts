@@ -74,7 +74,7 @@ abstract class Attribute{
 
 // these should never be hit because they shouldnt have to be made in the editor and are added automatically in the addimplicitrefs function
             case 'id':
-                newAttribute = new identityAttribute(attribute._id,(attribute as identityAttribute).pointerType,attribute.hidden)
+                newAttribute = new IdentityAttribute(attribute._id,(attribute as IdentityAttribute).pointerType,attribute.hidden)
                 break;
 
             case 'array':
@@ -122,7 +122,7 @@ class TextAttribute extends Attribute{
     }
 }
 
-class identityAttribute extends Attribute{
+class IdentityAttribute extends Attribute{
     pointerType:string
     
     constructor(_id: string,pointerType:string,hidden:boolean = false){
