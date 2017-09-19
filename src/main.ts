@@ -2,6 +2,7 @@
 /// <reference path="buttons.ts" />
 /// <reference path="modal.ts" />
 /// <reference path="Designer.ts" />
+/// <reference path="pathFinder.ts" />
 
 
 //todo

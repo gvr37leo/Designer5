@@ -52,6 +52,7 @@ function start(){
             var collection = db.collection(req.params.object)
     
             delete req.body._id
+            req.body.lastupdate = new Date().getTime()
             collection.insert(req.body, function(err, result){
                 if(err)res.send(err)
                 else res.send({status:'success'});
@@ -62,6 +63,7 @@ function start(){
             var collection = db.collection(req.params.object)
     
             delete req.body._id
+            req.body.lastupdate = new Date().getTime()
             collection.update({_id:new mongodb.ObjectID(req.params.id)}, {$set:req.body}, function(err, result){
                 if(err)res.send(err);
                 else res.send({status:'success'});

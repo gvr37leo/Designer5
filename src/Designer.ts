@@ -22,29 +22,34 @@ class Designer{
         var navbarContainer = document.querySelector('#navbar')
         var navbar = new Navbar(navbarContainer, appDef)
 
+        var pathFinder = new PathFinder()
+        pathFinder.register("", () => {
+            element.innerHTML = ''
+            new GridControl(element, this.definition.objdefinitions[0] as ObjDef, {})
+        })      
+        pathFinder.register(":object", (params) => {
+            element.innerHTML = ''
+            var objdefinition = this.definition.objdefinitions.find((obj) => {
+                return obj.name == params[0]
+            })
+            new GridControl(element, objdefinition as ObjDef, {})
+        })
+        pathFinder.register(":object/:id", (params) => {
+            element.innerHTML = ''
+            var objdefinition = this.definition.objdefinitions.find((obj) => {
+                return obj.name == params[0]
+            })
+            new ObjectView(element, objdefinition as ObjDef, params[1])
+        })
 
-        var router = Router({
-            "": () => {
-                element.innerHTML = ''
-                new GridControl(element, this.definition.objdefinitions[0] as ObjDef, {})
-            },
-            ":object": (object) => {
-                element.innerHTML = ''
-                var objdefinition = this.definition.objdefinitions.find((obj) => {
-                    return obj.name == object
-                })
-                new GridControl(element, objdefinition as ObjDef, {})
-            },
-            ":object/:id": (object, id) => {
-                element.innerHTML = ''
-                var objdefinition = this.definition.objdefinitions.find((obj) => {
-                    return obj.name == object
-                })
-                new ObjectView(element, objdefinition as ObjDef, id)
-            },
-        });
-
-        router.init();
+        pathFinder.trigger(location.hash)
+        window.addEventListener("hashchange", (e: HashChangeEvent) => {
+            var path = location.hash
+            if (path[0] == "#"){
+                path = path.slice(1)
+            } 
+            pathFinder.trigger(path)
+        })
     }
 
 }
