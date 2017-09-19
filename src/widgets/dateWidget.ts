@@ -39,16 +39,14 @@ class DateWidget extends Widget<string>{
         super(element)
 
         var templateDiv = createAndAppend(this.element,this.template)
-        
+
         this.container = templateDiv.querySelector('#container') as HTMLInputElement 
         this.inputel = templateDiv.querySelector('#input') as HTMLInputElement
         this.subdatepicker = templateDiv.querySelector('#subdatepicker') as HTMLInputElement
-        // this.headerrow = templateDiv.querySelector('#headerrow') as HTMLElement
         this.left = templateDiv.querySelector('#left') as HTMLElement
         this.middle = templateDiv.querySelector('#middle') as HTMLElement
         this.right = templateDiv.querySelector('#right') as HTMLElement
         this.calendar = templateDiv.querySelector('#calendar') as HTMLElement
-        // this.calendarbody = templateDiv.querySelector('#calendarbody') as HTMLElement
         this.selected = new Box<DateCell>(null)
 
         this.selected.onchange.listen((val, old) => {
