@@ -1,8 +1,11 @@
 /// <reference path="../../widget.ts" />
 /// <reference path="dateCell.ts" />
 /// <reference path="../../main.ts" />
+/// <reference path="subDateWidget.ts" />
 
-class DayhWidget extends Widget<any>{
+
+class DayWidget extends SubDateWidget{
+
     template: string = `
         <table> 
             <thead> 
@@ -13,14 +16,45 @@ class DayhWidget extends Widget<any>{
             </tbody> 
         <table> 
     `
-    constructor(element: HTMLElement, momentToDisplay:moment.Moment) {
-        super(element)
-        this.fillHeaderRow()
+    headerrow: HTMLElement;
+    calendarbody: HTMLElement;
+    selected: Box<DateCell>;
+    
+    constructor(element: HTMLElement, momentToDisplay:moment.Moment, selectedMoment:moment.Moment) {
+        super(element,momentToDisplay,selectedMoment)
+        createAndAppend(element,this.template)
+        this.headerrow = element.querySelector('#headerrow') as HTMLElement
+        this.calendarbody = element.querySelector('#calendarbody') as HTMLElement
+        this.selected = new Box<DateCell>(null)
+        
+        
 
+        this.selected.onchange.listen((val, old) => {
+            val.dateCell.classList.add('selected-date')
+            if(old){
+                old.dateCell.classList.remove('selected-date')
+            }
+        })
+    }
+
+    render(): SubDateWidget {
+        this.fillHeaderRow()
+        this.fillBody(this.momentToDisplay)
+        return this
+    }
+
+    fillHeaderRow() {
+        var days = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za']
+        for (var day of days) {
+            var cell = createTableCell(this.headerrow)
+            cell.appendChild(string2html(`<b>${day}</b>`))
+            cell.classList.add('dow')
+        }
+    }
+
+    fillBody(momentToDisplay:moment.Moment){
         var firstDayOfTheMonth = momentToDisplay.date(1)
         var firstDayOfTheCalendar = firstDayOfTheMonth.subtract(firstDayOfTheMonth.day(), 'days')
-
-        var selectedMoment = moment(this.value.get())
 
         for (var row = 0; row < 6; row++) {
             var rowelement = document.createElement('tr')
@@ -30,20 +64,11 @@ class DayhWidget extends Widget<any>{
                     this.value.set(dateCell.moment.valueOf())
                     this.selected.set(dateCell)
                 })
-                if (firstDayOfTheCalendar.isSame(selectedMoment, 'day')) {
-                    this.selected.set(dateCell)
-                }
+                // if (firstDayOfTheCalendar.isSame(selectedMoment, 'day')) {
+                //     this.selected.set(dateCell)
+                // }
                 firstDayOfTheCalendar.add(1, 'days')
             }
-        }
-    }
-
-    fillHeaderRow() {
-        var days = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za']
-        for (var day of days) {
-            var cell = createTableCell(this.headerrow)
-            cell.appendChild(string2html(`<b>${day}</b>`))
-            cell.classList.add('dow')
         }
     }
 

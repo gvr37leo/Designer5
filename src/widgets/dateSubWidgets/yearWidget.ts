@@ -1,7 +1,7 @@
 /// <reference path="../../widget.ts" />
 
 
-class YearWidget extends Widget<any>{
+class YearWidget extends SubDateWidget{
     template: string = `
         <table> 
             <thead> 
@@ -13,8 +13,12 @@ class YearWidget extends Widget<any>{
         <table> 
     `
 
-    constructor(element:HTMLElement){
-        super(element) 
+    constructor(element: HTMLElement, momentToDisplay:moment.Moment, selectedMoment:moment.Moment){
+        super(element,momentToDisplay,selectedMoment)
+    }
+
+    render(): SubDateWidget {
+        throw new Error("Method not implemented.");
     }
 
     protected handleSetReadOnly(val: boolean) {

@@ -1,20 +1,23 @@
 /// <reference path="../widget.ts" />
 /// <reference path="dateSubWidgets/dateCell.ts" />
+/// <reference path="dateSubWidgets/dayWidget.ts" />
+/// <reference path="dateSubWidgets/hourWidget.ts" />
+/// <reference path="dateSubWidgets/monthWidget.ts" />
+/// <reference path="dateSubWidgets/yearWidget.ts" />
+
 /// <reference path="../moment.d.ts" />
 /// <reference path="../main.ts" />
 
 
-class DateWidget extends Widget<string>{
+class DateWidget extends Widget<number>{
+    displayLevel: DisplayLevel;
     subdatepicker: HTMLInputElement;
-    selected: Box<DateCell>;
     container: HTMLInputElement;
     calendar: HTMLElement;
     displayMoment: any;
-    // calendarbody: HTMLElement; 
     right: HTMLElement; 
     middle: HTMLElement; 
     left: HTMLElement; 
-    // headerrow: HTMLElement; 
     inputel: HTMLInputElement; 
     template: string = ` 
         <div style="display:flex;"> 
@@ -37,30 +40,35 @@ class DateWidget extends Widget<string>{
 
     constructor(element:HTMLElement){
         super(element)
-
         var templateDiv = createAndAppend(this.element,this.template)
-
         this.container = templateDiv.querySelector('#container') as HTMLInputElement 
         this.inputel = templateDiv.querySelector('#input') as HTMLInputElement
-        this.subdatepicker = templateDiv.querySelector('#subdatepicker') as HTMLInputElement
+        this.calendar = templateDiv.querySelector('#calendar') as HTMLElement
         this.left = templateDiv.querySelector('#left') as HTMLElement
         this.middle = templateDiv.querySelector('#middle') as HTMLElement
         this.right = templateDiv.querySelector('#right') as HTMLElement
-        this.calendar = templateDiv.querySelector('#calendar') as HTMLElement
-        this.selected = new Box<DateCell>(null)
-
-        this.selected.onchange.listen((val, old) => {
-            val.dateCell.classList.add('selected-date')
-            if(old){
-                old.dateCell.classList.remove('selected-date')
-            }
-        })
+        this.subdatepicker = templateDiv.querySelector('#subdatepicker') as HTMLInputElement
         
+        
+        var selectedMoment = moment(this.value.get())
         this.displayMoment = globalNow.clone();
+        this.displayLevel = DisplayLevel.chain([
+            new HourWidget(this.subdatepicker,this.displayMoment,selectedMoment),
+            new DayWidget(this.subdatepicker,this.displayMoment,selectedMoment),
+            new YearWidget(this.subdatepicker,this.displayMoment,selectedMoment)]
+        )[1]
         this.displayMonth(this.displayMoment.clone())
         
+
+
+
         this.value.onchange.listen((val) => {
             this.inputel.value = this.formatter(val as any)
+        })
+
+        this.middle.addEventListener('click', () => {
+            this.displayLevel = this.displayLevel.up
+            this.displayLevel.val.render()
         })
 
         this.left.addEventListener('click', () => {
@@ -82,22 +90,28 @@ class DateWidget extends Widget<string>{
         })
     }
 
-
-
-    displayHours(moment){
-
+    displayHours(momentToDisplay:moment.Moment){
+        this.middle.innerText = this.displayMoment.format('ddd')
+        var widget = new HourWidget(this.subdatepicker,momentToDisplay.clone())
+        widget.value.onchange.listen((val,old) => {
+            this.value.set(val)
+        })
     }
 
-    displayMonth(momentToDisplay){
-        this.calendarbody.innerHTML = ''
+    displayMonth(momentToDisplay:moment.Moment){
         this.middle.innerText = this.displayMoment.format('MMMM YYYY')
-
-
-        
+        var widget = new DayWidget(this.subdatepicker,momentToDisplay.clone(),null)
+        widget.value.onchange.listen((val,old) => {
+            this.value.set(val)
+        })
     }
 
     displayYear(momentToDisplay:moment.Moment){
-
+        this.middle.innerText = this.displayMoment.format('YYYY')
+        var widget = new YearWidget(this.subdatepicker,momentToDisplay.clone())
+        widget.value.onchange.listen((val,old) => {
+            this.value.set(val)
+        })
     }
 
     moveLeft(){
@@ -114,6 +128,33 @@ class DateWidget extends Widget<string>{
     
     handleSetReadOnly(val: boolean) {
         
+    }
+}
+
+class DisplayLevel{
+    val:SubDateWidget
+    up:DisplayLevel
+    down:DisplayLevel
+
+    constructor(val:SubDateWidget){
+        this.val = val;
+    }
+
+    static chain(levels:SubDateWidget[]):DisplayLevel[]{
+        var displayLevels:DisplayLevel[] = []
+        for(var level of levels){
+            displayLevels.push(new DisplayLevel(level))
+        }
+
+        displayLevels[0].down = displayLevels[0]
+        displayLevels[0].up = displayLevels[1]
+        for(var i = 1; i < displayLevels.length - 1; i++){
+            displayLevels[i].down = displayLevels[i - 1]
+            displayLevels[i].up = displayLevels[i + 1]
+        }
+        displayLevels[displayLevels.length - 1].down = displayLevels[displayLevels.length - 1]
+        displayLevels[displayLevels.length - 1].up = displayLevels[displayLevels.length - 2]
+        return displayLevels;
     }
 }
 

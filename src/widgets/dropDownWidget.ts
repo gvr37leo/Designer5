@@ -1,7 +1,6 @@
 /// <reference path="../widget.ts" />
 /// <reference path="../main.ts" />
 
-
 class DropDownWidget<T> extends Widget<T>{
     displayer: (val: T) => string;
     dropper: HTMLElement;
@@ -24,7 +23,6 @@ class DropDownWidget<T> extends Widget<T>{
             var drop = string2html(`<div class="hovereffect">${this.displayer(option)}</div>`)
             drop.addEventListener('click', () => {
                 this.value.set(option)
-                this.onselect.trigger(option._id, 0)
             })
 
             this.dropper.appendChild(drop)

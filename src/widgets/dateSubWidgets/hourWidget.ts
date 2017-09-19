@@ -1,7 +1,8 @@
 /// <reference path="../../widget.ts" />
 
 
-class HourhWidget extends Widget<any>{
+class HourWidget extends SubDateWidget{
+
     template: string = `
         <div style="display:flex;">
             <div style="display:flex; flex-direction:column; justify-content:space-around;">
@@ -19,8 +20,12 @@ class HourhWidget extends Widget<any>{
             </div>
         </div>
     `
-    constructor(element: HTMLElement) {
-        super(element)
+    constructor(element: HTMLElement, momentToDisplay:moment.Moment, selectedMoment:moment.Moment) {
+        super(element,momentToDisplay,selectedMoment)
+    }
+
+    render(): SubDateWidget {
+        throw new Error("Method not implemented.");
     }
 
     protected handleSetReadOnly(val: boolean) {
