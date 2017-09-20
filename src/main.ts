@@ -3,6 +3,8 @@
 /// <reference path="modal.ts" />
 /// <reference path="Designer.ts" />
 /// <reference path="pathFinder.ts" />
+/// <reference path="widgets/dropDownWidget.ts" />
+
 
 
 //todo
