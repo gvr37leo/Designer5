@@ -10,6 +10,7 @@
 
 
 class DateWidget extends Widget<number>{
+    selectedMoment: moment.Moment;
     displayLevel: DisplayLevel;
     subdatepicker: HTMLInputElement;
     container: HTMLInputElement;
@@ -40,6 +41,7 @@ class DateWidget extends Widget<number>{
 
     constructor(element:HTMLElement){
         super(element)
+        var that = this
         var templateDiv = createAndAppend(this.element,this.template)
         this.container = templateDiv.querySelector('#container') as HTMLInputElement 
         this.inputel = templateDiv.querySelector('#input') as HTMLInputElement
@@ -50,76 +52,68 @@ class DateWidget extends Widget<number>{
         this.subdatepicker = templateDiv.querySelector('#subdatepicker') as HTMLInputElement
         
         
-        var selectedMoment = moment(this.value.get())
+        this.selectedMoment = moment(this.value.get())
         this.displayMoment = globalNow.clone();
-        this.displayLevel = DisplayLevel.chain([
-            new HourWidget(this.subdatepicker,this.displayMoment,selectedMoment),
-            new DayWidget(this.subdatepicker,this.displayMoment,selectedMoment),
-            new YearWidget(this.subdatepicker,this.displayMoment,selectedMoment)]
-        )[1]
-        this.displayMonth(this.displayMoment.clone())
+
+
+        var subDateWidgets = [
+            new HourWidget(this.subdatepicker),
+            new DayWidget(this.subdatepicker),
+            new YearWidget(this.subdatepicker)
+        ]
+        this.displayLevel = DisplayLevel.chain(subDateWidgets)[1]
+        for (var subDateWidget of subDateWidgets){
+            subDateWidget.value.onchange.listen((val, old) => {
+                that.value.set(val)
+            })
+        }
+
+        this.display(this.displayMoment)
         
 
 
 
         this.value.onchange.listen((val) => {
-            this.inputel.value = this.formatter(val as any)
+            that.inputel.value = that.formatter(val as any)
+            this.selectedMoment = moment(val)
         })
 
         this.middle.addEventListener('click', () => {
-            this.displayLevel = this.displayLevel.up
-            this.displayLevel.val.render()
+            that.displayLevel = that.displayLevel.up
+            this.display(this.displayMoment)
         })
 
         this.left.addEventListener('click', () => {
-            this.moveLeft()
+            that.moveLeft()
         })
 
         this.right.addEventListener('click', () => {
-            this.moveRight()
+            that.moveRight()
         })
 
         this.inputel.addEventListener('focus', () => {
-            this.calendar.style.display = 'block'
+            that.calendar.style.display = 'block'
         })
 
         document.addEventListener('click', (e) => {
-            if (!this.container.contains(e.target as any)) {
-                this.calendar.style.display = 'none'
+            if (!that.container.contains(e.target as any)) {
+                that.calendar.style.display = 'none'
             }
         })
     }
 
-    displayHours(momentToDisplay:moment.Moment){
-        this.middle.innerText = this.displayMoment.format('ddd')
-        var widget = new HourWidget(this.subdatepicker,momentToDisplay.clone())
-        widget.value.onchange.listen((val,old) => {
-            this.value.set(val)
-        })
-    }
-
-    displayMonth(momentToDisplay:moment.Moment){
-        this.middle.innerText = this.displayMoment.format('MMMM YYYY')
-        var widget = new DayWidget(this.subdatepicker,momentToDisplay.clone(),null)
-        widget.value.onchange.listen((val,old) => {
-            this.value.set(val)
-        })
-    }
-
-    displayYear(momentToDisplay:moment.Moment){
-        this.middle.innerText = this.displayMoment.format('YYYY')
-        var widget = new YearWidget(this.subdatepicker,momentToDisplay.clone())
-        widget.value.onchange.listen((val,old) => {
-            this.value.set(val)
-        })
+    display(momentToDisplay: moment.Moment){
+        this.subdatepicker.innerHTML = ''
+        this.middle.innerText = this.displayMoment.format(this.displayLevel.val.middleDisplay)
+        this.displayLevel.val.render(this.displayMoment.clone(),this.selectedMoment)
     }
 
     moveLeft(){
-        this.displayMonth(this.displayMoment.subtract(1,'months').clone())
+        this.display(this.displayMoment.subtract(1, this.displayLevel.val.moveSize).clone())
     }
 
     moveRight(){
-        this.displayMonth(this.displayMoment.add(1,'months').clone())
+        this.display(this.displayMoment.add(1,this.displayLevel.val.moveSize).clone())
     }
 
     formatter(val:number):string{
@@ -152,8 +146,9 @@ class DisplayLevel{
             displayLevels[i].down = displayLevels[i - 1]
             displayLevels[i].up = displayLevels[i + 1]
         }
-        displayLevels[displayLevels.length - 1].down = displayLevels[displayLevels.length - 1]
-        displayLevels[displayLevels.length - 1].up = displayLevels[displayLevels.length - 2]
+        displayLevels[displayLevels.length - 1].down = displayLevels[displayLevels.length - 2]
+        displayLevels[displayLevels.length - 1].up = displayLevels[displayLevels.length - 1]
+
         return displayLevels;
     }
 }

@@ -12,13 +12,15 @@ class YearWidget extends SubDateWidget{
             </tbody> 
         <table> 
     `
+    middleDisplay = 'YYYY'
+    moveSize = 'year'
 
-    constructor(element: HTMLElement, momentToDisplay:moment.Moment, selectedMoment:moment.Moment){
-        super(element,momentToDisplay,selectedMoment)
+    constructor(element: HTMLElement){
+        super(element)
     }
 
-    render(): SubDateWidget {
-        throw new Error("Method not implemented.");
+    render(momentToDisplay: moment.Moment, selectedMoment: moment.Moment): SubDateWidget {
+        return null;
     }
 
     protected handleSetReadOnly(val: boolean) {

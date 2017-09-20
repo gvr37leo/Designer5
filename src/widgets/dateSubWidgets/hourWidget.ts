@@ -20,12 +20,15 @@ class HourWidget extends SubDateWidget{
             </div>
         </div>
     `
-    constructor(element: HTMLElement, momentToDisplay:moment.Moment, selectedMoment:moment.Moment) {
-        super(element,momentToDisplay,selectedMoment)
+    middleDisplay = 'ddd'
+    moveSize = 'day'
+
+    constructor(element: HTMLElement) {
+        super(element)
     }
 
-    render(): SubDateWidget {
-        throw new Error("Method not implemented.");
+    render(momentToDisplay: moment.Moment, selectedMoment: moment.Moment): SubDateWidget {
+        return null;
     }
 
     protected handleSetReadOnly(val: boolean) {

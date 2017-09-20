@@ -2,14 +2,15 @@
 
 
 abstract class SubDateWidget extends Widget<number>{
-    momentToDisplay:moment.Moment
-    selectedMoment:moment.Moment
+    middleDisplay:string
+    moveSize:string
+    selected: Box<DateCell>;
 
-    constructor(element:HTMLElement, momentToDisplay:moment.Moment, selectedMoment:moment.Moment){
+
+    constructor(element:HTMLElement){
         super(element)
-        this.momentToDisplay = momentToDisplay
-        this.selectedMoment = selectedMoment
+        this.selected = new Box<DateCell>(null)
     }
 
-    abstract render():SubDateWidget
+    abstract render(momentToDisplay: moment.Moment, selectedMoment: moment.Moment):SubDateWidget
 }

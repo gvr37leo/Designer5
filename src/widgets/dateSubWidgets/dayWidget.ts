@@ -6,6 +6,7 @@
 
 class DayWidget extends SubDateWidget{
 
+
     template: string = `
         <table> 
             <thead> 
@@ -18,17 +19,12 @@ class DayWidget extends SubDateWidget{
     `
     headerrow: HTMLElement;
     calendarbody: HTMLElement;
-    selected: Box<DateCell>;
-    
-    constructor(element: HTMLElement, momentToDisplay:moment.Moment, selectedMoment:moment.Moment) {
-        super(element,momentToDisplay,selectedMoment)
-        createAndAppend(element,this.template)
-        this.headerrow = element.querySelector('#headerrow') as HTMLElement
-        this.calendarbody = element.querySelector('#calendarbody') as HTMLElement
-        this.selected = new Box<DateCell>(null)
-        
-        
+    middleDisplay = 'MMMM YYYY'
+    moveSize = 'month'
 
+    constructor(element: HTMLElement) {
+        super(element)
+        
         this.selected.onchange.listen((val, old) => {
             val.dateCell.classList.add('selected-date')
             if(old){
@@ -37,9 +33,13 @@ class DayWidget extends SubDateWidget{
         })
     }
 
-    render(): SubDateWidget {
+    render(momentToDisplay: moment.Moment, selectedMoment: moment.Moment): SubDateWidget {
+        createAndAppend(this.element, this.template)
+        this.headerrow = this.element.querySelector('#headerrow') as HTMLElement
+        this.calendarbody = this.element.querySelector('#calendarbody') as HTMLElement
+
         this.fillHeaderRow()
-        this.fillBody(this.momentToDisplay)
+        this.fillBody(momentToDisplay, selectedMoment)
         return this
     }
 
@@ -52,7 +52,7 @@ class DayWidget extends SubDateWidget{
         }
     }
 
-    fillBody(momentToDisplay:moment.Moment){
+    fillBody(momentToDisplay: moment.Moment, selectedMoment: moment.Moment){
         var firstDayOfTheMonth = momentToDisplay.date(1)
         var firstDayOfTheCalendar = firstDayOfTheMonth.subtract(firstDayOfTheMonth.day(), 'days')
 
@@ -64,9 +64,9 @@ class DayWidget extends SubDateWidget{
                     this.value.set(dateCell.moment.valueOf())
                     this.selected.set(dateCell)
                 })
-                // if (firstDayOfTheCalendar.isSame(selectedMoment, 'day')) {
-                //     this.selected.set(dateCell)
-                // }
+                if (firstDayOfTheCalendar.isSame(selectedMoment, 'day')) {
+                    this.selected.set(dateCell)
+                }
                 firstDayOfTheCalendar.add(1, 'days')
             }
         }
