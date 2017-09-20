@@ -16,13 +16,14 @@ class DropDownWidget<T> extends Widget<T>{
     `
     optionlist:T[]
 
-    constructor(element:HTMLElement,displayer:(val:T) => string,optionlist:T[]){
+    constructor(element:HTMLElement,classes:string,displayer:(val:T) => string,optionlist:T[]){
         super(element)
         var that = this;
         createAndAppend(this.element, this.template)
         this.container = this.element.querySelector('#container') as HTMLElement
         this.input = this.element.querySelector('#input') as HTMLInputElement
         this.dropper = this.element.querySelector('#dropper') as HTMLElement
+        this.input.classList.add(classes)
 
         this.value.onchange.listen((val, old) => {
             that.input.value = that.displayer(val)

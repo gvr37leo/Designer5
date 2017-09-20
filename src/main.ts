@@ -9,9 +9,7 @@
 
 //todo
 //depends upon - hiding
-//filtering
-//datewidget
-//enum should maybe point to another object instead of being a string array
+
 declare var download:(contents:string,filename:string,mimetype:string) => void
 declare var Router:any
 interface Window { objectMap: Map<string, ObjDef>; }

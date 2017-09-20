@@ -34,15 +34,17 @@ class PointerWidget extends Widget<string>{
 
         this.value.value = 0;
         this.optionsMap = new Map<string,any>()
+        var dropDownLoaded = new EventSystem()
 
         getlist(this.referencedObject.name, (res) => {
             // for(var obj of res){
             //     that.optionsMap.set(obj._id,obj)
             // }
 
-            that.dropdownWidget = new DropDownWidget<any>(that.dropdowncontainer,(val) => {
+            that.dropdownWidget = new DropDownWidget<any>(that.dropdowncontainer,'group-left',(val) => {
                 return that.getDisplayValue(val)
             },res)
+            dropDownLoaded.trigger(0,0)
 
             that.dropdownWidget.value.onchange.listen((val) => {
                 if(val == null){
@@ -67,12 +69,19 @@ class PointerWidget extends Widget<string>{
                 displayHasBeenSet = true
 
                 if(pointer == null){
-                    // that.dropdownWidget.input.value = 'nullptr'
+                    if(this.dropdownWidget){
+                        that.dropdownWidget.input.value = 'nullptr'
+                    }else{
+                        dropDownLoaded.listen(() => {
+                            that.dropdownWidget.input.value = 'nullptr'     
+                        })
+                    }
                 }else{
                     getobject(window.objectMap.get(attribute.pointerType).name ,pointer,(data) => {
                         if(data == null){
                             that.dropdownWidget.input.value = 'null'
                         }else{
+                            that.dropdownWidget.value.set(data,true)
                             that.dropdownWidget.input.value = that.getDisplayValue(data)
                         }
                     },(error) => {
@@ -80,7 +89,7 @@ class PointerWidget extends Widget<string>{
                     })
                 }
             }
-            that.link.href = `/#${attribute.name}/${pointer}`
+            that.link.href = `/#${this.referencedObject.name}/${pointer}`
         })
     }
 
