@@ -1,6 +1,7 @@
 /// <reference path="../widget.ts" />
 
 class PointerWidget extends Widget<string>{
+    dropDownLoaded: EventSystem<{}>;
     optionsMap: Map<string, any>;
     dropdowncontainer: HTMLElement;
     referencedObjectDropdownAttribute: Attribute;
@@ -34,7 +35,7 @@ class PointerWidget extends Widget<string>{
 
         this.value.value = 0;
         this.optionsMap = new Map<string,any>()
-        var dropDownLoaded = new EventSystem()
+        this.dropDownLoaded = new EventSystem()
 
         getlist(this.referencedObject.name, (res) => {
             // for(var obj of res){
@@ -44,7 +45,7 @@ class PointerWidget extends Widget<string>{
             that.dropdownWidget = new DropDownWidget<any>(that.dropdowncontainer,'group-left',(val) => {
                 return that.getDisplayValue(val)
             },res)
-            dropDownLoaded.trigger(0,0)
+            this.dropDownLoaded.trigger(0,0)
 
             that.dropdownWidget.value.onchange.listen((val) => {
                 if(val == null){
@@ -69,21 +70,19 @@ class PointerWidget extends Widget<string>{
                 displayHasBeenSet = true
 
                 if(pointer == null){
-                    if(this.dropdownWidget){
+                    this.executeWhenLoaded(() => {
                         that.dropdownWidget.input.value = 'nullptr'
-                    }else{
-                        dropDownLoaded.listen(() => {
-                            that.dropdownWidget.input.value = 'nullptr'     
-                        })
-                    }
+                    })
                 }else{
                     getobject(window.objectMap.get(attribute.pointerType).name ,pointer,(data) => {
-                        if(data == null){
-                            that.dropdownWidget.input.value = 'null'
-                        }else{
-                            that.dropdownWidget.value.set(data,true)
-                            that.dropdownWidget.input.value = that.getDisplayValue(data)
-                        }
+                        this.executeWhenLoaded(() => {
+                            if(data == null){
+                                that.dropdownWidget.input.value = 'null'
+                            }else{
+                                that.dropdownWidget.value.set(data,true)
+                                that.dropdownWidget.input.value = that.getDisplayValue(data)
+                            }
+                        })
                     },(error) => {
                         
                     })
@@ -107,6 +106,16 @@ class PointerWidget extends Widget<string>{
             return 'nullptr'
         }else{
             return val[this.referencedObjectDropdownAttribute.name] || val._id
+        }
+    }
+
+    executeWhenLoaded(callback:()=>void){
+        if(this.dropdownWidget){
+            callback();
+        }else{
+            this.dropDownLoaded.listen(() => {
+                callback()
+            })
         }
     }
 }
