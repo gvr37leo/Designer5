@@ -95,6 +95,79 @@ toastr.options.hideDuration = 500;
 toastr.options.timeOut = 800; 
 toastr.options.extendedTimeOut = 500; 
 
+var genDef = {
+	"customButtons": [],
+	"objdefinitions": [
+		{
+			"_id": "59bd375ba93b0d1f60899fab",
+			"name": "vrijwilliger",
+			"attributes": [
+				{
+					"_id": "59bd37bda93b0d1f60899fae",
+					"name": "naam",
+					"enumType": "text",
+					"hidden": false,
+					"belongsToObject": "59bd375ba93b0d1f60899fab"
+				}
+			],
+			"hidden": false,
+			"dropdownAttribute": "59bd37bda93b0d1f60899fae"
+		},
+		{
+			"_id": "59bd3767a93b0d1f60899fac",
+			"name": "oudere",
+			"attributes": [
+				{
+					"_id": "59bd37e6a93b0d1f60899faf",
+					"name": "naam",
+					"enumType": "text",
+					"hidden": false,
+					"belongsToObject": "59bd3767a93b0d1f60899fac"
+				},
+				{
+					"_id": "59bd380ca93b0d1f60899fb0",
+					"name": "adres",
+					"enumType": "text",
+					"hidden": false,
+					"belongsToObject": "59bd3767a93b0d1f60899fac"
+				}
+			],
+			"hidden": false,
+			"dropdownAttribute": "59bd37bda93b0d1f60899fae"
+		},
+		{
+			"_id": "59bd3785a93b0d1f60899fad",
+			"name": "aanvraag",
+			"attributes": [
+				{
+					"_id": "59bd383ca93b0d1f60899fb1",
+					"name": "aanvrager",
+					"enumType": "pointer",
+					"hidden": false,
+					"pointerType": "59bd3767a93b0d1f60899fac",
+					"belongsToObject": "59bd3785a93b0d1f60899fad"
+				},
+				{
+					"_id": "59bd3864a93b0d1f60899fb2",
+					"name": "vrijwilliger",
+					"enumType": "pointer",
+					"hidden": false,
+					"pointerType": "59bd375ba93b0d1f60899fab",
+					"belongsToObject": "59bd3785a93b0d1f60899fad"
+				},
+				{
+					"_id": "59c2ec6b020bb52178fd165f",
+					"name": "datum",
+					"enumType": "date",
+					"hidden": false,
+					"belongsToObject": "59bd3785a93b0d1f60899fad"
+				}
+			],
+			"hidden": false
+		}
+	]
+}
+
 var globalModal = new Modal()
 var globalNow = moment()
-var designer = new Designer(document.querySelector('#grid'),testDefinition)
+var designer = new Designer(document.querySelector('#grid'),genDef as any)
