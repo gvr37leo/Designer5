@@ -34,7 +34,7 @@ function generateAppDefenition(appdef:AppDef){
         var attributeMap: Map<string, Attribute> = maps[1]
         var enumMap:Map<string,EnumType> = maps[2]
         for (var obj of objectMap) { 
-            objectMap.set(obj[1]._id, new ObjDef(obj[1]._id,obj[1].name, obj[1].dropdownAttribute, [], obj[1].hidden)) 
+            objectMap.set(obj[1]._id, new ObjDef(obj[1]._id,obj[1].name, obj[1].dropdownAttribute, [],[], obj[1].hidden)) 
         } 
 
         for(var pair of attributeMap){
@@ -49,13 +49,13 @@ function generateAppDefenition(appdef:AppDef){
     })
 }
 
-var selfDef = new AppDef([new CustomButton('generate app definition', generateAppDefenition)],[
+var selfDef = new AppDef([new CustomButton<AppDef>('generate app definition', generateAppDefenition)],[
     new ObjDef('1','object', '1',[
         new TextAttribute('1','name'),
         new pointerAttribute('2','dropdownAttribute','2'),
         new booleanAttribute('3','hidden'),
         new booleanAttribute('4','advancedSearch'),
-    ]),
+	], []),
     new ObjDef('2','attribute', '5',[
         new TextAttribute('5', 'name'),
         new pointerAttribute('6','enumType','3'),
@@ -64,10 +64,10 @@ var selfDef = new AppDef([new CustomButton('generate app definition', generateAp
         new booleanAttribute('9','hidden',true),
         new booleanAttribute('10','required',true),
         new pointerAttribute('11','pointerType','1',true),
-    ]),
+	], []),
     new ObjDef('3','enumType','13',[
         new TextAttribute('13', 'value'),
-    ])
+	], [])
 ])
 
 var testDefinition = new AppDef([],[
@@ -77,17 +77,20 @@ var testDefinition = new AppDef([],[
         new dateAttribute('3','birthday'),
         new numberAttribute('4','lengte',true),
         new pointerAttribute('5','vriend','1'),
-    ]),
+	], [new CustomButton<GridControl>('filter', (grid: GridControl) => {
+		grid.filter.name = 'paul'
+		grid.refetchbody()
+	})]),
     new ObjDef('2', 'bedrijf', '1',[
         new TextAttribute('6','name'),
         new TextAttribute('7','branch'),
         new numberAttribute('8','rating'),
-    ]),
+	], []),
     new ObjDef('3','persoonwerktBijBedrijf',null,[
         new pointerAttribute('10','werknemer','1'),
         new pointerAttribute('11','werkgever','2'),
         new numberAttribute('12','salaris'),
-    ],true)
+	], [],true)
 ])
 
 toastr.options.showDuration = 300; 
@@ -170,4 +173,4 @@ var genDef = {
 
 var globalModal = new Modal()
 var globalNow = moment()
-var designer = new Designer(document.querySelector('#grid'),genDef as any)
+var designer = new Designer(document.querySelector('#grid'),testDefinition)

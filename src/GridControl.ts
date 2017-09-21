@@ -82,6 +82,12 @@ class GridControl{
             this.refetchbody()
         })
 
+        for (let customButton of this.definition.customButtons){
+            new Button(this.buttonContainer, customButton.name,'btn btn-default clearbtn',() => {
+                customButton.callback(this)
+            })
+        }
+
         this.appendHeader()
         this.refetchbody()
         

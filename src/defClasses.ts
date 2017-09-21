@@ -1,11 +1,11 @@
 
 class AppDef{
-    customButtons: CustomButton[];
+    customButtons: CustomButton<AppDef>[];
     databaseName: string
     objdefinitions:ObjDef[]
     dateformat:string
 
-    constructor(customButtons:CustomButton[],objdefinitions:ObjDef[]){
+    constructor(customButtons:CustomButton<AppDef>[],objdefinitions:ObjDef[]){
         this.customButtons = customButtons
         this.objdefinitions = objdefinitions
     }
@@ -18,9 +18,11 @@ class ObjDef{
     advancedSearch:boolean
     hidden:boolean
     dropdownAttribute:string
+    customButtons: CustomButton<GridControl>[];
 
-    constructor(_id:string, name:string, dropdownAttribute:string, attributes:Attribute[],hidden:boolean = false){
+    constructor(_id: string, name: string, dropdownAttribute: string, attributes: Attribute[], customButtons: CustomButton<GridControl>[],hidden:boolean = false){
         this._id = _id
+        this.customButtons = customButtons
         this.name = name
         this.attributes = attributes
         this.hidden = hidden
