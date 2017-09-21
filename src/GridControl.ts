@@ -109,8 +109,9 @@ class GridControl{
 
             //titlerow
             var titleCell = createTableCell(this.titlerow)
-            titleCell.appendChild(string2html(`<b>${attribute.name}</b>`))
-            new Button(titleCell,'^','btn btn-default',() => {
+            var innerTitleCell = createAndAppend(titleCell, '<div style="display:flex; justify-content:space-between; max-width:220px;"></div>')
+            innerTitleCell.appendChild(string2html(`<b>${attribute.name}</b>`))
+            new Button(innerTitleCell,'^','btn btn-default',() => {
                 this.sortDirection *= -1;
                 this.sort = {}
                 this.sort[attribute.name] = this.sortDirection

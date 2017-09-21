@@ -1,4 +1,6 @@
 .nav{
+    position: fixed;
+    width: 100%;
     padding: 10px;
     display: flex;
     background-color: black;
@@ -24,6 +26,7 @@ a:focus {
 
 .contentcontainer{
     padding: 10px;
+    padding-top: 30px;
 }
 
 .createbtn{

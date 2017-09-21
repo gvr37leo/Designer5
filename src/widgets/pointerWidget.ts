@@ -14,7 +14,7 @@ class PointerWidget extends Widget<string>{
     template:string = `
         <div style="display:flex; max-width:220px;">
             <div id="dropdowncontainer">
-
+                <input class="form-control group-left" type="text"> 
             </div>
             <span id="delbuttoncontainer"></span>
             <a class="btn btn-info group-right" id="link">-></a>
@@ -41,7 +41,7 @@ class PointerWidget extends Widget<string>{
             // for(var obj of res){
             //     that.optionsMap.set(obj._id,obj)
             // }
-
+            this.dropdowncontainer.innerHTML = '';
             that.dropdownWidget = new DropDownWidget<any>(that.dropdowncontainer,'group-left',(val) => {
                 return that.getDisplayValue(val)
             },res)
