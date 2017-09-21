@@ -33,8 +33,10 @@ function generateAppDefenition(appdef:AppDef){
         var objectMap:Map<string,ObjDef> = maps[0]
         var attributeMap: Map<string, Attribute> = maps[1]
         var enumMap:Map<string,EnumType> = maps[2]
-        for (var obj of objectMap) { 
-            objectMap.set(obj[1]._id, new ObjDef(obj[1]._id,obj[1].name, obj[1].dropdownAttribute, [],[], obj[1].hidden)) 
+        for (var keyvaluepair of objectMap) {
+			var key = keyvaluepair[0]
+			var obj = keyvaluepair[1]
+            objectMap.set(key, new ObjDef(obj._id,obj.name, obj.dropdownAttribute, [],[], obj.hidden)) 
         } 
 
         for(var pair of attributeMap){
@@ -173,4 +175,4 @@ var genDef = {
 
 var globalModal = new Modal()
 var globalNow = moment()
-var designer = new Designer(document.querySelector('#grid'),testDefinition)
+var designer = new Designer(document.querySelector('#grid'), selfDef)

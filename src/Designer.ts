@@ -42,17 +42,9 @@ class Designer{
             new ObjectView(element, objdefinition as ObjDef, params[1])
         })
 
-        pathFinder.trigger(this.removeHash(location.hash))
+        pathFinder.trigger(removeHash(location.hash))
         window.addEventListener("hashchange", (e: HashChangeEvent) => {
-            pathFinder.trigger(this.removeHash(location.hash))
+            pathFinder.trigger(removeHash(location.hash))
         })
     }
-
-    removeHash(string:string):string{
-        if (string[0] == "#"){
-            string = string.slice(1)
-        }
-        return string
-    }
-
 }

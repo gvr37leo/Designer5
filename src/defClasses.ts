@@ -22,11 +22,11 @@ class ObjDef{
 
     constructor(_id: string, name: string, dropdownAttribute: string, attributes: Attribute[], customButtons: CustomButton<GridControl>[],hidden:boolean = false){
         this._id = _id
-        this.customButtons = customButtons
         this.name = name
-        this.attributes = attributes
         this.hidden = hidden
         this.dropdownAttribute = dropdownAttribute
+        this.customButtons = customButtons
+        this.attributes = attributes
     }
 }
 

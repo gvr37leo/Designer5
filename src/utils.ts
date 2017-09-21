@@ -234,8 +234,13 @@ class CoolUp{
     }
 }
 
-
-
 function isEmpty(obj){
     return Object.keys(obj).length === 0 && obj.constructor === Object
+}
+
+function removeHash(string: string): string {
+    if (string[0] == "#") {
+        string = string.slice(1)
+    }
+    return string
 }
