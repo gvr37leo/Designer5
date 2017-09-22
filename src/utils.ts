@@ -190,6 +190,10 @@ function addImplicitRefs(appDef:AppDef):AppDef{
                 referencedObject.attributes.push(newAttribute)
             }
         }
+
+        var lastupdateAttribute = new dateAttribute('NULL', 'lastupdate')
+        lastupdateAttribute.readonly = true;
+        objDef.attributes.push(lastupdateAttribute)
     }
     appDef.objdefinitions = mapToAppDefList(map).objdefinitions
     return appDef
