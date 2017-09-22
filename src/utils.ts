@@ -16,10 +16,10 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
             widget = new NumberWidget(element,{})
             break;
         case 'date':
-            widget = new DateWidget(element)
+            widget = new DateWidget(element,attr)
             break;
         case 'id':
-            widget = new idWidget(element,attr as IdentityAttribute)
+            widget = new idWidget(element, attr as IdentityAttribute)
             break;
         case 'enum':
             widget = new EnumWidget(element,attr as enumAttribute)
@@ -180,18 +180,18 @@ function addImplicitRefs(appDef:AppDef):AppDef{
     var map = appDefListToMap(appDef)
 
     for(var objDef of appDef.objdefinitions){
-        objDef.attributes.unshift(new IdentityAttribute('NULL',objDef.name))
+        objDef.attributes.unshift(new IdentityAttribute(null,objDef.name))
 
         for(var attribute of objDef.attributes){
             attribute.belongsToObject = objDef._id
             if(attribute.enumType == 'pointer'){
                 var referencedObject = map.get((attribute as pointerAttribute).pointerType)
-                var newAttribute = new arrayAttribute('NULL',attribute.name,objDef._id,attribute._id)
+                var newAttribute = new arrayAttribute(null,attribute.name,objDef._id,attribute._id)
                 referencedObject.attributes.push(newAttribute)
             }
         }
 
-        var lastupdateAttribute = new dateAttribute('NULL', 'lastupdate')
+        var lastupdateAttribute = new dateAttribute(null, 'lastupdate')
         lastupdateAttribute.readonly = true;
         objDef.attributes.push(lastupdateAttribute)
     }

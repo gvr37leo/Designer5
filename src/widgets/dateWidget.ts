@@ -10,6 +10,7 @@
 
 
 class DateWidget extends Widget<number>{
+    attribute: dateAttribute;
     selectedMoment: moment.Moment;
     displayLevel: DisplayLevel;
     subdatepicker: HTMLInputElement;
@@ -39,8 +40,9 @@ class DateWidget extends Widget<number>{
         </div> 
     `
 
-    constructor(element:HTMLElement){
+    constructor(element:HTMLElement,attribute:dateAttribute){
         super(element)
+        this.attribute = attribute
         var that = this
         var templateDiv = createAndAppend(this.element,this.template)
         this.container = templateDiv.querySelector('#container') as HTMLInputElement 
@@ -50,7 +52,7 @@ class DateWidget extends Widget<number>{
         this.middle = templateDiv.querySelector('#middle') as HTMLElement
         this.right = templateDiv.querySelector('#right') as HTMLElement
         this.subdatepicker = templateDiv.querySelector('#subdatepicker') as HTMLInputElement
-        
+        this.inputel.readOnly = this.attribute.readonly
         
         this.selectedMoment = moment(this.value.get())
         this.displayMoment = globalNow.clone();
@@ -78,28 +80,30 @@ class DateWidget extends Widget<number>{
             this.selectedMoment = moment(val)
         })
 
-        this.middle.addEventListener('click', () => {
-            that.displayLevel = that.displayLevel.up
-            this.display(this.displayMoment)
-        })
+        if (!this.attribute.readonly) {
+            this.middle.addEventListener('click', () => {
+                that.displayLevel = that.displayLevel.up
+                this.display(this.displayMoment)
+            })
 
-        this.left.addEventListener('click', () => {
-            that.moveLeft()
-        })
+            this.left.addEventListener('click', () => {
+                that.moveLeft()
+            })
 
-        this.right.addEventListener('click', () => {
-            that.moveRight()
-        })
+            this.right.addEventListener('click', () => {
+                that.moveRight()
+            })
 
-        this.inputel.addEventListener('focus', () => {
-            that.calendar.style.display = 'block'
-        })
+            this.inputel.addEventListener('focus', () => {
+                that.calendar.style.display = 'block'
+            })
 
-        document.addEventListener('click', (e) => {
-            if (!that.container.contains(e.target as any)) {
-                that.calendar.style.display = 'none'
-            }
-        })
+            document.addEventListener('click', (e) => {
+                if (!that.container.contains(e.target as any)) {
+                    that.calendar.style.display = 'none'
+                }
+            })
+        }
     }
 
     display(momentToDisplay: moment.Moment){
