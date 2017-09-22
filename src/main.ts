@@ -54,7 +54,7 @@ function generateAppDefenition(appdef:AppDef){
 var selfDef = new AppDef([new CustomButton<AppDef>('generate app definition', generateAppDefenition)],[
     new ObjDef('1','object', '1',[
         new TextAttribute('1','name'),
-        new pointerAttribute('2','dropdownAttribute','2'),
+        new pointerAttribute('2','dropdownAttribute','2','7'),
         new booleanAttribute('3','hidden'),
         new booleanAttribute('4','advancedSearch'),
 	], []),
@@ -65,7 +65,7 @@ var selfDef = new AppDef([new CustomButton<AppDef>('generate app definition', ge
         new booleanAttribute('8','readonly',true),
         new booleanAttribute('9','hidden',true),
         new booleanAttribute('10','required',true),
-        new pointerAttribute('11','pointerType','1',true),
+        new pointerAttribute('11','pointerType','1',null,true),
 	], []),
     new ObjDef('3','enumType','13',[
         new TextAttribute('13', 'value'),
@@ -99,79 +99,6 @@ toastr.options.showDuration = 300;
 toastr.options.hideDuration = 500; 
 toastr.options.timeOut = 800; 
 toastr.options.extendedTimeOut = 500; 
-
-var genDef = {
-	"customButtons": [],
-	"objdefinitions": [
-		{
-			"_id": "59bd375ba93b0d1f60899fab",
-			"name": "vrijwilliger",
-			"attributes": [
-				{
-					"_id": "59bd37bda93b0d1f60899fae",
-					"name": "naam",
-					"enumType": "text",
-					"hidden": false,
-					"belongsToObject": "59bd375ba93b0d1f60899fab"
-				}
-			],
-			"hidden": false,
-			"dropdownAttribute": "59bd37bda93b0d1f60899fae"
-		},
-		{
-			"_id": "59bd3767a93b0d1f60899fac",
-			"name": "oudere",
-			"attributes": [
-				{
-					"_id": "59bd37e6a93b0d1f60899faf",
-					"name": "naam",
-					"enumType": "text",
-					"hidden": false,
-					"belongsToObject": "59bd3767a93b0d1f60899fac"
-				},
-				{
-					"_id": "59bd380ca93b0d1f60899fb0",
-					"name": "adres",
-					"enumType": "text",
-					"hidden": false,
-					"belongsToObject": "59bd3767a93b0d1f60899fac"
-				}
-			],
-			"hidden": false,
-			"dropdownAttribute": "59bd37bda93b0d1f60899fae"
-		},
-		{
-			"_id": "59bd3785a93b0d1f60899fad",
-			"name": "aanvraag",
-			"attributes": [
-				{
-					"_id": "59bd383ca93b0d1f60899fb1",
-					"name": "aanvrager",
-					"enumType": "pointer",
-					"hidden": false,
-					"pointerType": "59bd3767a93b0d1f60899fac",
-					"belongsToObject": "59bd3785a93b0d1f60899fad"
-				},
-				{
-					"_id": "59bd3864a93b0d1f60899fb2",
-					"name": "vrijwilliger",
-					"enumType": "pointer",
-					"hidden": false,
-					"pointerType": "59bd375ba93b0d1f60899fab",
-					"belongsToObject": "59bd3785a93b0d1f60899fad"
-				},
-				{
-					"_id": "59c2ec6b020bb52178fd165f",
-					"name": "datum",
-					"enumType": "date",
-					"hidden": false,
-					"belongsToObject": "59bd3785a93b0d1f60899fad"
-				}
-			],
-			"hidden": false
-		}
-	]
-}
 
 var globalModal = new Modal()
 var globalNow = moment()

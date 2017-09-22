@@ -39,6 +39,20 @@ class EnumType{
     }
 }
 
+class Row{
+    _id:string
+    column:Column
+}
+
+class Column{
+    _id:string
+    grow:number = 0;
+    basis:string
+
+    rows:Row[]
+    attributes:Attribute[]
+}
+
 abstract class Attribute{
     _id:string
     name:string
@@ -147,7 +161,8 @@ class arrayAttribute extends Attribute{
 
 class pointerAttribute extends Attribute{
     pointerType:string
-    constructor(_id: string,name:string,pointerType:string,hidden:boolean = false){
+    filterOnColumn:string
+    constructor(_id: string,name:string,pointerType:string,filterOnColumn:string = null,hidden:boolean = false){
         super(_id,name, 'pointer',hidden)
         this.pointerType = pointerType
     }

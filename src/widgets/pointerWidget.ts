@@ -1,7 +1,7 @@
 /// <reference path="../widget.ts" />
 
 class PointerWidget extends Widget<string>{
-    dropDownLoaded: EventSystem<{}>;
+    dropDownLoaded: EventSystem<any>;
     optionsMap: Map<string, any>;
     dropdowncontainer: HTMLElement;
     referencedObjectDropdownAttribute: Attribute;
@@ -36,8 +36,12 @@ class PointerWidget extends Widget<string>{
         this.value.value = 0;
         this.optionsMap = new Map<string,any>()
         this.dropDownLoaded = new EventSystem()
-
-        getlist(this.referencedObject.name, (res) => {
+        var filter = {}
+        if(attribute.filterOnColumn){
+            // this.requestDataFromParent.trigger()
+            // filter[window.attributeMap.get(this.referencedObject.dropdownAttribute).name] == this.data._id
+        }
+        getlistfiltered(this.referencedObject.name,{}, (res) => {
             // for(var obj of res){
             //     that.optionsMap.set(obj._id,obj)
             // }
