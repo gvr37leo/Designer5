@@ -19,7 +19,7 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
             widget = new DateWidget(element)
             break;
         case 'id':
-            widget = new idWidget(element,attr)
+            widget = new idWidget(element,attr as IdentityAttribute)
             break;
         case 'enum':
             widget = new EnumWidget(element,attr as enumAttribute)
