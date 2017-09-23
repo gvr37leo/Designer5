@@ -6,6 +6,7 @@
 /// <reference path="widgets/textWidget.ts" />
 /// <reference path="widgets/enumWidget.ts" />
 /// <reference path="widgets/idWidget.ts" />
+/// <reference path="GridRow.ts" />
 
 
 var types = ['text','boolean','number','date','pointer','array']
@@ -27,7 +28,6 @@ class GridControl{
     element: Element
     data
     definition:ObjDef
-    onchange:EventSystem<any>
     template:string = `
         <div class="grid">
             <h2 id="gridtitle"></h2>
@@ -48,7 +48,6 @@ class GridControl{
 
     constructor(element:Element, definition:ObjDef, filter){
         var that = this
-        this.onchange = new EventSystem()
         this.element = element;
         this.definition = definition
         this.filter = filter
@@ -158,32 +157,11 @@ class GridControl{
 
     appendBody(data){
         for(let rows = 0; rows < data.length; rows++){
-            let rowchange = new EventSystem();
-            var row = document.createElement('tr')
-            this.tablebody.appendChild(row)
+            var row = new GridRow(this.definition,data[rows])
+            this.tablebody.appendChild(row.element)
 
-            for(let attribute of this.definition.attributes){
-                if(attribute.enumType == 'array' || attribute.hidden)continue;
-                var widget = getWidget(attribute,createTableCell(row))
-                widget.value.set(data[rows][attribute.name])
-
-                widget.value.onchange.listen((val) => {
-                    data[rows][attribute.name] = val;
-                    this.onchange.trigger(0,0)
-                    rowchange.trigger(0,0)
-                })
-            }
-
-            // save button
-            let savebtn = new SaveButton(createTableCell(row),rowchange,() => {
-                update(this.definition.name,data[rows]._id,data[rows],() => {},() => {})
-            })
-
-            // delete button
-            let deletebutton = new Button(createTableCell(row),'delete', 'btn btn-danger',() => {
-                del(this.definition.name,data[rows]._id,() => {
-                    this.refetchbody()
-                },() => {})
+            row.deleteEvent.listen((val) => {
+                this.refetchbody()
             })
         }
     }
