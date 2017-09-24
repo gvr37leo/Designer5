@@ -13,7 +13,7 @@ class GridRow{
         this.definition = objdef
         this.element = document.createElement('tr')
         var row = this.element
-
+        
         for(let attribute of this.definition.attributes){
             if(attribute.enumType == 'array' || attribute.hidden)continue;
             var widget = getWidget(attribute,createTableCell(row))
@@ -21,7 +21,6 @@ class GridRow{
 
             widget.value.onchange.listen((val) => {
                 data[attribute.name] = val;
-                this.dirtied.trigger(0,0)
                 this.dirtied.trigger(0,0)
             })
         }

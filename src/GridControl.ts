@@ -7,6 +7,7 @@
 /// <reference path="widgets/enumWidget.ts" />
 /// <reference path="widgets/idWidget.ts" />
 /// <reference path="GridRow.ts" />
+/// <reference path="GridSearchRow.ts" />
 
 
 var types = ['text','boolean','number','date','pointer','array']
@@ -14,6 +15,8 @@ var types = ['text','boolean','number','date','pointer','array']
 
 
 class GridControl{
+    rows: GridRow[];
+    searchRow: GridSearhRow;
     sort: {};
     sortDirection: number;
     buttonContainer: Element;
@@ -23,7 +26,7 @@ class GridControl{
     gridtitle: HTMLElement;
     tablebody: Element;
     titlerow: Element;
-    searchrow: Element;
+    searchrow: HTMLElement;
     filter: any;
     element: Element
     data
@@ -50,19 +53,16 @@ class GridControl{
         var that = this
         this.element = element;
         this.definition = definition
-        this.filter = filter
-        this.sort = {}
+        this.rows = []
+        this.sort = {};
         this.sortDirection = 1
-        this.filterCooldown = new CoolUp(1000, () => {
-            this.refetchbody()
-        })
 
         this.element.appendChild(string2html(this.template))
         this.buttonContainer = this.element.querySelector('#button-container')
         this.gridtitle = this.element.querySelector('#gridtitle') as HTMLElement
         this.tablebody = this.element.querySelector('#tablebody') 
         this.titlerow = this.element.querySelector('#titlerow')
-        this.searchrow = this.element.querySelector('#searchrow')
+        this.searchrow = this.element.querySelector('#searchrow') as HTMLElement
         this.createlinkContainer = this.element.querySelector('#createlink-container');
         this.gridtitle.innerText = this.definition.name
         
@@ -88,12 +88,17 @@ class GridControl{
         }
 
         this.appendHeader()
+
+        this.searchRow =new GridSearhRow(this.searchrow, this.definition)
+        this.searchRow.searchChange.listen(() => {
+            this.refetchbody()
+        })
+
         this.refetchbody()
-        
     }
 
     refetchbody(){
-        getlistfiltered(this.definition.name,{filter:this.filter,sort:this.sort},(res) => {
+        getlistfiltered(this.definition.name,{filter:this.searchRow.filter.toJson(),sort:this.sort},(res) => {
             this.data = res
             this.tablebody.innerHTML = ''
             this.appendBody(res)
@@ -103,56 +108,40 @@ class GridControl{
     }
 
     appendHeader(){
+        var selectedHeader:HTMLElement = null
+
         for(let attribute of this.definition.attributes){
             if(attribute.enumType == 'array' || attribute.hidden)continue;
 
-            //titlerow
             var titleCell = createTableCell(this.titlerow)
-            var innerTitleCell = createAndAppend(titleCell, '<div style="display:flex; justify-content:space-between; max-width:220px;"></div>')
-            innerTitleCell.appendChild(string2html(`<b>${attribute.name}</b>`))
-            new Button(innerTitleCell,'^','btn btn-default',() => {
+            var innerTitleCell = createAndAppend(titleCell, `<div class="sortableheader" style="display:flex; max-width:220px;">
+                <b>${attribute.name}</b>
+                <span id="sortordersymbol"></span>
+            </div>`)
+            let sortordersymbol = innerTitleCell.querySelector('#sortordersymbol') as HTMLElement
+
+            innerTitleCell.addEventListener('click',() => {
+
+                if(selectedHeader){
+                    selectedHeader.classList.remove('glyphicon')
+                    selectedHeader.classList.remove('glyphicon-triangle-top')
+                    selectedHeader.classList.remove('glyphicon-triangle-bottom')
+                }
+                sortordersymbol.classList.add('glyphicon')
+                if(this.sortDirection == 1){
+                    
+                    sortordersymbol.classList.add('glyphicon-triangle-top')
+                }else{
+                    sortordersymbol.classList.add('glyphicon-triangle-bottom')
+                }
+                selectedHeader = sortordersymbol
+
                 this.sortDirection *= -1;
                 this.sort = {}
                 this.sort[attribute.name] = this.sortDirection
                 this.refetchbody()
             })
-
-
-            //columnrow
-            var tableCell = createTableCell(this.searchrow)
-            var innerCell = createAndAppend(tableCell,'<div style="display:flex; max-width:220px;"></div>')
-            
-            var searchFields:Widget<any>[] = []
-
-            if(attribute.enumType == 'date' || attribute.enumType == 'number'){
-                var fromSerachField = getWidget(attribute, innerCell)
-                fromSerachField.value.onchange.listen((val) => {
-                    if (!this.filter[attribute.name]) this.filter[attribute.name] = {}
-                    this.filter[attribute.name].$gte  = val
-                    this.filterCooldown.restartCast()
-                })
-
-                var toSerachField = getWidget(attribute, innerCell)
-                toSerachField.value.onchange.listen((val) => {
-                    if (!this.filter[attribute.name]) this.filter[attribute.name] = {}
-                    this.filter[attribute.name].$lt = val
-                    this.filterCooldown.restartCast()
-                })
-
-            }else{
-                var searchField = getWidget(attribute, innerCell)
-                searchField.value.onchange.listen((val) => {
-                    this.filter[attribute.name] = val
-                    this.filterCooldown.restartCast()
-                })
-            }
-
-            var clearSearchField = new Button(innerCell, 'clear', 'btn btn-danger clearbtn', () => {
-                delete this.filter[attribute.name]
-                this.refetchbody()
-            })
         }
-
     }
 
     appendBody(data){
@@ -163,6 +152,7 @@ class GridControl{
             row.deleteEvent.listen((val) => {
                 this.refetchbody()
             })
+            this.rows.push(row)
         }
     }
 }
