@@ -121,7 +121,10 @@ class GridControl{
             let sortordersymbol = innerTitleCell.querySelector('#sortordersymbol') as HTMLElement
 
             innerTitleCell.addEventListener('click',() => {
-
+                this.sortDirection *= -1;
+                this.sort = {}
+                this.sort[attribute.name] = this.sortDirection
+                this.refetchbody()
                 if(selectedHeader){
                     selectedHeader.classList.remove('glyphicon')
                     selectedHeader.classList.remove('glyphicon-triangle-top')
@@ -129,17 +132,13 @@ class GridControl{
                 }
                 sortordersymbol.classList.add('glyphicon')
                 if(this.sortDirection == 1){
-                    
                     sortordersymbol.classList.add('glyphicon-triangle-top')
                 }else{
                     sortordersymbol.classList.add('glyphicon-triangle-bottom')
                 }
                 selectedHeader = sortordersymbol
 
-                this.sortDirection *= -1;
-                this.sort = {}
-                this.sort[attribute.name] = this.sortDirection
-                this.refetchbody()
+                
             })
         }
     }
