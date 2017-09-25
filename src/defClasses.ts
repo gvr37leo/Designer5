@@ -165,6 +165,7 @@ class pointerAttribute extends Attribute{
     constructor(_id: string,name:string,pointerType:string,filterOnColumn:string = null,hidden:boolean = false){
         super(_id,name, 'pointer',hidden)
         this.pointerType = pointerType
+        this.filterOnColumn = filterOnColumn
     }
 }
 

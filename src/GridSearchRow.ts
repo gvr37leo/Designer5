@@ -26,7 +26,7 @@ class GridSearhRow{
             let tableCell = createTableCell(this.element)
             let innerCell = createAndAppend(tableCell,'<div style="display:flex; max-width:220px;"></div>')
 
-            let searchField = getWidget(attribute, innerCell)
+            let searchField = getWidget(attribute, innerCell,{} as any)
             this.filter.set(attribute,searchField.value,false)
 
             searchField.value.onchange.listen(() => {

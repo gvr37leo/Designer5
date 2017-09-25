@@ -1,6 +1,7 @@
 /// <reference path="../widget.ts" />
 
 class PointerWidget extends Widget<string>{
+    filterAttribute: pointerAttribute;
     dropDownLoaded: EventSystem<any>;
     optionsMap: Map<string, any>;
     dropdowncontainer: HTMLElement;
@@ -20,7 +21,7 @@ class PointerWidget extends Widget<string>{
             <a class="btn btn-info group-right" id="link">-></a>
         </div>` 
 
-    constructor(element:HTMLElement, attribute:pointerAttribute, infoer:(val) => string){
+    constructor(element:HTMLElement, attribute:pointerAttribute, row:any){
         super(element)
         var that = this
         this.attribute = attribute
@@ -33,23 +34,26 @@ class PointerWidget extends Widget<string>{
         this.referencedObject = window.objectMap.get(attribute.pointerType)
         this.referencedObjectDropdownAttribute = window.attributeMap.get(this.referencedObject.dropdownAttribute)
 
+        
+
         this.value.value = 0;
         this.optionsMap = new Map<string,any>()
         this.dropDownLoaded = new EventSystem()
         var filter = {}
+
         if(attribute.filterOnColumn){
-            // this.requestDataFromParent.trigger()
-            // filter[window.attributeMap.get(this.referencedObject.dropdownAttribute).name] == this.data._id
+            this.filterAttribute = window.attributeMap.get(attribute.filterOnColumn) as pointerAttribute
+            filter[this.filterAttribute.name] = row._id
         }
-        getlistfiltered(this.referencedObject.name,{}, (res) => {
+        getlistfiltered(this.referencedObject.name,{filter:filter}, (res) => {
             // for(var obj of res){
             //     that.optionsMap.set(obj._id,obj)
             // }
-            this.dropdowncontainer.innerHTML = '';
+            that.dropdowncontainer.innerHTML = '';
             that.dropdownWidget = new DropDownWidget<any>(that.dropdowncontainer,'group-left',(val) => {
                 return that.getDisplayValue(val)
             },res)
-            this.dropDownLoaded.trigger(0,0)
+            that.dropDownLoaded.trigger(0,0)
 
             that.dropdownWidget.value.onchange.listen((val) => {
                 if(val == null){
@@ -74,12 +78,12 @@ class PointerWidget extends Widget<string>{
                 displayHasBeenSet = true
 
                 if(pointer == null){
-                    this.executeWhenLoaded(() => {
+                    that.executeWhenLoaded(() => {
                         that.dropdownWidget.input.value = 'nullptr'
                     })
                 }else{
                     getobject(window.objectMap.get(attribute.pointerType).name ,pointer,(data) => {
-                        this.executeWhenLoaded(() => {
+                        that.executeWhenLoaded(() => {
                             if(data == null){
                                 that.dropdownWidget.input.value = 'null'
                             }else{
@@ -92,7 +96,7 @@ class PointerWidget extends Widget<string>{
                     })
                 }
             }
-            that.link.href = `/#${this.referencedObject.name}/${pointer}`
+            that.link.href = `/#${that.referencedObject.name}/${pointer}`
         })
     }
 

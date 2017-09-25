@@ -6,7 +6,7 @@ function mod(number, modulus){
     return ((number%modulus)+modulus)%modulus;
 }
 
-function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
+function getWidget(attr:Attribute,element:HTMLElement,row:any):Widget<any>{
     var widget:Widget<any>
     switch (attr.enumType) {
         case 'boolean':
@@ -25,7 +25,7 @@ function getWidget(attr:Attribute,element:HTMLElement):Widget<any>{
             widget = new EnumWidget(element,attr as enumAttribute)
             break;
         case 'pointer':
-            widget = new PointerWidget(element, attr as pointerAttribute, (val) => val._id)
+            widget = new PointerWidget(element, attr as pointerAttribute, row)
             break;
         default://text
             widget = new TextWidget(element)

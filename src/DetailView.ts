@@ -46,7 +46,7 @@ class DetailView{
     addWidget(attribute:Attribute){
         var container = string2html('<div></div>')
         container.appendChild(string2html(`<div><b>${attribute.name}</b></div>`))
-        var widget = getWidget(attribute, container)
+        var widget = getWidget(attribute, container,{} as any)
 
         this.fieldContainer.appendChild(container)
 
