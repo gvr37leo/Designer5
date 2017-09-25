@@ -98,7 +98,7 @@ class ObjectView extends DetailView{
 
                 }))
             }else{
-                this.addWidget(attribute,{_id:this.id})
+                this.addWidget(attribute,data)
             }
         }
     }
