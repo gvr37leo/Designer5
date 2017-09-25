@@ -5,11 +5,13 @@
 
 
 class ObjectView extends DetailView{
+    id: string;
     buttons: Button[] = [];
     changeEvent: EventSystem<any>;
 
-    constructor(element:Element,definition:ObjDef, id){
+    constructor(element:Element,definition:ObjDef, id:string){
         super(element, definition)
+        this.id = id
         var that = this
         this.arraycontainer.style.display = 'none'
         this.changeEvent = new EventSystem<any>()
@@ -96,7 +98,7 @@ class ObjectView extends DetailView{
 
                 }))
             }else{
-                this.addWidget(attribute)
+                this.addWidget(attribute,{_id:this.id})
             }
         }
     }
