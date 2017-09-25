@@ -56,6 +56,7 @@ class GridControl{
         this.rows = []
         this.sort = {};
         this.sortDirection = 1
+        this.filter = filter
 
         this.element.appendChild(string2html(this.template))
         this.buttonContainer = this.element.querySelector('#button-container')
@@ -98,7 +99,7 @@ class GridControl{
     }
 
     refetchbody(){
-        getlistfiltered(this.definition.name,{filter:this.searchRow.filter.toJson(),sort:this.sort},(res) => {
+        getlistfiltered(this.definition.name,{filter:this.filter,sort:this.sort},(res) => {
             this.data = res
             this.tablebody.innerHTML = ''
             this.appendBody(res)
