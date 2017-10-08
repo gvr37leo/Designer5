@@ -15,11 +15,13 @@ var types = ['text','boolean','number','date','pointer','array']
 
 
 class GridControl{
+    skipWidget: NumberWidget;
+    limit: number;
     rows: GridRow[];
     searchRow: GridSearhRow;
     sort: {};
     sortDirection: number;
-    buttonContainer: Element;
+    buttonContainer: HTMLElement;
     filterCooldown: CoolUp;
     createButton: Button;
     createlinkContainer: Element;
@@ -34,7 +36,7 @@ class GridControl{
     template:string = `
         <div class="grid">
             <h2 id="gridtitle"></h2>
-            <div id="button-container">
+            <div id="button-container" style="display:flex;">
                 <span id="createlink-container"></span>
             </div>
             <table id="table" class="table table-striped" style="width:100%;">
@@ -57,9 +59,10 @@ class GridControl{
         this.sort = {};
         this.sortDirection = 1
         this.filter = filter
+        this.limit = 10;
 
         this.element.appendChild(string2html(this.template))
-        this.buttonContainer = this.element.querySelector('#button-container')
+        this.buttonContainer = this.element.querySelector('#button-container') as HTMLElement
         this.gridtitle = this.element.querySelector('#gridtitle') as HTMLElement
         this.tablebody = this.element.querySelector('#tablebody') 
         this.titlerow = this.element.querySelector('#titlerow')
@@ -82,6 +85,10 @@ class GridControl{
             this.refetchbody()
         })
 
+        this.skipWidget = new NumberWidget(this.buttonContainer ,{})
+        this.skipWidget.value.set(0)
+        this.skipWidget.inputel.placeholder = "Paging"
+
         for (let customButton of this.definition.customButtons){
             new Button(this.buttonContainer, customButton.name,'btn btn-default clearbtn',() => {
                 customButton.callback(this)
@@ -90,7 +97,7 @@ class GridControl{
 
         this.appendHeader()
 
-        this.searchRow =new GridSearhRow(this.searchrow, this.definition)
+        this.searchRow = new GridSearhRow(this.searchrow, this.definition,this.filter)
         this.searchRow.searchChange.listen(() => {
             this.refetchbody()
         })
@@ -99,7 +106,7 @@ class GridControl{
     }
 
     refetchbody(){
-        getlistfiltered(this.definition.name,{filter:this.filter,sort:this.sort},(res) => {
+        getlistfiltered(this.definition.name,{filter:this.filter,sort:this.sort,paging:{skip:this.skipWidget.value.get() * this.limit,limit:this.limit }},(res) => {
             this.data = res
             this.tablebody.innerHTML = ''
             this.appendBody(res)
@@ -156,3 +163,4 @@ class GridControl{
         }
     }
 }
+

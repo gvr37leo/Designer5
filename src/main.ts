@@ -46,7 +46,7 @@ function generateAppDefenition(appdef:AppDef){
             reffedObj.attributes.push(Attribute.makeAttributeFromObject(pair[1]))
         }
 
-        var appdef = new AppDef([], Array.from(objectMap.values()))
+        var appdef = new AppDef([], Array.from(objectMap.values()),[])
         download(JSON.stringify(appdef, null, '\t'), "appDef.json", "application/json")
     })
 }
@@ -62,22 +62,24 @@ var selfDef = new AppDef([new CustomButton<AppDef>('generate app definition', ge
         new TextAttribute('5', 'name'),
         new pointerAttribute('6','enumType','3'),
         new pointerAttribute('7','belongsToObject', '1'),
-        new booleanAttribute('8','readonly',true),
-        new booleanAttribute('9','hidden',true),
-        new booleanAttribute('10','required',true),
-        new pointerAttribute('11','pointerType','1',null,true),
+        new booleanAttribute('8','readonly',null,true),
+        new booleanAttribute('9','hidden',null,true),
+        new booleanAttribute('10','required',null,true),
+        new pointerAttribute('11','pointerType','1',null,null,true),
 	], []),
     new ObjDef('3','enumType','13',[
         new TextAttribute('13', 'value'),
 	], [])
+],[
+
 ])
 
 var testDefinition = new AppDef([],[
     new ObjDef('1','person', '1',[
         new TextAttribute('1','name'),
-        new booleanAttribute('2','homeless'),
+        new booleanAttribute('2','homeless','1'),
         new dateAttribute('3','birthday'),
-        new numberAttribute('4','lengte',true),
+        new numberAttribute('4','lengte',null,true),
         new pointerAttribute('5','vriend','1'),
 	], [new CustomButton<GridControl>('filter', (grid: GridControl) => {
 		grid.filter.name = 'paul'
@@ -93,6 +95,8 @@ var testDefinition = new AppDef([],[
         new pointerAttribute('11','werkgever','2'),
         new numberAttribute('12','salaris'),
 	], [],true)
+],[
+    new Column('1','adress info','1'),
 ])
 
 toastr.options.showDuration = 300; 
@@ -102,4 +106,4 @@ toastr.options.extendedTimeOut = 500;
 
 var globalModal = new Modal()
 var globalNow = moment()
-var designer = new Designer(document.querySelector('#grid'), selfDef)
+var designer = new Designer(document.querySelector('#grid'), testDefinition)

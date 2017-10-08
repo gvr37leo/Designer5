@@ -36,7 +36,7 @@ function start(){
         app.post('/api/search/:object', function(req, res){
             var collection = db.collection(req.params.object)
             var query:Query = req.body;
-            collection.find(query.filter).sort(query.sort).limit(50).toArray(function(err, result){
+            collection.find(query.filter).sort(query.sort).skip(query.paging.skip).limit(query.paging.limit).toArray(function(err, result){
                 res.send(result);
             })
         })
@@ -92,4 +92,8 @@ app.listen(port, function(){
 declare class Query{
     filter:any
     sort:any
+    paging:{
+        skip:number,
+        limit:number
+    }
 }

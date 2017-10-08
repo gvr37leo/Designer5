@@ -45,7 +45,7 @@ class PointerWidget extends Widget<string>{
             this.filterAttribute = window.attributeMap.get(attribute.filterOnColumn) as pointerAttribute
             filter[this.filterAttribute.name] = row._id
         }
-        getlistfiltered(this.referencedObject.name,{filter:filter}, (res) => {
+        getlistfiltered(this.referencedObject.name,{filter:filter,sort:undefined,paging:{skip:0,limit:50}}, (res) => {
             // for(var obj of res){
             //     that.optionsMap.set(obj._id,obj)
             // }

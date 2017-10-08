@@ -92,3 +92,11 @@ a:focus {
 .sortableheader:hover{
     text-decoration: underline;
 }
+
+.panel{
+    margin-right: 10px;
+}
+
+#buttoncontainer{
+    margin-bottom: 10px;
+}

@@ -82,7 +82,7 @@ function getlist(pointertype:string,callback:(data) => void,errorCB:(error) => v
     })
 }
 
-function getlistfiltered(pointertype: string,filter,callback:(data) => void,errorCB:(error) => void){
+function getlistfiltered(pointertype: string,filter:Query,callback:(data) => void,errorCB:(error) => void){
     fetch(`/api/search/${pointertype}`,{
         headers:{
             'Content-Type': 'application/json'
@@ -178,8 +178,10 @@ function createTableCell(row){
 
 function addImplicitRefs(appDef:AppDef):AppDef{
     var map = appDefListToMap(appDef)
+    var objMap = new Map<string,ObjDef>()
 
     for(var objDef of appDef.objdefinitions){
+        objMap.set(objDef._id,objDef)
         objDef.attributes.unshift(new IdentityAttribute(null,objDef.name))
 
         for(var attribute of objDef.attributes){
@@ -195,8 +197,46 @@ function addImplicitRefs(appDef:AppDef):AppDef{
         lastupdateAttribute.readonly = true;
         objDef.attributes.push(lastupdateAttribute)
     }
+
+    for(var column of appDef.columns){
+        objMap.get(column.belongsToObject).columns.push(column)
+    }
+
     appDef.objdefinitions = mapToAppDefList(map).objdefinitions
     return appDef
+}
+interface IHasID{
+    _id:string
+}
+function createMap <T extends IHasID>(entitys:T[]):Map<string,T>{
+    var map = new Map<string,T>();
+    for(var entity of entitys){
+        map.set(entity._id,entity)
+    }
+    return map;
+}
+
+function addImplecitRefs2(appdef:AppDef){
+    var attributeMap = createMap(appdef.attributes);
+    var columnMap = createMap(appdef.columns);
+    var objMap = createMap(appdef.objdefinitions);
+
+    for(var obj of appdef.objdefinitions){
+        obj.attributes.push(new IdentityAttribute(null,obj.name))
+        var lastupdateAttribute = new dateAttribute(null, 'lastupdate')
+        lastupdateAttribute.readonly = true;
+        obj.attributes.push(lastupdateAttribute)
+    }
+
+    for(var attribute of appdef.attributes){
+        objMap.get(attribute.belongsToObject).attributes.push(attribute)
+        columnMap.get(attribute.belongsToColumn).attributes.push(attribute)
+    }
+
+    for(var column of appdef.columns){
+        objMap.get(column.belongsToObject).columns.push(column)
+    }
+
 }
 
 function appDefListToMap(appdef:AppDef):Map<string,ObjDef>{
@@ -208,7 +248,7 @@ function appDefListToMap(appdef:AppDef):Map<string,ObjDef>{
 }
 
 function mapToAppDefList(map:Map<string,ObjDef>):AppDef{
-    var appDef = new AppDef([],[])
+    var appDef = new AppDef([],[],[])
 
     for(var pair of map){
         var string = pair[0]
@@ -247,4 +287,13 @@ function removeHash(string: string): string {
         string = string.slice(1)
     }
     return string
+}
+
+declare class Query{
+    filter:any
+    sort:any
+    paging:{
+        skip:number,
+        limit:number
+    }
 }

@@ -33,7 +33,8 @@ class Numeral{
 }
 
 class NumberWidget extends Widget<number>{
-    
+    inputel: HTMLInputElement;
+
     mousePos
     mouseDownLoc
     mouseDown
@@ -46,11 +47,12 @@ class NumberWidget extends Widget<number>{
     type
     onchange
     formatter
-    value
+    value:Box<number>
     stringProcessor
 
     constructor(element: HTMLElement, options){
         super(element)
+        var that = this;
         //variables used for dragging(private)
         this.mousePos = {x:0,y:0}
         this.mouseDownLoc = null;
@@ -59,9 +61,9 @@ class NumberWidget extends Widget<number>{
         
         //other variables (public)
         this.value = new Box(0)//internal value
-        var inputel = <HTMLInputElement>string2html('<input class="form-control" />')
-        this.element = inputel
-        element.appendChild(inputel)
+        this.inputel = <HTMLInputElement>string2html('<input class="form-control" />')
+        this.element = this.inputel
+        element.appendChild(this.inputel)
         
         //defaults------------------------------
         this.stepSize = 5//pixels to drag per tick
@@ -75,7 +77,7 @@ class NumberWidget extends Widget<number>{
 
         //keep internal value and displayed value in sync
         this.value.onchange.listen((value) => {
-            inputel.value = this.formatter()
+            that.inputel.value = this.formatter()
         })
 
         //trigger onchange event for when user wants to know if the interal value has changed
@@ -116,7 +118,7 @@ class NumberWidget extends Widget<number>{
         this.element.addEventListener('keydown',(e) => {
             switch (e.keyCode) {
                 case 13://enter
-                    inputel.value = this.formatter()
+                that.inputel.value = this.formatter()
                     break;
                 case 38://up
                     this.value.set(this.value.get() + 1)
@@ -128,7 +130,7 @@ class NumberWidget extends Widget<number>{
         })
 
         this.element.addEventListener('input', (e) => {
-            this.value.set(this.stringProcessor(inputel.value))
+            this.value.set(this.stringProcessor(that.inputel.value))
         })
 
         if(this.draggable){
@@ -153,7 +155,7 @@ class NumberWidget extends Widget<number>{
         }
 
         this.element.addEventListener('blur', (e) => {
-            inputel.value = this.formatter()
+            that.inputel.value = this.formatter()
         })
     }
     
