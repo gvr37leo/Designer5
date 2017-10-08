@@ -50,6 +50,7 @@ class DetailView{
         this.objectTitle.innerText = this.definition.name
         
         this.generalColumn = new ColumnView(this.columnContainer,'General')
+        this.generalColumn.element.classList.add('panel-primary')
         this.columnMap = new Map<string,ColumnView>();
         for(var column of definition.columns){
             this.columnMap.set(column._id,new ColumnView(this.columnContainer,column.name))
