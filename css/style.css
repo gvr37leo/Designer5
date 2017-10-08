@@ -97,6 +97,10 @@ a:focus {
     margin-right: 10px;
 }
 
-#buttoncontainer{
+#button-container{
     margin-bottom: 10px;
+}
+
+#button-container > *{
+    margin-right: 10px;
 }

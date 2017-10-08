@@ -12,7 +12,7 @@ class DetailView{
         <div>
             <h2 id="objecttitle"></h2>
             
-            <div id="buttoncontainer">
+            <div id="button-container">
                 <a class="btn btn-default" id="uplink">Up</a>
             </div>
             
@@ -44,7 +44,7 @@ class DetailView{
         this.arraycontainer = this.element.querySelector('#arraycontainer') as HTMLElement 
         this.gridcontainer = this.element.querySelector('#gridcontainer')
         this.tabs = this.element.querySelector('#tabs')
-        this.buttonContainer = this.element.querySelector('#buttoncontainer')
+        this.buttonContainer = this.element.querySelector('#button-container')
         this.uplink = this.element.querySelector('#uplink') as HTMLAnchorElement
         this.uplink.href = `/#${this.definition.name}`
         this.objectTitle.innerText = this.definition.name
