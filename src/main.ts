@@ -62,16 +62,17 @@ var selfDef = new AppDef([new CustomButton<AppDef>('generate app definition', ge
         new TextAttribute('5', 'name'),
         new pointerAttribute('6','enumType','3'),
         new pointerAttribute('7','belongsToObject', '1'),
-        new booleanAttribute('8','readonly',null,true),
-        new booleanAttribute('9','hidden',null,true),
-        new booleanAttribute('10','required',null,true),
-        new pointerAttribute('11','pointerType','1',null,null,true),
+        new booleanAttribute('8','readonly','2',true),
+        new booleanAttribute('9','hidden','2',true),
+        new booleanAttribute('10','required','2',true),
+        new pointerAttribute('11','pointerType','1',null,'1',true),
 	], []),
     new ObjDef('3','enumType','13',[
         new TextAttribute('13', 'value'),
 	], [])
 ],[
-
+    new Column('1','pointer specific','2'),
+    new Column('2','secondary','2')
 ])
 
 var testDefinition = new AppDef([],[
@@ -106,4 +107,4 @@ toastr.options.extendedTimeOut = 500;
 
 var globalModal = new Modal()
 var globalNow = moment()
-var designer = new Designer(document.querySelector('#grid'), testDefinition)
+var designer = new Designer(document.querySelector('#grid'), selfDef)

@@ -182,7 +182,9 @@ function addImplicitRefs(appDef:AppDef):AppDef{
 
     for(var objDef of appDef.objdefinitions){
         objMap.set(objDef._id,objDef)
-        objDef.attributes.unshift(new IdentityAttribute(null,objDef.name))
+        objDef.columns.push(new Column('genCol','generatedFields',objDef._id))
+        
+        objDef.attributes.unshift(new IdentityAttribute(null,objDef.name,'genCol'))
 
         for(var attribute of objDef.attributes){
             attribute.belongsToObject = objDef._id
@@ -193,7 +195,7 @@ function addImplicitRefs(appDef:AppDef):AppDef{
             }
         }
 
-        var lastupdateAttribute = new dateAttribute(null, 'lastupdate')
+        var lastupdateAttribute = new dateAttribute(null, 'lastupdate','genCol')
         lastupdateAttribute.readonly = true;
         objDef.attributes.push(lastupdateAttribute)
     }
