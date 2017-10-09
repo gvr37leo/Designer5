@@ -1,14 +1,14 @@
 /// <reference path="../widget.ts" />
 
 class PointerWidget extends Widget<string>{
-    filterAttribute: pointerAttribute;
+    filterAttribute: PointerAttribute;
     dropDownLoaded: EventSystem<any>;
     optionsMap: Map<string, any>;
     dropdowncontainer: HTMLElement;
     referencedObjectDropdownAttribute: Attribute;
     referencedObject: ObjDef;
     delbuttoncontainer: HTMLElement;
-    attribute: pointerAttribute;
+    attribute: PointerAttribute;
     value:Box<any>
     dropdownWidget:DropDownWidget<any>
     link:HTMLAnchorElement
@@ -21,7 +21,7 @@ class PointerWidget extends Widget<string>{
             <a class="btn btn-info group-right" id="link">-></a>
         </div>` 
 
-    constructor(element:HTMLElement, attribute:pointerAttribute, row:any){
+    constructor(element:HTMLElement, attribute:PointerAttribute, row:any){
         super(element)
         var that = this
         this.attribute = attribute
@@ -42,7 +42,7 @@ class PointerWidget extends Widget<string>{
         var filter = {}
 
         if(attribute.filterOnColumn){
-            this.filterAttribute = window.attributeMap.get(attribute.filterOnColumn) as pointerAttribute
+            this.filterAttribute = window.attributeMap.get(attribute.filterOnColumn) as PointerAttribute
             filter[this.filterAttribute.name] = row._id
         }
         getlistfiltered(this.referencedObject.name,{filter:filter,sort:undefined,paging:{skip:0,limit:50}}, (res) => {

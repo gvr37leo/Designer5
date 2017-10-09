@@ -25,7 +25,7 @@ function getWidget(attr:Attribute,element:HTMLElement,row:any):Widget<any>{
             widget = new EnumWidget(element,attr as enumAttribute)
             break;
         case 'pointer':
-            widget = new PointerWidget(element, attr as pointerAttribute, row)
+            widget = new PointerWidget(element, attr as PointerAttribute, row)
             break;
         default://text
             widget = new TextWidget(element)
@@ -189,7 +189,7 @@ function addImplicitRefs(appDef:AppDef):AppDef{
         for(var attribute of objDef.attributes){
             attribute.belongsToObject = objDef._id
             if(attribute.enumType == 'pointer'){
-                var referencedObject = map.get((attribute as pointerAttribute).pointerType)
+                var referencedObject = map.get((attribute as PointerAttribute).pointerType)
                 var newAttribute = new arrayAttribute(null,attribute.name,objDef._id,attribute._id)
                 referencedObject.attributes.push(newAttribute)
             }

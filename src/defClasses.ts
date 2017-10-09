@@ -84,10 +84,10 @@ abstract class Attribute{
                 newAttribute = new TextAttribute(attribute._id,attribute.name,null,attribute.hidden)
                 break;
             case 'boolean':
-                newAttribute = new booleanAttribute(attribute._id,attribute.name,null,attribute.hidden)
+                newAttribute = new BooleanAttribute(attribute._id,attribute.name,null,attribute.hidden)
                 break;
             case 'pointer':
-                newAttribute = new pointerAttribute(attribute._id,attribute.name,(attribute as pointerAttribute).pointerType,null,null,attribute.hidden)
+                newAttribute = new PointerAttribute(attribute._id,attribute.name,(attribute as PointerAttribute).pointerType,null,null,attribute.hidden)
                 break;
             case 'date':
                 newAttribute = new dateAttribute(attribute._id,attribute.name,null,attribute.hidden)
@@ -113,7 +113,7 @@ abstract class Attribute{
     }
 }
 
-class booleanAttribute extends Attribute{
+class BooleanAttribute extends Attribute{
     constructor(_id: string,name:string,belongsToColumn:string = null,hidden:boolean = false){
         super(_id,name, 'boolean',belongsToColumn,hidden)
     }
@@ -167,7 +167,7 @@ class arrayAttribute extends Attribute{
     }
 }
 
-class pointerAttribute extends Attribute{
+class PointerAttribute extends Attribute{
     pointerType:string
     filterOnColumn:string
     constructor(_id: string,name:string,pointerType:string,filterOnColumn:string = null,belongsToColumn:string = null,hidden:boolean = false){
