@@ -88,7 +88,7 @@ abstract class Attribute{
                 newAttribute = new BooleanAttribute(attribute._id, attribute.name, attribute.belongsToObject,null,attribute.hidden)
                 break;
             case 'pointer':
-                newAttribute = new PointerAttribute(attribute._id, attribute.name, attribute.belongsToObject,(attribute as PointerAttribute).pointerType,null,null,attribute.hidden)
+                newAttribute = new PointerAttribute(attribute._id, attribute.name, attribute.belongsToObject,(attribute as PointerAttribute).pointerType,null,null,null,attribute.hidden)
                 break;
             case 'date':
                 newAttribute = new dateAttribute(attribute._id, attribute.name, attribute.belongsToObject,null,attribute.hidden)
@@ -171,10 +171,13 @@ class arrayAttribute extends Attribute{
 class PointerAttribute extends Attribute{
     pointerType:string
     filterOnColumn:string
-    constructor(_id: string, name: string, pointerType: string, belongsToObject: string,filterOnColumn:string = null,belongsToColumn:string = null,hidden:boolean = false){
+    usingOwnColumn:string
+
+    constructor(_id: string, name: string, pointerType: string, belongsToObject: string,filterOnColumn:string = null,usingOwnColumn:string = null,belongsToColumn:string = null,hidden:boolean = false){
         super(_id, name, belongsToObject, 'pointer',belongsToColumn,hidden)
         this.pointerType = pointerType
         this.filterOnColumn = filterOnColumn
+        this.usingOwnColumn = usingOwnColumn
     }
 }
 

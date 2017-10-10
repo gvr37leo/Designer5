@@ -45,18 +45,9 @@ function generateAppDefenition(appdef:AppDef){
         for(let pair of attributeMap){
             pair[1].enumType = enumMap.get(pair[1].enumType).value
 
-            var reffedObj: ObjDef = objectMap.get(pair[1].belongsToObject)
-            attributes.push(Attribute.makeAttributeFromObject(pair[1]))
+            // attributes.push(Attribute.makeAttributeFromObject(pair[1]))
         }
-
-        // for (let pair of columnMap) {
-        //     var key = pair[0]
-        //     var column = pair[1]
-
-        //     objectMap.get(column.belongsToObject).columns.push(column)
-        // }
-
-        var appdef = new AppDef([], Array.from(objectMap.values()),attributes,Array.from(columnMap.values()))
+        var appdef = new AppDef([], Array.from(objectMap.values()), Array.from(attributeMap.values()),Array.from(columnMap.values()))
         download(JSON.stringify(appdef, null, '\t'), "appDef.json", "application/json")
     })
 }
@@ -77,10 +68,11 @@ var selfDef = new AppDef([new CustomButton<AppDef>('generate app definition', ge
     new BooleanAttribute('8', 'readonly', '2','2', true),
     new BooleanAttribute('9', 'hidden','2', '2', true),
     new BooleanAttribute('10', 'required','2', '2', true),
-    new PointerAttribute('11', 'pointerType', '1','2', null, '1', true),
-    new PointerAttribute('12', 'filter on column','2', '2', null, '1', true),//on object on column
+    new PointerAttribute('11', 'pointerType', '1','2', null,null, '1', true),
+    new PointerAttribute('12', 'filter on column','2', '2', '7','11', '1', true),
+    new PointerAttribute('17','usingOwnColumn','2','2','7','7','1',true),
     new TextAttribute('13', 'value','3'),
-    new PointerAttribute('16', 'place in column','4', '3', null, '2', true),
+    new PointerAttribute('16', 'place in column','4', '2', null,null, '2', true),
     new TextAttribute('14', 'name','4'),
     new PointerAttribute('15', 'belongsToObject','1', '4', null, null),
 ],[
@@ -111,6 +103,108 @@ var testDefinition = new AppDef([],[
     new Column('1', 'adress info', '1'),
 ])
 
+var gendef = {
+    "customButtons": [],
+    "objdefinitions": [
+        {
+            "attributes": [],
+            "columns": [],
+            "_id": "59c3c7c99e45eb2d98b34ed5",
+            "name": "vrijwilliger",
+            "hidden": false,
+            "dropdownAttribute": "59c3ca4c9e45eb2d98b34ed8",
+            "customButtons": []
+        },
+        {
+            "attributes": [],
+            "columns": [],
+            "_id": "59c3c7e19e45eb2d98b34ed6",
+            "name": "oudere",
+            "hidden": false,
+            "dropdownAttribute": "59c3cb009e45eb2d98b34edc",
+            "customButtons": []
+        },
+        {
+            "attributes": [],
+            "columns": [],
+            "_id": "59c3c7e99e45eb2d98b34ed7",
+            "name": "aanvraag",
+            "hidden": false,
+            "dropdownAttribute": null,
+            "customButtons": []
+        }
+    ],
+    "attributes": [
+        {
+            "_id": "59c3ca4c9e45eb2d98b34ed8",
+            "belongsToObject": "59c3c7e19e45eb2d98b34ed6",
+            "readonly": false,
+            "name": "naam",
+            "enumType": "text",
+            "lastupdate": 1507560750624,
+            "place in column": "59db8d18b6fc5e2c8019f130"
+        },
+        {
+            "_id": "59c3ca669e45eb2d98b34ed9",
+            "belongsToObject": "59c3c7e99e45eb2d98b34ed7",
+            "enumType": "pointer",
+            "pointerType": "59c3c7c99e45eb2d98b34ed5",
+            "name": "vrijwilliger",
+            "lastupdate": 1506003558919
+        },
+        {
+            "_id": "59c3ca719e45eb2d98b34eda",
+            "belongsToObject": "59c3c7e99e45eb2d98b34ed7",
+            "enumType": "pointer",
+            "pointerType": "59c3c7e19e45eb2d98b34ed6",
+            "name": "aanvrager",
+            "lastupdate": 1506003569459
+        },
+        {
+            "_id": "59c3ca959e45eb2d98b34edb",
+            "belongsToObject": "59c3c7e99e45eb2d98b34ed7",
+            "enumType": "date",
+            "name": "afspraak datum",
+            "lastupdate": 1506003605957
+        },
+        {
+            "_id": "59c3cb009e45eb2d98b34edc",
+            "belongsToObject": "59c3c7c99e45eb2d98b34ed5",
+            "enumType": "text",
+            "name": "naam",
+            "lastupdate": 1506003712823
+        },
+        {
+            "_id": "59c3cb439e45eb2d98b34edd",
+            "belongsToObject": "59c3c7c99e45eb2d98b34ed5",
+            "enumType": "boolean",
+            "name": "doordeweeks beschikbaar",
+            "lastupdate": 1506003779740
+        },
+        {
+            "_id": "59c3cb4d9e45eb2d98b34ede",
+            "belongsToObject": "59c3c7c99e45eb2d98b34ed5",
+            "name": "weekend beschikbaar",
+            "enumType": "boolean",
+            "lastupdate": 1506003789699
+        }
+    ],
+    "columns": [
+        {
+            "_id": "59db8d18b6fc5e2c8019f130",
+            "name": "col1",
+            "belongsToObject": "59c3c7c99e45eb2d98b34ed5",
+            "lastupdate": 1507560728384
+        },
+        {
+            "_id": "59db8d1fb6fc5e2c8019f131",
+            "name": "col2",
+            "belongsToObject": "59c3c7e19e45eb2d98b34ed6",
+            "lastupdate": 1507560735990
+        }
+    ]
+}
+
 toastr.options.showDuration = 300; 
 toastr.options.hideDuration = 500; 
 toastr.options.timeOut = 800; 
@@ -118,4 +212,4 @@ toastr.options.extendedTimeOut = 500;
 
 var globalModal = new Modal()
 var globalNow = moment()
-var designer = new Designer(document.querySelector('#grid'), selfDef)
+var designer = new Designer(document.querySelector('#grid'), selfDef as any)

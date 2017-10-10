@@ -176,37 +176,6 @@ function createTableCell(row){
     return td
 }
 
-// function addImplicitRefs(appDef:AppDef):AppDef{
-//     var map = appDefListToMap(appDef)
-//     var objMap = new Map<string,ObjDef>()
-
-//     for(var objDef of appDef.objdefinitions){
-//         objMap.set(objDef._id,objDef)
-//         objDef.columns.push(new Column('genCol','generatedFields',objDef._id))
-        
-//         objDef.attributes.unshift(new IdentityAttribute(null,objDef.name,'genCol'))
-
-//         for(var attribute of objDef.attributes){
-//             attribute.belongsToObject = objDef._id
-//             if(attribute.enumType == 'pointer'){
-//                 var referencedObject = map.get((attribute as PointerAttribute).pointerType)
-//                 var newAttribute = new arrayAttribute(null,attribute.name,objDef._id,attribute._id)
-//                 referencedObject.attributes.push(newAttribute)
-//             }
-//         }
-
-//         var lastupdateAttribute = new dateAttribute(null, 'lastupdate','genCol')
-//         lastupdateAttribute.readonly = true;
-//         objDef.attributes.push(lastupdateAttribute)
-//     }
-
-//     for(var column of appDef.columns){
-//         objMap.get(column.belongsToObject).columns.push(column)
-//     }
-
-//     appDef.objdefinitions = mapToAppDefList(map).objdefinitions
-//     return appDef
-// }
 interface IHasID{
     _id:string
 }
@@ -247,27 +216,6 @@ function addImplicitRefs2(appdef: AppDef): AppDef{
     }
     return appdef
 }
-
-// function appDefListToMap(appdef:AppDef):Map<string,ObjDef>{
-//     var map = new Map<string,ObjDef>()
-//     for(var ObjDef of appdef.objdefinitions){
-//         map.set(ObjDef._id,ObjDef)
-//     }
-//     return map
-// }
-
-// function mapToAppDefList(map:Map<string,ObjDef>):AppDef{
-//     var appDef = new AppDef([],[],[],[])
-
-//     for(var pair of map){
-//         var string = pair[0]
-//         var objDef = pair[1]
-
-//         appDef.objdefinitions.push(objDef)
-//     }
-
-//     return appDef;
-// }
 
 class CoolUp{
     timeout: number = null;

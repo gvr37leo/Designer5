@@ -33,7 +33,7 @@ class PointerWidget extends Widget<string>{
 
         this.referencedObject = window.objectMap.get(attribute.pointerType)
         this.referencedObjectDropdownAttribute = window.attributeMap.get(this.referencedObject.dropdownAttribute)
-
+        
         
 
         this.value.value = 0;
@@ -43,7 +43,15 @@ class PointerWidget extends Widget<string>{
 
         if(attribute.filterOnColumn){
             this.filterAttribute = window.attributeMap.get(attribute.filterOnColumn) as PointerAttribute
-            filter[this.filterAttribute.name] = row._id
+            if (row){
+                if(attribute.usingOwnColumn){
+                    filter[this.filterAttribute.name] = row[window.attributeMap.get(attribute.usingOwnColumn).name]
+                }else{
+                    filter[this.filterAttribute.name] = row._id
+                }
+            }else{
+                filter[this.filterAttribute.name] = null
+            }
         }
         getlistfiltered(this.referencedObject.name,{filter:filter,sort:undefined,paging:{skip:0,limit:50}}, (res) => {
             // for(var obj of res){
