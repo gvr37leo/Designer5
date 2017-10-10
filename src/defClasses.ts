@@ -7,9 +7,10 @@ class AppDef{
     columns:Column[]
     attributes:Attribute[]
 
-    constructor(customButtons:CustomButton<AppDef>[],objdefinitions:ObjDef[],columns:Column[]){
+    constructor(customButtons:CustomButton<AppDef>[],objdefinitions:ObjDef[],attributes:Attribute[],columns:Column[]){
         this.customButtons = customButtons
         this.objdefinitions = objdefinitions
+        this.attributes = attributes
         this.columns = columns
     }
 }
@@ -17,20 +18,19 @@ class AppDef{
 class ObjDef{
     _id:string
     name:string
-    attributes:Attribute[]
+    attributes:Attribute[] = []
     advancedSearch:boolean
     hidden:boolean
     dropdownAttribute:string
     customButtons: CustomButton<GridControl>[];
     columns:Column[] = []
 
-    constructor(_id: string, name: string, dropdownAttribute: string, attributes: Attribute[], customButtons: CustomButton<GridControl>[],hidden:boolean = false){
+    constructor(_id: string, name: string, dropdownAttribute: string, customButtons: CustomButton<GridControl>[],hidden:boolean = false){
         this._id = _id
         this.name = name
         this.hidden = hidden
         this.dropdownAttribute = dropdownAttribute
         this.customButtons = customButtons
-        this.attributes = attributes
     }
 }
 
@@ -50,7 +50,7 @@ class Column{
     // basis:string
 
     belongsToObject:string
-    attributes:Attribute[]
+    attributes:Attribute[] = []
 
     constructor(_id:string,name:string,belongsToObject:string){
         this._id = _id
@@ -69,40 +69,41 @@ abstract class Attribute{
     required:boolean
     belongsToColumn:string
 
-    constructor(_id:string, name: string, type: string,belongsToColumn:string = null, hidden: boolean = false) {//, belongsToObject: ObjDef
+    constructor(_id:string, name: string,belongsToObject:string, type: string,belongsToColumn:string = null, hidden: boolean = false) {//, belongsToObject: ObjDef
         this._id = _id;
         this.name = name;
         this.enumType = type;
         this.hidden = hidden
         this.belongsToColumn = belongsToColumn
+        this.belongsToObject = belongsToObject
     }
 
     static makeAttributeFromObject(attribute:Attribute):Attribute{
         var newAttribute:Attribute = null;
         switch(attribute.enumType){
             case 'text':
-                newAttribute = new TextAttribute(attribute._id,attribute.name,null,attribute.hidden)
+                newAttribute = new TextAttribute(attribute._id,attribute.name,attribute.belongsToObject,null,attribute.hidden)
                 break;
             case 'boolean':
-                newAttribute = new BooleanAttribute(attribute._id,attribute.name,null,attribute.hidden)
+                newAttribute = new BooleanAttribute(attribute._id, attribute.name, attribute.belongsToObject,null,attribute.hidden)
                 break;
             case 'pointer':
-                newAttribute = new PointerAttribute(attribute._id,attribute.name,(attribute as PointerAttribute).pointerType,null,null,attribute.hidden)
+                newAttribute = new PointerAttribute(attribute._id, attribute.name, attribute.belongsToObject,(attribute as PointerAttribute).pointerType,null,null,attribute.hidden)
                 break;
             case 'date':
-                newAttribute = new dateAttribute(attribute._id,attribute.name,null,attribute.hidden)
+                newAttribute = new dateAttribute(attribute._id, attribute.name, attribute.belongsToObject,null,attribute.hidden)
                 break;
             case 'number':
-                newAttribute = new numberAttribute(attribute._id,attribute.name,null,attribute.hidden)
+                newAttribute = new numberAttribute(attribute._id, attribute.name, attribute.belongsToObject,null,attribute.hidden)
                 break;
 
 // these should never be hit because they shouldnt have to be made in the editor and are added automatically in the addimplicitrefs function
             case 'id':
-                newAttribute = new IdentityAttribute(attribute._id,(attribute as IdentityAttribute).pointerType,null,attribute.hidden)
+                newAttribute = new IdentityAttribute(attribute._id, (attribute as IdentityAttribute).pointerType, attribute.belongsToObject,null,attribute.hidden)
                 break;
 
             case 'array':
-                newAttribute = new arrayAttribute(attribute._id,attribute.name,(attribute as arrayAttribute).pointerType,(attribute as arrayAttribute).column,attribute.hidden)
+                newAttribute = new arrayAttribute(attribute._id, attribute.name, (attribute as arrayAttribute).pointerType, (attribute as arrayAttribute).column, attribute.belongsToObject,null,attribute.hidden)
                 break;
         }
         newAttribute.belongsToObject = attribute.belongsToObject
@@ -114,43 +115,43 @@ abstract class Attribute{
 }
 
 class BooleanAttribute extends Attribute{
-    constructor(_id: string,name:string,belongsToColumn:string = null,hidden:boolean = false){
-        super(_id,name, 'boolean',belongsToColumn,hidden)
+    constructor(_id: string, name: string, belongsToObject: string,belongsToColumn:string = null,hidden:boolean = false){
+        super(_id,name,belongsToObject, 'boolean',belongsToColumn,hidden)
     }
 }
 
 class dateAttribute extends Attribute{
-    constructor(_id: string,name:string,belongsToColumn:string = null,hidden:boolean = false){
-        super(_id,name, 'date',belongsToColumn,hidden)
+    constructor(_id: string, name: string, belongsToObject: string,belongsToColumn:string = null,hidden:boolean = false){
+        super(_id, name, belongsToObject, 'date',belongsToColumn,hidden)
     }
 }
 
 class numberAttribute extends Attribute{
-    constructor(_id: string,name:string,belongsToColumn:string = null,hidden:boolean = false){
-        super(_id,name, 'number',belongsToColumn,hidden)
+    constructor(_id: string, name: string, belongsToObject: string,belongsToColumn:string = null,hidden:boolean = false){
+        super(_id, name, belongsToObject, 'number',belongsToColumn,hidden)
     }
 }
 
-class enumAttribute extends Attribute{
-    enumtypes:string[]//for type enum
+// class enumAttribute extends Attribute{
+//     enumtypes:string[]//for type enum
 
-    constructor(_id: string,name:string, enumtypes:string[],belongsToColumn:string = null,hidden:boolean = false){
-        super(_id,name, 'enum',belongsToColumn,hidden)
-        this.enumtypes = enumtypes
-    }
-}
+//     constructor(_id: string,name:string, enumtypes:string[],belongsToColumn:string = null,hidden:boolean = false){
+//         super(_id,name, 'enum',belongsToColumn,hidden)
+//         this.enumtypes = enumtypes
+//     }
+// }
 
 class TextAttribute extends Attribute{
-    constructor(_id: string,name:string,belongsToColumn:string = null,hidden:boolean = false){
-        super(_id,name, 'text',belongsToColumn,hidden)
+    constructor(_id: string, name: string, belongsToObject: string,belongsToColumn:string = null,hidden:boolean = false){
+        super(_id, name, belongsToObject, 'text',belongsToColumn,hidden)
     }
 }
 
 class IdentityAttribute extends Attribute{
     pointerType:string
     
-    constructor(_id: string,pointerType:string,belongsToColumn:string = null,hidden:boolean = false){
-        super(_id,'_id', 'id',belongsToColumn,hidden)
+    constructor(_id: string, pointerType: string, belongsToObject: string,belongsToColumn:string = null,hidden:boolean = false){
+        super(_id, '_id', belongsToObject, 'id',belongsToColumn,hidden)
         this.pointerType = pointerType
         this.readonly = true
     }
@@ -160,8 +161,8 @@ class IdentityAttribute extends Attribute{
 class arrayAttribute extends Attribute{
     pointerType:string
     column:string
-    constructor(_id: string,name:string,pointerType:string,column:string,belongsToColumn:string = null,hidden:boolean = false){
-        super(_id,name, 'array',belongsToColumn,hidden)
+    constructor(_id: string, name: string, pointerType: string, column: string, belongsToObject: string,belongsToColumn:string = null,hidden:boolean = false){
+        super(_id, name, belongsToObject, 'array',belongsToColumn,hidden)
         this.pointerType = pointerType
         this.column = column
     }
@@ -170,8 +171,8 @@ class arrayAttribute extends Attribute{
 class PointerAttribute extends Attribute{
     pointerType:string
     filterOnColumn:string
-    constructor(_id: string,name:string,pointerType:string,filterOnColumn:string = null,belongsToColumn:string = null,hidden:boolean = false){
-        super(_id,name, 'pointer',belongsToColumn,hidden)
+    constructor(_id: string, name: string, pointerType: string, belongsToObject: string,filterOnColumn:string = null,belongsToColumn:string = null,hidden:boolean = false){
+        super(_id, name, belongsToObject, 'pointer',belongsToColumn,hidden)
         this.pointerType = pointerType
         this.filterOnColumn = filterOnColumn
     }

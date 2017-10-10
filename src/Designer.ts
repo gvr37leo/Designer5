@@ -12,13 +12,13 @@ class Designer{
         window.attributeMap = new Map<string,Attribute>()
         for(var obj of appDef.objdefinitions){
             window.objectMap.set(obj._id, obj);
-            for(var attribute of obj.attributes){
-                window.attributeMap.set(attribute._id, attribute)
-            }
+        }
+        for (var attribute of appDef.attributes) {
+            window.attributeMap.set(attribute._id, attribute)
         }
 
 
-        this.definition = addImplicitRefs(appDef)
+        this.definition = addImplicitRefs2(appDef)
         var navbarContainer = document.querySelector('#navbar')
         var navbar = new Navbar(navbarContainer, appDef)
 
