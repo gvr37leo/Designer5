@@ -38,6 +38,7 @@ function start(){
             var query:Query = req.body;
             collection.find(query.filter).sort(query.sort).skip(query.paging.skip).limit(query.paging.limit).toArray(function(err, result){
                 res.send(result);
+                // collection.count({})
             })
         })
     

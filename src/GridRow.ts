@@ -20,6 +20,7 @@ class GridRow{
             if(attribute.enumType == 'array' || attribute.hidden)continue;
             var widget = getWidget(attribute,createTableCell(row),this.data)
             widget.value.set(data[attribute.name])
+            widget.readonly.set(attribute.readonly)
 
             widget.value.onchange.listen((val) => {
                 data[attribute.name] = val;

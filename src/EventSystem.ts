@@ -1,11 +1,14 @@
 
 class Box<T>{
     onchange:EventSystem<T>
+    onClear:EventSystem<any>
     value:T
+    isSet:boolean = false;
 
     constructor(value:T){
         this.onchange = new EventSystem();
         this.value = value
+        this.onClear = new EventSystem();
     }
 
     get():T{
@@ -15,11 +18,17 @@ class Box<T>{
     set(value:T,silent:boolean = false){
         var old = this.value
         this.value = value
-        if(old != value){
+        if(old != value || !this.isSet){
+            this.isSet = true;
             if(!silent){
                 this.onchange.trigger(this.value, old)
             }
         }
+    }
+
+    clear(){
+        this.isSet = false;
+        this.onClear.trigger(0,0)
     }
 }
 

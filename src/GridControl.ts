@@ -29,7 +29,7 @@ class GridControl{
     tablebody: Element;
     titlerow: Element;
     searchrow: HTMLElement;
-    filter: any;
+    // filter: any;
     element: Element
     data
     definition:ObjDef
@@ -58,7 +58,7 @@ class GridControl{
         this.rows = []
         this.sort = {};
         this.sortDirection = 1
-        this.filter = filter
+        // this.filter = filter
         this.limit = 10;
 
         this.element.appendChild(string2html(this.template))
@@ -106,7 +106,7 @@ class GridControl{
     }
 
     refetchbody(){
-        getlistfiltered(this.definition.name,{filter:this.filter,sort:this.sort,paging:{skip:this.skipWidget.value.get() * this.limit,limit:this.limit }},(res) => {
+        getlistfiltered(this.definition.name,{filter:this.searchRow.filter.toJson(),sort:this.sort,paging:{skip:this.skipWidget.value.get() * this.limit,limit:this.limit }},(res) => {
             this.data = res
             this.tablebody.innerHTML = ''
             this.appendBody(res)

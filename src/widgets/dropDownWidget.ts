@@ -53,6 +53,10 @@ class DropDownWidget<T> extends Widget<T>{
                 that.dropper.style.display = 'none'
             }
         })
+
+        this.value.onClear.listen(() => {
+            this.input.value = ''
+        })
     }
 
     protected handleSetReadOnly(val: boolean) {

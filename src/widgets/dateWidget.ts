@@ -52,7 +52,7 @@ class DateWidget extends Widget<number>{
         this.middle = templateDiv.querySelector('#middle') as HTMLElement
         this.right = templateDiv.querySelector('#right') as HTMLElement
         this.subdatepicker = templateDiv.querySelector('#subdatepicker') as HTMLInputElement
-        this.inputel.readOnly = this.attribute.readonly
+        // this.inputel.readOnly = this.attribute.readonly
         
         this.selectedMoment = moment(this.value.get())
         this.displayMoment = globalNow.clone();
@@ -80,30 +80,34 @@ class DateWidget extends Widget<number>{
             this.selectedMoment = moment(val)
         })
 
-        if (!this.attribute.readonly) {
-            this.middle.addEventListener('click', () => {
-                that.displayLevel = that.displayLevel.up
-                this.display(this.displayMoment)
-            })
+        this.value.onClear.listen(() => {
+            this.inputel.value = ''
+        })
 
-            this.left.addEventListener('click', () => {
-                that.moveLeft()
-            })
+        this.middle.addEventListener('click', () => {
+            that.displayLevel = that.displayLevel.up
+            this.display(this.displayMoment)
+        })
 
-            this.right.addEventListener('click', () => {
-                that.moveRight()
-            })
+        this.left.addEventListener('click', () => {
+            that.moveLeft()
+        })
 
-            this.inputel.addEventListener('focus', () => {
+        this.right.addEventListener('click', () => {
+            that.moveRight()
+        })
+
+        this.inputel.addEventListener('focus', () => {
+            if(!this.readonly.value){
                 that.calendar.style.display = 'block'
-            })
+            }
+        })
 
-            document.addEventListener('click', (e) => {
-                if (!that.container.contains(e.target as any)) {
-                    that.calendar.style.display = 'none'
-                }
-            })
-        }
+        document.addEventListener('click', (e) => {
+            if (!that.container.contains(e.target as any)) {
+                that.calendar.style.display = 'none'
+            }
+        })
     }
 
     display(momentToDisplay: moment.Moment){
@@ -125,7 +129,7 @@ class DateWidget extends Widget<number>{
     }
     
     handleSetReadOnly(val: boolean) {
-        
+        this.inputel.readOnly = val
     }
 }
 

@@ -61,6 +61,7 @@ class DetailView{
         var container = string2html('<div></div>')
         container.appendChild(string2html(`<div><b>${attribute.name}</b></div>`))
         var widget = getWidget(attribute, container,data)
+        widget.readonly.set(attribute.readonly)
         if(attribute.belongsToColumn != null){
             this.columnMap.get(attribute.belongsToColumn).body.appendChild(container)
         }else{

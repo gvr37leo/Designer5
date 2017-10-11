@@ -17,6 +17,10 @@ class TextWidget extends Widget<string>{
         this.value.onchange.listen((val) => {
             that.inputel.value = val
         })
+
+        this.value.onClear.listen(() => {
+            this.inputel.value = ''
+        })
     }
     
     handleSetReadOnly(val: boolean) {

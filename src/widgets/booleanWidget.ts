@@ -34,6 +34,12 @@ class BooleanWidget extends Widget<boolean>{
                 this.slidertbn.classList.remove('slideron')
             }
         })
+
+
+        this.value.onClear.listen(() => {
+            this.slidertbn.classList.add('slideroff')
+            this.slidertbn.classList.remove('slideron')
+        })
     }
 
     handleSetReadOnly(val: boolean) {

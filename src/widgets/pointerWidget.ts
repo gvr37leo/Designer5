@@ -106,6 +106,9 @@ class PointerWidget extends Widget<string>{
             }
             that.link.href = `/#${that.referencedObject.name}/${pointer}`
         })
+        this.value.onClear.listen(() => {
+            this.dropdownWidget.value.clear()
+        })
     }
 
     handleSetReadOnly(val: boolean) {

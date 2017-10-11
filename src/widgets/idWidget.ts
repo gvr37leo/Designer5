@@ -4,7 +4,7 @@
 //change this to pointertype and remove the delete button when readonly
 
 class idWidget extends Widget<string>{
-    attribute: Attribute;
+    attribute: IdentityAttribute;
     inspectLink: HTMLAnchorElement;
     inputel: HTMLInputElement;
     template:string = `
@@ -22,7 +22,6 @@ class idWidget extends Widget<string>{
         this.element.appendChild(string2html(this.template))
         this.inputel = this.element.querySelector('#inputel') as HTMLInputElement
         this.inspectLink = this.element.querySelector('#inspectlink') as HTMLAnchorElement
-        this.readonly.set(true)
 
         this.inputel.addEventListener('input',(e) => {
             that.value.set(that.inputel.value)
