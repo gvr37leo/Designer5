@@ -94,8 +94,8 @@ class RequestState{
 var cache = new Map<string,RequestState>()
 
 function getlistfiltered(pointertype: string,filter:Query,callback:(data) => void,errorCB:(error) => void){
-    if (cache.has(queryHash(pointertype,filter))){
-        let requestState = cache.get(queryHash(pointertype, filter))
+    if (cache.has(serializeQuery(pointertype,filter))){
+        let requestState = cache.get(serializeQuery(pointertype, filter))
 
         if (requestState.state == RequestStateState.loading){
             requestState.onloadcb.listen((data) => {
@@ -105,20 +105,20 @@ function getlistfiltered(pointertype: string,filter:Query,callback:(data) => voi
             callback(requestState.response)
         }
     }else{
-        console.log('server request')
+        console.log('server request ' + serializeQuery(pointertype,filter))
         handleStaleRequest(pointertype, filter, (res) => {
             callback(res)
         })
     }
 }
 
-function queryHash(pointertype: string, filter: Query){
+function serializeQuery(pointertype: string, filter: Query){
     return pointertype + ':' + JSON.stringify(filter.filter)
 }
 
 function handleStaleRequest(pointertype:string,filter:Query,callback) {
     var requestState = new RequestState(RequestStateState.loading)
-    cache.set(queryHash(pointertype, filter), requestState)
+    cache.set(serializeQuery(pointertype, filter), requestState)
 
 
     getlistfilteredUncached(pointertype, filter, (res) => {
@@ -128,7 +128,7 @@ function handleStaleRequest(pointertype:string,filter:Query,callback) {
         callback(res)
         requestState.onloadcb.trigger(res, 0)
         setTimeout(() => {
-            cache.delete(queryHash(pointertype, filter))
+            cache.delete(serializeQuery(pointertype, filter))
         },5000)
     }, () => {
 
@@ -153,22 +153,9 @@ function getlistfilteredUncached(pointertype: string, filter:Query, callback:(da
 }
 
 function getobject(pointertype: string, id: string,callback:(data) => void,errorCB:(error) => void){
-    fetch(`/api/${pointertype}/${id}`,{
-        headers:{
-            'Content-Type': 'application/json'
-        },
-        method:'GET',
-    })
-    .then(response => response.text())
-    .then((res) => {
-        if(res == ""){
-            callback(null);
-        }
-        else{
-            callback(JSON.parse(res))
-        }
-    }).catch((err) => {
-        handleError(err)
+    getlistfiltered(pointertype,{filter:{_id:id},sort:undefined,paging:{skip:0,limit:10}},(data) => {
+        callback(data[0])
+    },(err) => {
         errorCB(err)
     })
 }

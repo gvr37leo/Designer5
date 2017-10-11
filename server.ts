@@ -36,6 +36,9 @@ function start(){
         app.post('/api/search/:object', function(req, res){
             var collection = db.collection(req.params.object)
             var query:Query = req.body;
+            if(query.filter._id){
+                query.filter._id = new mongodb.ObjectID(query.filter._id)
+            }
             collection.find(query.filter).sort(query.sort).skip(query.paging.skip).limit(query.paging.limit).toArray(function(err, result){
                 res.send(result);
                 // collection.count({})
