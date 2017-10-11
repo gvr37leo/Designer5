@@ -21,9 +21,6 @@ function getWidget(attr:Attribute,element:HTMLElement,row:any):Widget<any>{
         case 'id':
             widget = new idWidget(element, attr as IdentityAttribute)
             break;
-        case 'enum':
-            widget = new EnumWidget(element,attr as enumAttribute)
-            break;
         case 'pointer':
             widget = new PointerWidget(element, attr as PointerAttribute, row)
             break;
@@ -107,9 +104,8 @@ function getlistfiltered(pointertype: string,filter:Query,callback:(data) => voi
         } else if (requestState.state == RequestStateState.loaded) {
             callback(requestState.response)
         }
-        console.log('cache used ' + queryHash(pointertype, filter))
-        
     }else{
+        console.log('server request')
         handleStaleRequest(pointertype, filter, (res) => {
             callback(res)
         })
@@ -133,8 +129,7 @@ function handleStaleRequest(pointertype:string,filter:Query,callback) {
         requestState.onloadcb.trigger(res, 0)
         setTimeout(() => {
             cache.delete(queryHash(pointertype, filter))
-            console.log('cache clear', queryHash(pointertype, filter))
-        }, 5000)
+        },5000)
     }, () => {
 
     })

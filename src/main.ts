@@ -211,4 +211,4 @@ toastr.options.extendedTimeOut = 500;
 
 var globalModal = new Modal()
 var globalNow = moment()
-var designer = new Designer(document.querySelector('#grid'), gendef as any)
+var designer = new Designer(document.querySelector('#grid'), selfDef as any)
