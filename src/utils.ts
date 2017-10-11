@@ -82,13 +82,71 @@ function getlist(pointertype:string,callback:(data) => void,errorCB:(error) => v
     })
 }
 
+enum RequestStateState{loading,loaded}
+class RequestState{
+    state: RequestStateState
+    response: any
+    onloadcb:EventSystem<any>
+
+    constructor(requestStateState:RequestStateState){
+        this.state = requestStateState
+        this.onloadcb = new EventSystem<any>()
+    }
+}
+
+var cache = new Map<string,RequestState>()
+
 function getlistfiltered(pointertype: string,filter:Query,callback:(data) => void,errorCB:(error) => void){
-    fetch(`/api/search/${pointertype}`,{
-        headers:{
+    if (cache.has(queryHash(pointertype,filter))){
+        let requestState = cache.get(queryHash(pointertype, filter))
+
+        if (requestState.state == RequestStateState.loading){
+            requestState.onloadcb.listen((data) => {
+                callback(data)
+            })
+        } else if (requestState.state == RequestStateState.loaded) {
+            callback(requestState.response)
+        }
+        console.log('cache used ' + queryHash(pointertype, filter))
+        
+    }else{
+        handleStaleRequest(pointertype, filter, (res) => {
+            callback(res)
+        })
+    }
+}
+
+function queryHash(pointertype: string, filter: Query){
+    return pointertype + ':' + JSON.stringify(filter.filter)
+}
+
+function handleStaleRequest(pointertype:string,filter:Query,callback) {
+    var requestState = new RequestState(RequestStateState.loading)
+    cache.set(queryHash(pointertype, filter), requestState)
+
+
+    getlistfilteredUncached(pointertype, filter, (res) => {
+        requestState.response = res
+        requestState.state = RequestStateState.loaded
+
+        callback(res)
+        requestState.onloadcb.trigger(res, 0)
+        setTimeout(() => {
+            cache.delete(queryHash(pointertype, filter))
+            console.log('cache clear', queryHash(pointertype, filter))
+        }, 5000)
+    }, () => {
+
+    })
+}
+
+function getlistfilteredUncached(pointertype: string, filter:Query, callback:(data) => void,errorCB:(error) => void){
+    fetch(`/api/search/${pointertype}`, {
+        headers: {
             'Content-Type': 'application/json'
         },
-        method:'POST',
-        body:JSON.stringify(filter)
+        method: 'POST',
+        body: JSON.stringify(filter)
     })
     .then(handleResponse)
     .then((res) => {

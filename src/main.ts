@@ -82,7 +82,6 @@ var selfDef = new AppDef([new CustomButton<AppDef>('generate app definition', ge
 
 var testDefinition = new AppDef([],[
     new ObjDef('1', 'person', '1', [new CustomButton<GridControl>('filter', (grid: GridControl) => {
-        grid.filter.name = 'paul'
         grid.refetchbody()
     })]),
     new ObjDef('2', 'bedrijf', '1',[]),
@@ -212,4 +211,4 @@ toastr.options.extendedTimeOut = 500;
 
 var globalModal = new Modal()
 var globalNow = moment()
-var designer = new Designer(document.querySelector('#grid'), selfDef as any)
+var designer = new Designer(document.querySelector('#grid'), gendef as any)

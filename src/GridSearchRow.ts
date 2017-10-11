@@ -19,8 +19,7 @@ class GridSearhRow{
             this.searchChange.trigger(0,0)
         })
         this.filter = new Filter()
-        // this.filter = filter
-        
+
         for(let attribute of this.definition.attributes){
             if(attribute.enumType == 'array'|| attribute.hidden)continue;
             let tableCell = createTableCell(this.element)
@@ -64,6 +63,10 @@ class GridSearhRow{
                 this.searchChange.trigger(0,0)
             })
         }
+
+        for(var key in filter){
+            this.filter.map.get(key).set(filter[key])
+        }
     }
 }
 
@@ -71,7 +74,7 @@ class Filter{
     map:Map<string,Box<any>>
 
     constructor(){
-        this.map = new Map<string, any>()
+        this.map = new Map<string, Box<any>>()
     }
 
     set(atribute:Attribute,box:Box<any>,range:boolean){

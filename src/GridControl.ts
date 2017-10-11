@@ -97,7 +97,7 @@ class GridControl{
 
         this.appendHeader()
 
-        this.searchRow = new GridSearhRow(this.searchrow, this.definition,this.filter)
+        this.searchRow = new GridSearhRow(this.searchrow, this.definition,filter)
         this.searchRow.searchChange.listen(() => {
             this.refetchbody()
         })
