@@ -21,6 +21,7 @@ class GridSearhRow{
         this.filter = new Filter()
 
         for(let attribute of this.definition.attributes){
+            let dirtiedEvent:EventSystem<any> = new EventSystem<any>()
             if(attribute.enumType == 'array'|| attribute.hidden)continue;
             let tableCell = createTableCell(this.element)
             let innerCell = createAndAppend(tableCell,'<div style="display:flex; max-width:220px;"></div>')
@@ -28,33 +29,32 @@ class GridSearhRow{
             
             let searchfields:Widget<any>[] = []
 
-            // if(attribute.enumType == 'date' || attribute.enumType == 'number'){
-            //     var fromSerachField = getWidget(attribute, innerCell,{})
-            //     fromSerachField.value.onchange.listen((val) => {
-            //         if (!this.filter[attribute.name]) this.filter[attribute.name] = {}
-            //         this.filter[attribute.name].$gte  = val
-            //         this.filterCooldown.restartCast()
-            //     })
+            if(attribute.enumType == 'date' || attribute.enumType == 'number'){
+                var fromSerachField = getWidget(attribute, innerCell,{})
+                this.filter.setLow(attribute,fromSerachField.value)
 
-            //     var toSerachField = getWidget(attribute, innerCell,{})
-            //     toSerachField.value.onchange.listen((val) => {
-            //         if (!this.filter[attribute.name]) this.filter[attribute.name] = {}
-            //         this.filter[attribute.name].$lt = val
-            //         this.filterCooldown.restartCast()
-            //     })
-            //     searchfields.push(fromSerachField,toSerachField)
-            // }else{
-            let searchField = getWidget(attribute, innerCell,{})
-            // searchField.value.set(filter[attribute.name])
-            this.filter.set(attribute,searchField.value,false)
-            searchField.value.onchange.listen((val) => {
-                // this.filter[attribute.name] = val
-                this.filterCooldown.restartCast()
-            })
-            searchfields.push(searchField)
-            // }
+                var toSerachField = getWidget(attribute, innerCell,{})
+                this.filter.setHigh(attribute, toSerachField.value)
+                
+                searchfields.push(fromSerachField,toSerachField)
+            }else{
+                let searchField = getWidget(attribute, innerCell,{})
+                this.filter.set(attribute,searchField.value)
+                searchfields.push(searchField)
+            }
 
-            let clearSearchFields = new Button(innerCell, 'clear', 'btn btn-danger clearbtn', () => {
+            for(let searchField of searchfields){
+                searchField.value.onchange.listen((val) => {
+                    if(attribute.enumType == 'text'){
+                        this.filterCooldown.restartCast()
+                    }else{
+                        this.searchChange.trigger(0, 0)
+                    }
+                    dirtiedEvent.trigger(0,0)
+                })
+            }
+
+            let clearSearchFieldsButton = new DisableableButton(innerCell, 'clear', 'btn btn-danger clearbtn',dirtiedEvent, () => {
                 for(let _searchField of searchfields){
                     _searchField.value.clear()
                     // searchField.value.set(undefined)
@@ -72,25 +72,66 @@ class GridSearhRow{
 
 class Filter{
     map:Map<string,Box<any>>
+    lowMap: Map<string, Box<any>>
+    highMap: Map<string, Box<any>>
+    attributeMap:Map<string,Attribute>
 
     constructor(){
         this.map = new Map<string, Box<any>>()
+        this.lowMap = new Map<string, Box<any>>()
+        this.highMap = new Map<string, Box<any>>()
+        this.attributeMap = new Map<string,Attribute>()
     }
 
-    set(atribute:Attribute,box:Box<any>,range:boolean){
-        this.map.set(atribute.name,box)
+    set(attribute:Attribute,box:Box<any>){
+        this.map.set(attribute.name,box)
+        this.attributeMap.set(attribute.name,attribute)
+    }
+
+    setLow(attribute: Attribute, box: Box<any>){
+        this.lowMap.set(attribute.name, box)
+        this.attributeMap.set(attribute.name, attribute)
+    }
+
+    setHigh(attribute: Attribute, box: Box<any>){
+        this.highMap.set(attribute.name, box)
+        this.attributeMap.set(attribute.name, attribute)
     }
 
     toJson(){
         var filter = {}
 
         for(let pair of this.map){
-            var key = pair[0]
-            var value = pair[1]
+            var key:string = pair[0]
+            var value:Box<any> = pair[1]
+            var attribute:Attribute = this.attributeMap.get(key)
             if(value.isSet){
-                filter[key] = value.get()
+                if(attribute.enumType == 'text'){
+                    filter[key] = {$regex:`${value.get()}`,$options:''}
+                }else{
+                    filter[key] = value.get()
+                }
+            }
+        }
+
+        for (let pair of this.lowMap) {
+            var key: string = pair[0]
+            var lowbox: Box<any> = pair[1]
+            var highbox: Box<any> = this.highMap.get(key)
+
+            var rangefilter:any = {}
+
+            if (lowbox.isSet) {
+                rangefilter.$gte = lowbox.get()
             }
 
+            if(highbox.isSet){
+                rangefilter.$lt = highbox.get()
+            }
+            
+            if(highbox.isSet || lowbox.isSet){
+                filter[key] = rangefilter
+            }
         }
 
         return filter;

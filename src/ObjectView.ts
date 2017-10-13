@@ -16,7 +16,7 @@ class ObjectView extends DetailView{
         this.arraycontainer.style.display = 'none'
         this.changeEvent = new EventSystem<any>()
 
-        var savebtn = new SaveButton(this.buttonContainer as HTMLElement,this.changeEvent, () => {
+        var savebtn = new DisableableButton(this.buttonContainer as HTMLElement,'save','btn btn-success',this.changeEvent, () => {
             update(definition.name,id,that.data,() => {
                 
             },(error) => {

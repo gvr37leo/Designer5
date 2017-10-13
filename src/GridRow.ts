@@ -29,7 +29,7 @@ class GridRow{
         }
 
         // save button
-        let savebtn = new SaveButton(createTableCell(row),this.dirtied,() => {
+        let savebtn = new DisableableButton(createTableCell(row),'save','btn btn-success',this.dirtied,() => {
             update(this.definition.name,data._id,data,() => {},() => {})
         })
 
