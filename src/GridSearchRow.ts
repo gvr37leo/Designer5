@@ -45,7 +45,7 @@ class GridSearhRow{
 
             for(let searchField of searchfields){
                 searchField.value.onchange.listen((val) => {
-                    if(attribute.enumType == 'text'){
+                    if (attribute.enumType == 'text' || attribute.enumType == 'number'){
                         this.filterCooldown.restartCast()
                     }else{
                         this.searchChange.trigger(0, 0)

@@ -93,7 +93,7 @@ class PointerWidget extends Widget<string>{
                     getobject(window.objectMap.get(attribute.pointerType).name ,pointer,(data) => {
                         that.executeWhenLoaded(() => {
                             if(data == null){
-                                that.dropdownWidget.input.value = 'null'
+                                that.dropdownWidget.input.value = 'no data'
                             }else{
                                 that.dropdownWidget.value.set(data,true)
                                 that.dropdownWidget.input.value = that.getDisplayValue(data)

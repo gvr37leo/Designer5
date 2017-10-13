@@ -80,6 +80,10 @@ class NumberWidget extends Widget<number>{
             that.inputel.value = this.formatter()
         })
 
+        this.value.onClear.listen(() => {
+            this.inputel.value = ''
+        })
+
         //trigger onchange event for when user wants to know if the interal value has changed
         this.onchange = new EventSystem()
         this.value.onchange.listen((value) => {
