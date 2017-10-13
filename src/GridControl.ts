@@ -6,6 +6,8 @@
 /// <reference path="widgets/textWidget.ts" />
 /// <reference path="widgets/enumWidget.ts" />
 /// <reference path="widgets/idWidget.ts" />
+/// <reference path="widgets/rangeWidget.ts" />
+
 /// <reference path="GridRow.ts" />
 /// <reference path="GridSearchRow.ts" />
 
@@ -15,7 +17,7 @@ var types = ['text','boolean','number','date','pointer','array']
 
 
 class GridControl{
-    skipWidget: NumberWidget;
+    skipWidget: RangeWidget;
     limit: number;
     rows: GridRow[];
     searchRow: GridSearhRow;
@@ -85,9 +87,10 @@ class GridControl{
             this.refetchbody()
         })
 
-        this.skipWidget = new NumberWidget(this.buttonContainer ,{})
+
+        this.skipWidget = new RangeWidget(this.buttonContainer)
         this.skipWidget.value.set(0)
-        this.skipWidget.inputel.placeholder = "Paging"
+        // this.skipWidget.inputel.placeholder = "Paging"
 
         for (let customButton of this.definition.customButtons){
             new Button(this.buttonContainer, customButton.name,'btn btn-default clearbtn',() => {
