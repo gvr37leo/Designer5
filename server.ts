@@ -29,7 +29,13 @@ function start(){
         app.get('/api/:object', function(req, res){
             var collection = db.collection(req.params.object)
             collection.find({}).toArray(function(err, result){
-                res.send(result);
+                collection.count({}).then((count) => {
+                    res.send({
+                        data:result,
+                        collectionSize:count
+                    });
+                })
+                
             })
         })
     
@@ -40,8 +46,12 @@ function start(){
                 query.filter._id = new mongodb.ObjectID(query.filter._id)
             }
             collection.find(query.filter).sort(query.sort).skip(query.paging.skip).limit(query.paging.limit).toArray(function(err, result){
-                res.send(result);
-                // collection.count({})
+                collection.count({}).then((count) => {
+                    res.send({
+                        data:result,
+                        collectionSize:count
+                    });
+                })
             })
         })
     

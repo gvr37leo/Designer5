@@ -93,7 +93,7 @@ class RequestState{
 
 var cache = new Map<string,RequestState>()
 
-function getlistfiltered(pointertype: string,filter:Query,callback:(data) => void,errorCB:(error) => void){
+function getlistfiltered(pointertype: string,filter:Query,callback:(data:QueryResponse) => void,errorCB:(error) => void){
     if (cache.has(serializeQuery(pointertype,filter))){
         let requestState = cache.get(serializeQuery(pointertype, filter))
 
@@ -112,8 +112,13 @@ function getlistfiltered(pointertype: string,filter:Query,callback:(data) => voi
     }
 }
 
+declare class QueryResponse{
+    data
+    collectionSize:number
+}
+
 function serializeQuery(pointertype: string, filter: Query){
-    return pointertype + ':' + JSON.stringify(filter.filter)
+    return `${pointertype}:${JSON.stringify(filter)}`
 }
 
 function handleStaleRequest(pointertype:string,filter:Query,callback) {
@@ -153,8 +158,8 @@ function getlistfilteredUncached(pointertype: string, filter:Query, callback:(da
 }
 
 function getobject(pointertype: string, id: string,callback:(data) => void,errorCB:(error) => void){
-    getlistfiltered(pointertype,{filter:{_id:id},sort:undefined,paging:{skip:0,limit:10}},(data) => {
-        callback(data[0])
+    getlistfiltered(pointertype,{filter:{_id:id},sort:undefined,paging:{skip:0,limit:10}},(res) => {
+        callback(res.data[0])
     },(err) => {
         errorCB(err)
     })

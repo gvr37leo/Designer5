@@ -90,6 +90,10 @@ class GridControl{
 
         this.skipWidget = new RangeWidget(this.buttonContainer)
         this.skipWidget.value.set(0)
+        this.skipWidget.inputel.step = '1'
+        this.skipWidget.inputel.addEventListener('change',() => {
+            this.refetchbody()
+        })
         // this.skipWidget.inputel.placeholder = "Paging"
 
         for (let customButton of this.definition.customButtons){
@@ -110,9 +114,10 @@ class GridControl{
 
     refetchbody(){
         getlistfiltered(this.definition.name,{filter:this.searchRow.filter.toJson(),sort:this.sort,paging:{skip:this.skipWidget.value.get() * this.limit,limit:this.limit }},(res) => {
-            this.data = res
+            this.data = res.data
+            this.skipWidget.inputel.max = Math.floor(res.collectionSize / this.limit).toString()
             this.tablebody.innerHTML = ''
-            this.appendBody(res)
+            this.appendBody(res.data)
         },() => {
 
         })

@@ -60,7 +60,7 @@ class PointerWidget extends Widget<string>{
             that.dropdowncontainer.innerHTML = '';
             that.dropdownWidget = new DropDownWidget<any>(that.dropdowncontainer,'group-left',(val) => {
                 return that.getDisplayValue(val)
-            },res)
+            },res.data)
             that.dropDownLoaded.trigger(0,0)
 
             that.dropdownWidget.value.onchange.listen((val) => {
