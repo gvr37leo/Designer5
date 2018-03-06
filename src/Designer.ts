@@ -32,6 +32,7 @@ class Designer{
             var objdefinition = this.definition.objdefinitions.find((obj) => {
                 return obj.name == params[0]
             })
+            //crashes if object doesnt exist
             new GridControl(element, objdefinition as ObjDef, {})
         })
         pathFinder.register(":object/:id", (params) => {

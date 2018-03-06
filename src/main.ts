@@ -19,7 +19,7 @@ function fillMap<T>(objname:string):Promise<Map<string,T>>{
     return new Promise((resolve,reject) => {
         var map:Map<string,T> = new Map()
         getlist(objname,(data:any) => {
-            for(var obj of data){
+            for(var obj of data.data){
                 map.set(obj._id,obj)
             }
             resolve(map)
@@ -104,105 +104,76 @@ var testDefinition = new AppDef([],[
 ])
 
 var gendef = {
-    "customButtons": [],
-    "objdefinitions": [
-        {
-            "attributes": [],
-            "columns": [],
-            "_id": "59c3c7c99e45eb2d98b34ed5",
-            "name": "vrijwilliger",
-            "hidden": false,
-            "dropdownAttribute": "59c3ca4c9e45eb2d98b34ed8",
-            "customButtons": []
-        },
-        {
-            "attributes": [],
-            "columns": [],
-            "_id": "59c3c7e19e45eb2d98b34ed6",
-            "name": "oudere",
-            "hidden": false,
-            "dropdownAttribute": "59c3cb009e45eb2d98b34edc",
-            "customButtons": []
-        },
-        {
-            "attributes": [],
-            "columns": [],
-            "_id": "59c3c7e99e45eb2d98b34ed7",
-            "name": "aanvraag",
-            "hidden": false,
-            "dropdownAttribute": null,
-            "customButtons": []
-        }
-    ],
-    "attributes": [
-        {
-            "_id": "59c3ca4c9e45eb2d98b34ed8",
-            "belongsToObject": "59c3c7e19e45eb2d98b34ed6",
-            "readonly": false,
-            "name": "naam",
-            "enumType": "text",
-            "lastupdate": 1507560750624,
-            "place in column": "59db8d18b6fc5e2c8019f130"
-        },
-        {
-            "_id": "59c3ca669e45eb2d98b34ed9",
-            "belongsToObject": "59c3c7e99e45eb2d98b34ed7",
-            "enumType": "pointer",
-            "pointerType": "59c3c7c99e45eb2d98b34ed5",
-            "name": "vrijwilliger",
-            "lastupdate": 1506003558919
-        },
-        {
-            "_id": "59c3ca719e45eb2d98b34eda",
-            "belongsToObject": "59c3c7e99e45eb2d98b34ed7",
-            "enumType": "pointer",
-            "pointerType": "59c3c7e19e45eb2d98b34ed6",
-            "name": "aanvrager",
-            "lastupdate": 1506003569459
-        },
-        {
-            "_id": "59c3ca959e45eb2d98b34edb",
-            "belongsToObject": "59c3c7e99e45eb2d98b34ed7",
-            "enumType": "date",
-            "name": "afspraak datum",
-            "lastupdate": 1506003605957
-        },
-        {
-            "_id": "59c3cb009e45eb2d98b34edc",
-            "belongsToObject": "59c3c7c99e45eb2d98b34ed5",
-            "enumType": "text",
-            "name": "naam",
-            "lastupdate": 1506003712823
-        },
-        {
-            "_id": "59c3cb439e45eb2d98b34edd",
-            "belongsToObject": "59c3c7c99e45eb2d98b34ed5",
-            "enumType": "boolean",
-            "name": "doordeweeks beschikbaar",
-            "lastupdate": 1506003779740
-        },
-        {
-            "_id": "59c3cb4d9e45eb2d98b34ede",
-            "belongsToObject": "59c3c7c99e45eb2d98b34ed5",
-            "name": "weekend beschikbaar",
-            "enumType": "boolean",
-            "lastupdate": 1506003789699
-        }
-    ],
-    "columns": [
-        {
-            "_id": "59db8d18b6fc5e2c8019f130",
-            "name": "col1",
-            "belongsToObject": "59c3c7c99e45eb2d98b34ed5",
-            "lastupdate": 1507560728384
-        },
-        {
-            "_id": "59db8d1fb6fc5e2c8019f131",
-            "name": "col2",
-            "belongsToObject": "59c3c7e19e45eb2d98b34ed6",
-            "lastupdate": 1507560735990
-        }
-    ]
+	"customButtons": [],
+	"objdefinitions": [
+		{
+			"attributes": [],
+			"columns": [],
+			"_id": "5a9e8c04307c3d129cee74ee",
+			"name": "vrijwilliger",
+			"hidden": false,
+			"dropdownAttribute": "5a9e8e28307c3d129cee74fa",
+			"customButtons": []
+		},
+		{
+			"attributes": [],
+			"columns": [],
+			"_id": "5a9e8c0c307c3d129cee74ef",
+			"name": "oudere",
+			"hidden": false,
+			"dropdownAttribute": "5a9e8e46307c3d129cee74fb",
+			"customButtons": []
+		},
+		{
+			"attributes": [],
+			"columns": [],
+			"_id": "5a9e8c15307c3d129cee74f0",
+			"name": "afspraak",
+			"hidden": false,
+			"dropdownAttribute": "5a9e8e11307c3d129cee74f9",
+			"customButtons": []
+		}
+	],
+	"attributes": [
+		{
+			"_id": "5a9e8df2307c3d129cee74f7",
+			"belongsToObject": "5a9e8c15307c3d129cee74f0",
+			"enumType": "pointer",
+			"name": "rijder",
+			"pointerType": "5a9e8c04307c3d129cee74ee",
+			"lastupdate": 1520340466120
+		},
+		{
+			"_id": "5a9e8e08307c3d129cee74f8",
+			"belongsToObject": "5a9e8c15307c3d129cee74f0",
+			"name": "passagier",
+			"enumType": "pointer",
+			"pointerType": "5a9e8c0c307c3d129cee74ef",
+			"lastupdate": 1520340488157
+		},
+		{
+			"_id": "5a9e8e11307c3d129cee74f9",
+			"belongsToObject": "5a9e8c15307c3d129cee74f0",
+			"name": "datum",
+			"enumType": "date",
+			"lastupdate": 1520340497461
+		},
+		{
+			"_id": "5a9e8e28307c3d129cee74fa",
+			"belongsToObject": "5a9e8c04307c3d129cee74ee",
+			"name": "naam",
+			"enumType": "text",
+			"lastupdate": 1520340520197
+		},
+		{
+			"_id": "5a9e8e46307c3d129cee74fb",
+			"belongsToObject": "5a9e8c0c307c3d129cee74ef",
+			"name": "naam",
+			"enumType": "text",
+			"lastupdate": 1520340550118
+		}
+	],
+	"columns": []
 }
 
 toastr.options.showDuration = 300; 
@@ -212,4 +183,4 @@ toastr.options.extendedTimeOut = 500;
 
 var globalModal = new Modal()
 var globalNow = moment()
-var designer = new Designer(document.querySelector('#grid'), testDefinition as any)
+var designer = new Designer(document.querySelector('#grid'), gendef as any)
